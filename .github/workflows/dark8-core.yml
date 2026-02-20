@@ -1,4 +1,4 @@
-name: DARK8 Studio Core
+name: DARK8 Core Pipeline
 
 on:
   push:
@@ -6,24 +6,26 @@ on:
   workflow_dispatch:
 
 jobs:
-  analyze:
+  core:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      - name: Analyze repository structure
-        run: |
-          echo "=== DARK8 Studio Core Initialization ==="
-          echo "Repo structure:"
-          tree -L 3 || true
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
 
-      - name: Prepare environment
+      - name: Install dependencies
         run: |
-          echo "Preparing environment..."
-          python3 --version
-          echo "Environment ready."
+          pip install -r requirements.txt || true
+
+      - name: Analyze project
+        run: |
+          echo "=== DARK8 CORE ANALYSIS ==="
+          tree -L 3 || true
 
       - name: Core initialization
         run: |
-          echo "Initializing DARK8 core modules..."
+          echo "Initializing DARK8 core..."
           echo "Core ready."
