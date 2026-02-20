@@ -1,0 +1,310 @@
+
+🔧 Testowanie Kubernetes Manager...
+✅ Klaster zainicjalizowany: dark8-prod
+✅ Deployments: 2
+✅ Pody: 5
+✅ Scale up: dark8-api -> 5 replik
+✅ Serwisy: 1
+✅ Klaster info: {
+  "context": "dark8-prod",
+  "namespace": "dark8-system",
+  "version": "1.28.0",
+  "nodes": 3,
+  "created_at": "2026-02-17T12:48:06.413314",
+  "total_pods": 7,
+  "total_services": 1,
+  "total_deployments": 2,
+  "healthy_pods": 7
+}
+---kubectl-test-done---
+
+🔧 Testowanie Load Balancer...
+✅ Backendu dodane: 3
+✅ Żądanie od 192.168.1.0 -> server-0.dark8.local:8080
+✅ Żądanie od 192.168.1.1 -> server-1.dark8.local:8081
+✅ Żądanie od 192.168.1.2 -> server-2.dark8.local:8082
+✅ Żądanie od 192.168.1.3 -> server-0.dark8.local:8080
+✅ Żądanie od 192.168.1.4 -> server-1.dark8.local:8081
+✅ Żądanie od 192.168.1.0 -> server-0.dark8.local:8080
+✅ Żądanie od 192.168.1.1 -> server-1.dark8.local:8081
+✅ Żądanie od 192.168.1.2 -> server-2.dark8.local:8082
+✅ Żądanie od 192.168.1.3 -> server-0.dark8.local:8080
+✅ Żądanie od 192.168.1.4 -> server-1.dark8.local:8081
+✅ Stats: {'name': 'dark8-lb', 'algorithm': 'least_connections', 'total_backends': 3, 'healthy_backends': 3, 'active_connections': 10, 'total_connections': 10, 'total_bytes_sent': 0, 'total_bytes_received': 0, 'uptime_seconds': 0.000176}
+✅ Health checks: {'backend-0': True, 'backend-1': True, 'backend-2': True}
+✅ Rate limit check 0: True
+✅ Rate limit check 1: True
+✅ Rate limit check 2: True
+✅ Rate limit check 3: True
+✅ Rate limit check 4: True
+---loadbalancer-test-done---
+Traceback (most recent call last):
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 11, in <module>
+    from .monitoring import MetricsCollector, Metric
+ImportError: attempted relative import with no known parent package
+---prometheus-exporter-done---
+
+🔧 Testowanie Database Replication...
+✅ Instancji dodane: 3
+✅ Binlog entry: binlog-0
+✅ Binlog entry: binlog-1
+✅ Binlog entry: binlog-2
+✅ Binlog entry: binlog-3
+✅ Binlog entry: binlog-4
+✅ Replikacja: {'db-slave-0': True, 'db-slave-1': True}
+✅ Stats: {
+  "mode": "master_slave",
+  "total_instances": 3,
+  "active_instances": 3,
+  "binlog_entries": 5,
+  "binlog_size_bytes": 140,
+  "average_lag_seconds": 0.0,
+  "uptime_seconds": 0.014683
+}
+✅ Master failure detected: False
+---db-replication-test-done---
+
+🔧 Testowanie Monitoring Stack...
+✅ Monitoring Stack inicjalizowany
+✅ Metryki zarejestrowane: 10
+✅ Reguły alertów dodane
+✅ Alerty: 1
+✅ Dashboard overview: {
+  "metrics": {
+    "total_metrics_collected": 10,
+    "unique_metric_names": 1,
+    "uptime_seconds": 9.2e-05,
+    "retention_size": 100000
+  },
+  "alerts": {
+    "total_alerts": 1,
+    "active_alerts": 1,
+    "silenced_alerts": 0,
+    "critical_alerts": 0,
+    "warning_alerts": 1,
+    "alert_history_entries": 1
+  },
+  "active_alerts": [
+    {
+      "id": "high_request_rate-http_requests_total",
+      "name": "high_request_rate",
+      "severity": "warning",
+      "message": "Metric http_requests_total = 900.0 (threshold: 500)",
+      "created_at": "2026-02-17T12:48:07.223034"
+    }
+  ],
+  "uptime_seconds": 0.000103
+}
+✅ Log stats: {'total_logs': 2, 'debug_count': 0, 'info_count': 1, 'warning_count': 1, 'error_count': 0, 'critical_count': 0}
+---monitoring-test-done---
+
+🔧 Testowanie CI/CD Pipeline...
+✅ Pipeline utworzony: pipeline-0
+✅ Pipeline wynik: SUCCESS
+✅ Status: {
+  "pipeline_id": "pipeline-0",
+  "status": "success",
+  "commit": "abc123d",
+  "branch": "main",
+  "jobs_completed": 8,
+  "jobs_total": 8,
+  "duration_seconds": 0.406026
+}
+✅ Artifacts: {'total_artifacts': 1, 'total_size_bytes': 524288000, 'unique_names': 1, 'registry_names': ['dark8-api']}
+✅ Webhook result: True
+✅ Webhook stats: {'total_events': 1, 'push_events': 1, 'pull_request_events': 0, 'recent_events': [{'type': 'push', 'repository': 'https://github.com/dark8os/core', 'branch': 'main', 'commit': 'xyz789a', 'timestamp': '2026-02-17T12:48:07.727753'}]}
+---cicd-test-done---
+
+🔧 Testowanie Disaster Recovery...
+✅ SLA targets ustawione
+✅ Backup created: backup-0
+✅ Backup executed: True
+✅ Recovery point: rp-0
+✅ Status: {
+  "total_backups": 1,
+  "completed_backups": 0,
+  "failed_backups": 0,
+  "total_size_bytes": 7343794,
+  "sla_targets": {
+    "rpo": {
+      "postgres": 30,
+      "redis": 5
+    },
+    "rto": {
+      "postgres": 120,
+      "redis": 30
+    }
+  },
+  "uptime_seconds": 0.111247
+}
+🔄 Odtwarzanie backup-0 do /data/restore...
+✅ Restore completed: /data/restore
+✅ Restore: True
+✅ Plan summary: {
+  "resources": 1,
+  "critical_resources": 1,
+  "runbooks": 0,
+  "contacts": 1,
+  "recovery_sites": 1,
+  "created_at": "2026-02-17T12:48:08.561693"
+}
+---disaster-test-done---
+
+🔧 Testowanie Performance Profiler...
+✅ Profiling started
+✅ Funkcje profilowane
+✅ Memory samples zarejestrowane
+✅ CPU samples zarejestrowane
+✅ Bottlenecks detected: 1
+✅ Report: {
+  "total_bottlenecks": 1,
+  "critical": 0,
+  "high": 1,
+  "bottlenecks": [
+    {
+      "id": "bn-mem-__main__.expensive_operation",
+      "function": "__main__.expensive_operation",
+      "type": "memory_intensive",
+      "severity": "high",
+      "value": 428.45791573738705,
+      "recommendation": "Reduce memory usage in __main__.expensive_operation: Consider streaming or chunking",
+      "detected_at": "2026-02-17T12:48:08.920625"
+    }
+  ]
+}
+✅ Suggestions: 1
+---profiler-test-done---
+
+🔧 Testowanie API Gateway...
+✅ Trasy zarejestrowane: 2
+✅ API key zarejestrowany
+✅ Request 1: Status 200
+✅ Request 2 (cached): Cached=True
+✅ Gateway stats: {
+  "name": "dark8-api-gateway",
+  "uptime_seconds": 0.000535,
+  "total_requests": 2,
+  "routes_registered": 2,
+  "api_keys_registered": 1,
+  "cached_responses": 1,
+  "cache_memory_estimate_kb": 1024,
+  "request_log_entries": 2
+}
+✅ Request history: 2 entries
+---api-gateway-test-done---
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 60000)
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/socketserver.py", line 318, in _handle_request_noblock
+    self.process_request(request, client_address)
+  File "/usr/lib/python3.12/socketserver.py", line 349, in process_request
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.12/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 41, in do_GET
+    metric_type = 'gauge' if latest.type.name == 'GAUGE' else 'counter'
+                             ^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'name'
+----------------------------------------
+Exporter fetch error: Remote end closed connection without response
+Traceback (most recent call last):
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 119, in <module>
+    test_exporter()
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 90, in test_exporter
+    from .monitoring import MetricType
+ImportError: attempted relative import with no known parent package
+Traceback (most recent call last):
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 91, in test_exporter
+    from .monitoring import MetricType
+ImportError: attempted relative import with no known parent package
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 122, in <module>
+    test_exporter()
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 93, in test_exporter
+    from dark8_core.infrastructure.monitoring import MetricType
+ModuleNotFoundError: No module named 'dark8_core'
+Traceback (most recent call last):
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 96, in test_exporter
+    from .monitoring import MetricType
+ImportError: attempted relative import with no known parent package
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 127, in <module>
+    test_exporter()
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 98, in test_exporter
+    from dark8_core.infrastructure.monitoring import MetricType
+ModuleNotFoundError: No module named 'dark8_core'
+Traceback (most recent call last):
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 96, in test_exporter
+    from .monitoring import MetricType
+ImportError: attempted relative import with no known parent package
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 127, in <module>
+    test_exporter()
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 98, in test_exporter
+    from dark8_core.infrastructure.monitoring import MetricType
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/__init__.py", line 10, in <module>
+    from dark8_core.config import config, get_config
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/config.py", line 11, in <module>
+    from dotenv import load_dotenv
+ModuleNotFoundError: No module named 'dotenv'
+Traceback (most recent call last):
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 109, in test_exporter
+    from .monitoring import MetricType
+ImportError: attempted relative import with no known parent package
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 140, in <module>
+    test_exporter()
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 111, in test_exporter
+    from dark8_core.infrastructure.monitoring import MetricType
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/__init__.py", line 10, in <module>
+    from dark8_core.config import config, get_config
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/config.py", line 11, in <module>
+    from dotenv import load_dotenv
+ModuleNotFoundError: No module named 'dotenv'
+Traceback (most recent call last):
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 114, in test_exporter
+    from .monitoring import MetricType
+ImportError: attempted relative import with no known parent package
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 145, in <module>
+    test_exporter()
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/infrastructure/prometheus_exporter.py", line 116, in test_exporter
+    from dark8_core.infrastructure.monitoring import MetricType
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/__init__.py", line 10, in <module>
+    from dark8_core.config import config, get_config
+  File "/home/mariusz/Pulpit/DARK8_MARK01/dark8_core/config.py", line 11, in <module>
+    from dotenv import load_dotenv
+ModuleNotFoundError: No module named 'dotenv'
+127.0.0.1 - - [17/Feb/2026 12:52:11] "GET /metrics HTTP/1.1" 200 -
+---EXPORTER_OUTPUT_START---
+# HELP http_requests_total DARK8 metric http_requests_total
+# TYPE http_requests_total counter
+http_requests_total{job="api",instance="exporter-1"} 40.0
+---EXPORTER_OUTPUT_END---
+127.0.0.1 - - [17/Feb/2026 14:08:56] "GET /metrics HTTP/1.1" 200 -
+---EXPORTER_OUTPUT_START---
+# HELP http_requests_total DARK8 metric http_requests_total
+# TYPE http_requests_total counter
+http_requests_total{job="api",instance="exporter-1"} 40.0
+---EXPORTER_OUTPUT_END---

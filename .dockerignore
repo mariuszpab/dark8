@@ -1,0 +1,30 @@
+# Ignore virtualenvs, build artifacts and large dirs
+.venv
+venv
+dark8_env
+node_modules
+*.pyc
+__pycache__
+.git
+.gitignore
+.studio
+dist
+build
+.env
+*.log
+.dark8_cache
+dark8_logs/
+.idea/
+.vscode/
+*/.venv
+*/venv
+
+# Exclude large project folders that are not needed in image
+Pulpit/
+
+# Allow web and agent_local and studio/docker
+!web
+!agent_local
+!studio/docker
+!studio
+

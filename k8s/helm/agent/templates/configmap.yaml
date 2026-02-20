@@ -1,0 +1,10 @@
+{{- if .Values.config.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ default .Values.config.configMapName (printf "%s-config" .Release.Name) }}
+data:
+  # Example configuration keys
+  APP_ENV: "production"
+  LOG_LEVEL: "info"
+{{- end }}

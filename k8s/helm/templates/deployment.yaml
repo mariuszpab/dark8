@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dark8.fullname" . | default "dark8-core" }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "dark8.name" . | default "dark8-core" }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "dark8.name" . | default "dark8-core" }}
+      annotations:
+{{- if .Values.prometheus.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "{{ .Values.prometheus.metricsPath }}"
+        prometheus.io/port: "{{ .Values.service.port }}"
+{{- end }}
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name | default "" }}
+      containers:
+        - name: dark8-core
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "dark8.fullname" . }}-config
+            - secretRef:
+                name: {{ include "dark8.fullname" . }}-secret
+          livenessProbe: {{ toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe: {{ toYaml .Values.readinessProbe | nindent 12 }}
+          resources: {{ toYaml .Values.resources | nindent 12 }}

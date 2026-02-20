@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dark8-studio.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "dark8-studio.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "dark8-studio.name" . }}
+    spec:
+      serviceAccountName: {{ include "dark8-studio.serviceAccountName" . }}
+      containers:
+        - name: studio
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}

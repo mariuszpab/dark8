@@ -1,0 +1,159 @@
+import tkinter as tk
+from tkinter import scrolledtext
+from dark8_mark01.command_registry import get_handler
+from dark8_mark01.mpx_parser import parse_mpx_file
+
+
+# ---------------------------------------------------------
+# 1. Prosty interpreter języka polskiego → komendy DARK8
+# ---------------------------------------------------------
+
+def interpret_polish(text):
+    """
+    Bardzo prosty interpreter języka naturalnego.
+    W kolejnych etapach zastąpimy go modułem NLP.
+    """
+
+    t = text.lower().strip()
+
+    # --- WRITE_FILE ---
+    # "stwórz plik test.txt z treścią Hello"
+    if t.startswith("stwórz plik"):
+        parts = t.split(" ")
+        if len(parts) >= 3:
+            filename = parts[2]
+            if "treść" in t or "z treścią" in t:
+                content = t.split("treść")[-1].strip()
+            else:
+                content = ""
+            return {
+                "command": "WRITE_FILE",
+                "args": filename,
+                "block": content
+            }
+
+    # --- READ_FILE ---
+    if t.startswith("pokaż plik") or t.startswith("wyświetl plik"):
+        parts = t.split(" ")
+        if len(parts) >= 3:
+            filename = parts[2]
+            return {
+                "command": "READ_FILE",
+                "args": filename,
+                "block": None
+            }
+
+    # --- LIST_DIR ---
+    if t.startswith("pokaż katalog") or t.startswith("wyświetl katalog"):
+        parts = t.split(" ")
+        if len(parts) >= 3:
+            dirname = parts[2]
+            return {
+                "command": "LIST_DIR",
+                "args": dirname,
+                "block": None
+            }
+
+    # --- RUN_UPDATES ---
+    if "aktualizacje" in t or "uruchom aktualizacje" in t:
+        return {
+            "command": "RUN_UPDATES",
+            "args": "",
+            "block": None
+        }
+
+    # --- LOG ---
+    if t.startswith("powiedz") or t.startswith("napisz"):
+        msg = t.split(" ", 1)[1]
+        return {
+            "command": "LOG",
+            "args": msg,
+            "block": None
+        }
+
+    # fallback
+    return {
+        "command": "LOG",
+        "args": f"Nie rozumiem polecenia: {text}",
+        "block": None
+    }
+
+
+# ---------------------------------------------------------
+# 2. Funkcja wykonująca komendę DARK8
+# ---------------------------------------------------------
+
+def execute_dark8_command(cmd, args, block, log_callback):
+    handler = get_handler(cmd)
+    if handler is None:
+        log_callback(f"[ERROR] Nieznana komenda: {cmd}")
+        return
+
+    # przechwytujemy printy DARK8
+    import sys
+    from io import StringIO
+
+    buffer = StringIO()
+    old_stdout = sys.stdout
+    sys.stdout = buffer
+
+    try:
+        handler(cmd, args, block)
+    except Exception as e:
+        log_callback(f"[ERROR] Błąd wykonania: {e}")
+
+    sys.stdout = old_stdout
+    output = buffer.getvalue()
+
+    if output.strip():
+        log_callback(output.strip())
+
+
+# ---------------------------------------------------------
+# 3. UI — okno dialogowe
+# ---------------------------------------------------------
+
+def start_ui():
+    root = tk.Tk()
+    root.title("DARK8 — Interfejs dialogowy")
+
+    # Pole logów
+    log_box = scrolledtext.ScrolledText(root, width=80, height=25, wrap=tk.WORD)
+    log_box.pack(padx=10, pady=10)
+
+    def log(msg):
+        log_box.insert(tk.END, msg + "\n")
+        log_box.see(tk.END)
+
+    # Pole wejściowe
+    entry = tk.Entry(root, width=80)
+    entry.pack(padx=10, pady=5)
+
+    def on_execute():
+        text = entry.get().strip()
+        entry.delete(0, tk.END)
+
+        if not text:
+            return
+
+        log(f"> {text}")
+
+        # NLP → komenda DARK8
+        instr = interpret_polish(text)
+
+        # wykonanie
+        execute_dark8_command(instr["command"], instr["args"], instr["block"], log)
+
+    # Przycisk
+    btn = tk.Button(root, text="Wykonaj", command=on_execute)
+    btn.pack(pady=5)
+
+    root.mainloop()
+
+
+# ---------------------------------------------------------
+# 4. Start
+# ---------------------------------------------------------
+
+if __name__ == "__main__":
+    start_ui()

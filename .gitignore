@@ -1,0 +1,29 @@
+cat << 'EOF' > .gitignore
+# --- ŚRODOWISKA PYTHON ---
+.venv/
+dark8_env/
+
+# --- MODELE I DANE ---
+dark8_mark01/nlp/
+dark8_data/
+
+# --- LOGI ---
+dark8_logs/
+*.log
+
+# --- BUILDY / ARTEFAKTY ---
+dist/
+build/
+target/
+*.iso
+*.img
+*.bin
+*.zip
+*.tar
+*.gz
+
+# --- SYSTEM ---
+__pycache__/
+*.pyc
+EOF
+

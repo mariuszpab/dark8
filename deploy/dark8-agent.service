@@ -1,0 +1,13 @@
+[Unit]
+Description=DARK8 Agent Local (FastAPI)
+After=network.target
+
+[Service]
+Type=simple
+User=%i
+WorkingDirectory=/home/%i/Pulpit/DARK8_MARK01
+ExecStart=/home/%i/Pulpit/DARK8_MARK01/.venv/bin/uvicorn agent_local.main:app --host 0.0.0.0 --port 8000
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,52 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/yourorg/dark8
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+serviceAccount:
+  name: ""
+  automount: false
+
+config: |
+  # key: "value"
+
+secrets: |
+  # secret_key: "value"
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 5
+
+prometheus:
+  enabled: true
+  metricsPath: /metrics
+
+ingress:
+  enabled: false
+  host: ""
+  class: "nginx"
+  tls:
+    enabled: false
+    secretName: ""
+    hosts: []
+  certManager:
+    enabled: false
+    clusterIssuer: "letsencrypt"

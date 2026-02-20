@@ -1,0 +1,229 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dark8-os"
+version = "0.1.0-alpha"
+description = "Autonomous AI Operating System - Build applications with natural language"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Mariusz", email = "dev@dark8.local"}
+]
+keywords = ["ai", "agent", "nlp", "automation", "system"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    # Core AI/ML
+    "ollama>=0.0.45",
+    "transformers>=4.35.0",
+    "torch>=2.0.0",
+    "scikit-learn>=1.3.0",
+    
+    # NLP & Embeddings
+    "spacy>=3.7.0",
+    "fasttext>=0.9.2",
+    "sentence-transformers>=2.2.0",
+    "chroma-db>=0.4.0",
+    
+    # Web & API
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+    "httpx>=0.25.0",
+    "requests>=2.31.0",
+    "beautifulsoup4>=4.12.0",
+    "selenium>=4.13.0",
+    "playwright>=1.39.0",
+    
+    # Database & Storage
+    "sqlalchemy>=2.0.0",
+    "alembic>=1.12.0",
+    "sqlite3>=3.30.0",
+    "redis>=5.0.0",
+    
+    # Data Processing
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    
+    # System & Process
+    "psutil>=5.9.0",
+    "click>=8.1.0",
+    "typer>=0.9.0",
+    "rich>=13.5.0",
+    
+    # Git & VCS
+    "gitpython>=3.1.0",
+    "pygit2>=1.13.0",
+    
+    # Async
+    "asyncio-contextmanager>=1.0.0",
+    "aiofiles>=23.2.0",
+    
+    # Logging & Monitoring
+    "loguru>=0.7.0",
+    "python-json-logger>=2.0.0",
+    
+    # Security
+    "cryptography>=41.0.0",
+    "python-dotenv>=1.0.0",
+    
+    # Code Analysis
+    "pylint>=3.0.0",
+    "black>=23.10.0",
+    "isort>=5.12.0",
+    "mypy>=1.6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-xdist>=3.4.0",
+    "pytest-timeout>=2.1.0",
+    "ipython>=8.16.0",
+    "jupyter>=1.0.0",
+    "notebook>=7.0.0",
+    "ipdb>=0.13.0",
+]
+
+browser = [
+    "pyperclip>=1.8.0",
+    "playwright>=1.39.0",
+]
+
+llm = [
+    "anthropic>=0.7.0",
+    "openai>=1.0.0",
+]
+
+gpu = [
+    "torch[cuda]>=2.0.0",
+]
+
+docker = [
+    "docker>=6.1.0",
+]
+
+installer = [
+    "pyinstaller>=6.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/dark8-os/dark8"
+Documentation = "https://dark8-os.readthedocs.io"
+Repository = "https://github.com/dark8-os/dark8"
+Issues = "https://github.com/dark8-os/dark8/issues"
+
+[project.scripts]
+dark8 = "dark8_core.ui.cli:main"
+dark8-api = "dark8_core.ui.api:main"
+dark8-browser = "dark8_core.browser.browser:main"
+
+[tool.setuptools]
+packages = ["dark8_core"]
+
+[tool.setuptools.package-data]
+dark8_core = [
+    "nlp/models/*",
+    "agent/config/*",
+    "programmer/templates/*",
+    "ui/web/static/*",
+    "ui/web/templates/*",
+]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --strict-markers --tb=short"
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "slow: Slow tests",
+    "requires_ollama: Requires Ollama running",
+]
+
+[tool.coverage.run]
+source = ["dark8_core"]
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_mode = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+line_length = 100
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+
+[tool.pylint.messages_control]
+disable = [
+    "C0111",  # missing-docstring
+    "R0903",  # too-few-public-methods
+    "R0913",  # too-many-arguments
+]
+
+[tool.pylint.format]
+max-line-length = 100
+
+[tool.pylint.design]
+max-attributes = 10

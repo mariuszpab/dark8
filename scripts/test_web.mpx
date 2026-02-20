@@ -1,0 +1,11 @@
+FETCH_URL https://example.com
+ANALYZE_PAGE https://example.com
+SEARCH_WEB python 3.12
+DOWNLOAD_FILE https://speed.hetzner.de/1GB.bin
+SAVE_REPORT reports/web_report.txt <<<END
+Raport z testu web_tools:
+- Strona pobrana
+- Strona przeanalizowana
+- Wyniki wyszukiwania pobrane
+- Plik pobrany
+END

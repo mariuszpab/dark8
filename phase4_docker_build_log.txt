@@ -1,0 +1,10 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.50/build?dockerfile=Dockerfile&t=dark8%3Alocal&version=1": dial unix /var/run/docker.sock: connect: permission denied
+time="2026-02-17T14:20:10+01:00" level=error msg="Can't add file /home/mariusz/Pulpit/DARK8_MARK01/.env.example to tar: io: read/write on closed pipe"

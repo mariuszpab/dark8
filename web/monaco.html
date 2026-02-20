@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>DARK8 Studio — Monaco</title>
+    <style>html,body,#container{height:100%;margin:0;padding:0}#toolbar{padding:6px;background:#222;color:#fff}</style>
+  </head>
+  <body>
+    <div id="toolbar">
+      <input id="path" value="README.md" style="width:40%" />
+      <button id="load">Load</button>
+      <button id="save">Save</button>
+      <span id="status"></span>
+    </div>
+    <div id="container"></div>
+
+    <script src="https://unpkg.com/monaco-editor@0.39.0/min/vs/loader.js"></script>
+    <script>
+      require.config({ paths: { vs: 'https://unpkg.com/monaco-editor@0.39.0/min/vs' } });
+      require(['vs/editor/editor.main'], function () {
+        window.editor = monaco.editor.create(document.getElementById('container'), {
+          value: '// DARK8 Monaco Editor\n',
+          language: 'javascript',
+          automaticLayout: true,
+        });
+
+        document.getElementById('load').onclick = async () => {
+          const path = document.getElementById('path').value
+          const res = await fetch('/fs/read?path=' + encodeURIComponent(path))
+          const j = await res.json()
+          if (j.type === 'file') {
+            editor.setValue(j.content)
+            document.getElementById('status').innerText = 'Loaded ' + path
+          } else document.getElementById('status').innerText = 'Is directory'
+        }
+
+        document.getElementById('save').onclick = async () => {
+          const path = document.getElementById('path').value
+          const content = editor.getValue()
+          const res = await fetch('/fs/write?path=' + encodeURIComponent(path), {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(content)})
+          const j = await res.json()
+          document.getElementById('status').innerText = JSON.stringify(j)
+        }
+
+        // AI integration: ask selected text or whole file
+        const askBtn = document.createElement('button')
+        askBtn.innerText = 'Ask AI'
+        askBtn.onclick = async () => {
+          const selection = editor.getModel().getValueInRange(editor.getSelection())
+          const prompt = selection && selection.length > 0 ? selection : editor.getValue()
+          document.getElementById('status').innerText = 'Asking AI...'
+          try {
+            // If running inside Tauri, use invoke
+            if (window.__TAURI__) {
+              const res = await window.__TAURI__.invoke('agent_chat', { prompt })
+              const out = JSON.stringify(res, null, 2)
+              editor.executeEdits('ai', [{range: editor.getSelection(), text: '\n/* AI RESPONSE:\n' + out + '\n*/\n', forceMoveMarkers: true}])
+              document.getElementById('status').innerText = 'AI response inserted (tauri)'
+              return
+            }
+            const res = await fetch('/agent/chat', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({prompt})})
+            const j = await res.json()
+            const out = JSON.stringify(j, null, 2)
+            editor.executeEdits('ai', [{range: editor.getSelection(), text: '\n/* AI RESPONSE:\n' + out + '\n*/\n', forceMoveMarkers: true}])
+            document.getElementById('status').innerText = 'AI response inserted'
+          } catch (e) {
+            document.getElementById('status').innerText = 'AI error: ' + e
+          }
+        }
+        document.getElementById('toolbar').appendChild(askBtn)
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dark8-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dark8-core
+  template:
+    metadata:
+      labels:
+        app: dark8-core
+    spec:
+      containers:
+        - name: dark8-core
+          image: dark8:latest
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: app-code
+              mountPath: /app
+      volumes:
+        - name: app-code
+          hostPath:
+            path: /opt/dark8

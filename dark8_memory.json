@@ -1,0 +1,221 @@
+{
+    "goals": [
+        "stwórz prostą aplikację w pythonie która wypisuje listę zadań",
+        "stwórz prostą aplikację webową z listą zadań",
+        "stwórz proste api do zarządzania zadaniami",
+        "stwórz aplikację do notatek",
+        "",
+        "stwórz aplikację do notatek",
+        ".\\dark8_env\\Scripts\\Activate.ps1",
+        "",
+        "2"
+    ],
+    "projects": [
+        "projekty/app_generic",
+        "projekty/app_web",
+        "projekty/app_api"
+    ],
+    "history": {
+        "stwórz prostą aplikację w pythonie która wypisuje listę zadań": [
+            {
+                "index": 1,
+                "intent": "CREATE_PROJECT",
+                "description": "Tworzenie ogólnego projektu aplikacji",
+                "args": {
+                    "path": "projekty/app_generic",
+                    "template": "default"
+                },
+                "result": "Utworzono projekt: projekty/app_generic"
+            },
+            {
+                "index": 2,
+                "intent": "GENERATE_CODE",
+                "description": "Generowanie szkicu aplikacji",
+                "args": {
+                    "language": "python",
+                    "prompt": "Stwórz szkic aplikacji zgodnej z celem: stwórz prostą aplikację w pythonie która wypisuje listę zadań"
+                },
+                "result": "// Kod wygenerowany przez DARK8 OS\n// Język: python\n\n// TODO: implementacja na podstawie promptu:\n// Stwórz szkic aplikacji zgodnej z celem: stwórz prostą aplikację w pythonie która wypisuje listę zadań\n"
+            },
+            {
+                "index": 3,
+                "intent": "OVERWRITE_FILE",
+                "description": "Zapisanie szkicu aplikacji",
+                "args": {
+                    "path": "projekty/app_generic/main.py",
+                    "content": "# TODO: szkic aplikacji wygenerowany przez DARK8\n"
+                },
+                "result": "Nadpisano plik: projekty/app_generic/main.py"
+            }
+        ],
+        "stwórz prostą aplikację webową z listą zadań": [
+            {
+                "index": 1,
+                "intent": "CREATE_PROJECT",
+                "description": "Tworzenie projektu aplikacji webowej",
+                "args": {
+                    "path": "projekty/app_web",
+                    "template": "web"
+                },
+                "result": "Utworzono projekt: projekty/app_web"
+            },
+            {
+                "index": 2,
+                "intent": "GENERATE_CODE",
+                "description": "Generowanie kodu HTML dla aplikacji webowej",
+                "args": {
+                    "language": "html",
+                    "prompt": "Stwórz prostą stronę web zgodną z celem: stwórz prostą aplikację webową z listą zadań"
+                },
+                "result": "// Kod wygenerowany przez DARK8 OS\n// Język: html\n\n// TODO: implementacja na podstawie promptu:\n// Stwórz prostą stronę web zgodną z celem: stwórz prostą aplikację webową z listą zadań\n"
+            },
+            {
+                "index": 3,
+                "intent": "OVERWRITE_FILE",
+                "description": "Zapisanie kodu HTML do pliku index.html",
+                "args": {
+                    "path": "projekty/app_web/index.html",
+                    "content": "<!-- TODO: tutaj wstawimy wygenerowany kod HTML -->"
+                },
+                "result": "Nadpisano plik: projekty/app_web/index.html"
+            }
+        ],
+        "stwórz proste api do zarządzania zadaniami": [
+            {
+                "index": 1,
+                "intent": "CREATE_PROJECT",
+                "description": "Tworzenie projektu backend/API w Pythonie",
+                "args": {
+                    "path": "projekty/app_api",
+                    "template": "python"
+                },
+                "result": "Utworzono projekt: projekty/app_api"
+            },
+            {
+                "index": 2,
+                "intent": "GENERATE_CODE",
+                "description": "Generowanie kodu backendu/API",
+                "args": {
+                    "language": "python",
+                    "prompt": "Stwórz prosty backend/API w Pythonie zgodny z celem: stwórz proste api do zarządzania zadaniami"
+                },
+                "result": "// Kod wygenerowany przez DARK8 OS\n// Język: python\n\n// TODO: implementacja na podstawie promptu:\n// Stwórz prosty backend/API w Pythonie zgodny z celem: stwórz proste api do zarządzania zadaniami\n"
+            },
+            {
+                "index": 3,
+                "intent": "OVERWRITE_FILE",
+                "description": "Zapisanie kodu backendu do pliku main.py",
+                "args": {
+                    "path": "projekty/app_api/main.py",
+                    "content": "# TODO: tutaj wstawimy wygenerowany kod backendu/API\n"
+                },
+                "result": "Nadpisano plik: projekty/app_api/main.py"
+            },
+            {
+                "index": 4,
+                "intent": "BUILD_PROJECT",
+                "description": "Uruchomienie backendu/API",
+                "args": {
+                    "path": "projekty/app_api/main.py"
+                },
+                "result": ""
+            }
+        ],
+        "stwórz aplikację do notatek": [
+            {
+                "index": 1,
+                "intent": "CREATE_PROJECT",
+                "description": "Tworzenie ogólnego projektu aplikacji",
+                "args": {
+                    "path": "projekty/app_generic",
+                    "template": "default"
+                },
+                "result": "Utworzono projekt: projekty/app_generic"
+            },
+            {
+                "index": 2,
+                "intent": "GENERATE_CODE",
+                "description": "Generowanie szkicu aplikacji",
+                "args": {
+                    "language": "python",
+                    "prompt": "Stwórz szkic aplikacji zgodnej z celem: stwórz aplikację do notatek"
+                },
+                "result": "// Kod wygenerowany przez DARK8 OS\n// Język: python\n\n// TODO: implementacja na podstawie promptu:\n// Stwórz szkic aplikacji zgodnej z celem: stwórz aplikację do notatek\n"
+            },
+            {
+                "index": 3,
+                "intent": "OVERWRITE_FILE",
+                "description": "Zapisanie szkicu aplikacji",
+                "args": {
+                    "path": "projekty/app_generic/main.py",
+                    "content": "# TODO: szkic aplikacji wygenerowany przez DARK8\n"
+                },
+                "result": "Nadpisano plik: projekty/app_generic/main.py"
+            },
+            {
+                "index": 1,
+                "intent": "CREATE_PROJECT",
+                "description": "Tworzenie ogólnego projektu aplikacji",
+                "args": {
+                    "path": "projekty/app_generic",
+                    "template": "default"
+                },
+                "result": "Utworzono projekt: projekty/app_generic"
+            },
+            {
+                "index": 2,
+                "intent": "GENERATE_CODE",
+                "description": "Generowanie szkicu aplikacji",
+                "args": {
+                    "language": "python",
+                    "prompt": "Stwórz szkic aplikacji zgodnej z celem: stwórz aplikację do notatek"
+                },
+                "result": "// Kod wygenerowany przez DARK8 OS\n// Język: python\n\n// TODO: implementacja na podstawie promptu:\n// Stwórz szkic aplikacji zgodnej z celem: stwórz aplikację do notatek\n"
+            },
+            {
+                "index": 3,
+                "intent": "OVERWRITE_FILE",
+                "description": "Zapisanie szkicu aplikacji",
+                "args": {
+                    "path": "projekty/app_generic/main.py",
+                    "content": "# TODO: szkic aplikacji wygenerowany przez DARK8\n"
+                },
+                "result": "Nadpisano plik: projekty/app_generic/main.py"
+            }
+        ],
+        "": [
+            {
+                "index": 1,
+                "intent": "LOG",
+                "description": "Brak zdefiniowanego planu dla celu: ",
+                "args": {},
+                "result": "Brak obsługi dla intencji: LOG"
+            },
+            {
+                "index": 1,
+                "intent": "LOG",
+                "description": "Brak zdefiniowanego planu dla celu: ",
+                "args": {},
+                "result": "Brak obsługi dla intencji: LOG"
+            }
+        ],
+        ".\\dark8_env\\Scripts\\Activate.ps1": [
+            {
+                "index": 1,
+                "intent": "LOG",
+                "description": "Brak zdefiniowanego planu dla celu: .\\dark8_env\\Scripts\\Activate.ps1",
+                "args": {},
+                "result": "Brak obsługi dla intencji: LOG"
+            }
+        ],
+        "2": [
+            {
+                "index": 1,
+                "intent": "LOG",
+                "description": "Brak zdefiniowanego planu dla celu: 2",
+                "args": {},
+                "result": "Brak obsługi dla intencji: LOG"
+            }
+        ]
+    }
+}

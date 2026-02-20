@@ -1,0 +1,75 @@
+version: '3.8'
+services:
+  dark8-core:
+    build: .
+    container_name: dark8-core
+    ports:
+      - "8080:8080"
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./:/app
+
+  prometheus-exporter:
+    image: python:3.12-slim
+    container_name: dark8-prometheus-exporter
+    command: ["python3", "dark8_core/infrastructure/prometheus_exporter.py"]
+    ports:
+      - "9100:9100"
+    volumes:
+      - ./:/app
+    working_dir: /app
+version: '3.8'
+
+services:
+  dark8:
+    build: .
+    container_name: dark8-os
+    ports:
+      - "8000:8000"
+    environment:
+      - DARK8_ENV=development
+      - DARK8_DEBUG=true
+      - OLLAMA_HOST=http://ollama:11434
+    volumes:
+      - dark8-data:/root/.dark8
+      - .:/app
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: dark8-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    environment:
+      - OLLAMA_MODELS=/root/.ollama/models
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: dark8-postgres
+    environment:
+      - POSTGRES_DB=dark8
+      - POSTGRES_USER=dark8
+      - POSTGRES_PASSWORD=dark8_secure_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    expose:
+      - "5432"
+
+  redis:
+    image: redis:7-alpine
+    container_name: dark8-redis
+    restart: unless-stopped
+    expose:
+      - "6379"
+
+volumes:
+  dark8-data:
+  ollama-data:
+  postgres-data:

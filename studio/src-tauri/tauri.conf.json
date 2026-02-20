@@ -1,0 +1,14 @@
+{
+  "package": {
+    "productName": "DARK8 Studio",
+    "version": "0.1.0"
+  },
+  "tauri": {
+    "bundle": {
+      "identifier": "com.dark8.studio"
+    },
+    "allowlist": {
+      "all": true
+    }
+  }
+}

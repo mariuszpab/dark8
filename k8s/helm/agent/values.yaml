@@ -1,0 +1,70 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/mariusz-dark8/dark8-agent
+  tag: v1.0.0
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: true
+  host: agent.dark8.example.com
+  tls:
+    enabled: false
+    secretName: ""
+ 
+serviceAccount:
+  create: true
+  name: dark8-agent-sa
+
+resources:
+  limits:
+    cpu: 1
+    memory: 1Gi
+  requests:
+    cpu: 200m
+    memory: 256Mi
+
+env:
+  - name: ENV
+    value: production
+  - name: OLLAMA_HOST
+    value: "192.168.1.77"
+  - name: OLLAMA_PORT
+    value: "11434"
+
+config:
+  enabled: true
+  configMapName: dark8-agent-config
+
+secrets:
+  enabled: true
+  secretName: dark8-agent-secret
+  # NOTE: create k8s secret `dark8-agent-secret` for any sensitive keys (do NOT store GHCR token here)
+  # kubectl create secret generic dark8-agent-secret --from-literal=OLLAMA_API_KEY=xxx
+
+volumeMounts:
+  - name: web-static
+    mountPath: /app/web
+    readOnly: true
+
+volumes:
+  - name: web-static
+    emptyDir: {}
+
+readinessProbe:
+  httpGet:
+    path: /fs/list
+    port: 8000
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+livenessProbe:
+  httpGet:
+    path: /fs/list
+    port: 8000
+  initialDelaySeconds: 30
+  periodSeconds: 30

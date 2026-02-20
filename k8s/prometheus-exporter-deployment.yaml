@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus-exporter
+  template:
+    metadata:
+      labels:
+        app: prometheus-exporter
+    spec:
+      containers:
+        - name: prometheus-exporter
+          image: python:3.12-slim
+          command: ["python3", "dark8_core/infrastructure/prometheus_exporter.py"]
+          ports:
+            - containerPort: 9100
