@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   dark8-core:
     build: .
@@ -19,9 +20,7 @@ services:
     volumes:
       - ./:/app
     working_dir: /app
-version: '3.8'
 
-services:
   dark8:
     build: .
     container_name: dark8-os
@@ -73,3 +72,4 @@ volumes:
   dark8-data:
   ollama-data:
   postgres-data:
+
