@@ -1,29 +1,24 @@
 #include <stdint.h>
-#include "idt.h"
-#include "pic.h"
 
-volatile char* const VGA = (char*)0xB8000;
+void isr_common_handler(uint32_t int_no, uint32_t err_code) {
+    (void)int_no;
+    (void)err_code;
+    // Na razie nic – tylko po to, żeby linker był zadowolony
+}
 
-static void vga_puts(const char* s, int row, int col, uint8_t color) {
-    int i = 0;
-    int pos = (row * 80 + col) * 2;
-    while (s[i]) {
-        VGA[pos]     = s[i];
-        VGA[pos + 1] = color;
-        pos += 2;
-        i++;
+void irq_common_handler(uint32_t int_no, uint32_t err_code) {
+    (void)int_no;
+    (void)err_code;
+    // Na razie nic – tylko po to, żeby linker był zadowolony
+}
+
+void kernel_main() {
+    volatile char* vga = (volatile char*)0xB8000;
+    vga[0] = 'K';
+    vga[1] = 0x0F;   // biały na czarnym
+
+    while (1) {
+        __asm__ __volatile__("hlt");
     }
 }
 
-void kmain(void) {
-    vga_puts("DARK8 KERNEL C OK", 0, 0, 0x0F);
-
-    idt_init();
-    pic_remap();
-
-    asm volatile("sti");
-
-    for (;;) {
-        asm volatile("hlt");
-    }
-}

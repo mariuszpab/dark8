@@ -2,18 +2,27 @@ ENTRY(kmain)
 
 SECTIONS
 {
-    . = 0x00100000;
+    . = 0x00001000;
 
-    .text : {
+    .text :
+    {
         *(.text*)
     }
 
-    .rodata : {
+    .rodata :
+    {
         *(.rodata*)
     }
 
-    .data : {
+    .data :
+    {
         *(.data*)
+    }
+
+    .bss :
+    {
         *(.bss*)
+        *(COMMON)
     }
 }
+

@@ -1,0 +1,67 @@
+AS      = nasm
+CC      = i686-elf-gcc
+LD      = i686-elf-ld
+
+CFLAGS  = -ffreestanding -O2 -Wall -Wextra -m32
+LDFLAGS = -T kernel/linker.ld -nostdlib
+
+BOOTDIR = bootloader
+KERNDIR = kernel
+
+all: os.img
+
+$(BOOTDIR)/boot.bin: $(BOOTDIR)/boot.asm
+	$(AS) -f bin $< -o $@
+
+$(BOOTDIR)/stage2.bin: $(BOOTDIR)/stage2.asm
+	$(AS) -f bin $< -o $@
+
+$(KERNDIR)/kernel.o: $(KERNDIR)/kernel.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(KERNDIR)/paging.o: $(KERNDIR)/paging.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(KERNDIR)/idt.o: $(KERNDIR)/idt.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(KERNDIR)/pic.o: $(KERNDIR)/pic.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(KERNDIR)/keyboard.o: $(KERNDIR)/keyboard.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(KERNDIR)/kernel_asm.o: $(KERNDIR)/kernel.asm
+	$(AS) -f elf32 $< -o $@
+
+$(KERNDIR)/isr.o: $(KERNDIR)/isr.asm
+	$(AS) -f elf32 $< -o $@
+
+$(KERNDIR)/idt_load.o: $(KERNDIR)/idt_load.asm
+	$(AS) -f elf32 $< -o $@
+
+kernel.bin: \
+    $(KERNDIR)/kernel.o \
+    $(KERNDIR)/paging.o \
+    $(KERNDIR)/idt.o \
+    $(KERNDIR)/pic.o \
+    $(KERNDIR)/keyboard.o \
+    $(KERNDIR)/kernel_asm.o \
+    $(KERNDIR)/isr.o \
+    $(KERNDIR)/idt_load.o
+	$(LD) $(LDFLAGS) -o $@ $^
+
+os.img: $(BOOTDIR)/boot.bin $(BOOTDIR)/stage2.bin kernel.bin
+	dd if=/dev/zero of=$@ bs=512 count=2880 status=none
+	dd if=$(BOOTDIR)/boot.bin   of=$@ conv=notrunc status=none
+	dd if=$(BOOTDIR)/stage2.bin of=$@ bs=512 seek=1  conv=notrunc status=none
+	dd if=kernel.bin            of=$@ bs=512 seek=10 conv=notrunc status=none
+
+run: os.img
+	qemu-system-i386 -fda os.img
+
+clean:
+	rm -f $(BOOTDIR)/*.bin
+	rm -f $(KERNDIR)/*.o
+	rm -f kernel.bin os.img
+

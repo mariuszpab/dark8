@@ -5,7 +5,7 @@ start:
     mov si, msg2
     call print
 
-    ; przygotuj DAP dla LBA
+    ; przygotuj DAP dla LBA – 8 sektorów od LBA 2 do 0x0000:0x1000
     mov si, dap
     mov ah, 0x42
     mov dl, 0          ; A:
@@ -50,7 +50,7 @@ msg2       db "STAGE2 LBA",0
 msg_loaded db " KERNEL LOADED",0
 msg_err    db " LBA ERR",0
 
-; DAP – czytamy np. 8 sektorów od LBA 2 do 0x1000
+; DAP – czytamy 8 sektorów od LBA 2 do 0x0000:0x1000
 dap:
     db 16           ; rozmiar
     db 0
@@ -78,6 +78,7 @@ pm_entry:
     mov ss, ax
     mov esp, 0x90000
 
-    jmp 0x1000       ; skok do kernela
+    jmp 0x1000       ; skok do początku kernel.bin (kmain)
 
 times 512-($-$$) db 0
+

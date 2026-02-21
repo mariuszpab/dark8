@@ -1,4 +1,6 @@
-#pragma once
+#ifndef D8_IDT_H
+#define D8_IDT_H
+
 #include <stdint.h>
 
 struct idt_entry {
@@ -14,4 +16,7 @@ struct idt_ptr {
     uint32_t base;
 } __attribute__((packed));
 
-void idt_init(void);
+void idt_init();
+
+#endif
+

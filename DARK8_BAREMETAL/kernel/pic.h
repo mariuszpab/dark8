@@ -1,3 +1,11 @@
-#pragma once
-void pic_remap(void);
-void pic_send_eoi(void);
+#ifndef D8_PIC_H
+#define D8_PIC_H
+
+#include <stdint.h>
+
+void pic_remap(int offset1, int offset2);
+void pic_send_eoi(uint8_t irq);
+void pic_enable();
+
+#endif
+
