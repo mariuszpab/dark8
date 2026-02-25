@@ -1,0 +1,20 @@
+{
+    "build": {
+        "beforeBuildCommand": "npm run build",
+        "beforeDevCommand": "npm run dev",
+        "devPath": "http://localhost:5173",
+        "distDir": "../dist"
+    },
+    "package": {
+        "productName": "dark8-browser",
+        "version": "0.1.0"
+    },
+    "tauri": {
+        "embeddedServer": {
+            "active": true
+        },
+        "bundle": {
+            "active": false
+        }
+    }
+}

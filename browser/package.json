@@ -1,0 +1,16 @@
+{
+    "name": "dark8-browser",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "tauri": "tauri"
+    },
+    "devDependencies": {
+        "@tauri-apps/cli": "^2.0.0",
+        "svelte": "^4.0.0",
+        "vite": "^5.0.0"
+    }
+}
