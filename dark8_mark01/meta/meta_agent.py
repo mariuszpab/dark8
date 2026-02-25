@@ -1,12 +1,10 @@
 # meta_agent.py
 # DARK8 OS — META AGENT: samorozwój kodu + migracje
 
-from dark8_mark01.meta.code_editor import read_code, write_code, apply_patch
+from dark8_mark01.meta.code_editor import apply_patch, read_code, write_code
+from dark8_mark01.migrations.migration_manager import status as migrations_status
+from dark8_mark01.migrations.migration_manager import upgrade_all
 from dark8_mark01.tools.codegen import generate_code
-from dark8_mark01.migrations.migration_manager import (
-    upgrade_all,
-    status as migrations_status,
-)
 
 
 def meta_analyze(path: str) -> str:

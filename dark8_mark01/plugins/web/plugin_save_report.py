@@ -1,6 +1,7 @@
 # plugin_save_report.py
 import os
 
+
 def handle_SAVE_REPORT(task: dict, context: dict) -> dict:
     path = task.get("path")
     content = task.get("content")

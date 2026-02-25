@@ -1,7 +1,7 @@
 import os
+
 from ..command_registry import register_command
 from ..mpx_parser import parse_mpx_file
-
 
 # Zestaw ścieżek już zaimportowanych, aby uniknąć pętli
 _imported_scripts = set()

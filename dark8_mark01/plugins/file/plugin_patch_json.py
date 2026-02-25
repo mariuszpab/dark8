@@ -2,6 +2,7 @@
 import json
 import os
 
+
 def handle_PATCH_JSON(task: dict, context: dict) -> dict:
     path = task.get("path")
     patch = task.get("patch")

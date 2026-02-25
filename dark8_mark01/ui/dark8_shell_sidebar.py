@@ -1,6 +1,7 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFrame
-from PySide6.QtCore import Qt, QTimer
 import datetime
+
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtWidgets import QFrame, QLabel, QPushButton, QVBoxLayout, QWidget
 
 
 class Dark8SideBar(QWidget):

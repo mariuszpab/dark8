@@ -1,4 +1,3 @@
-
 def generate_code(language: str, prompt: str) -> str:
     """
     Generuje kod w wybranym języku na podstawie promptu.

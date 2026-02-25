@@ -3,8 +3,8 @@
 Security layer with input validation, sanitization, and protection.
 """
 
-from typing import Any, Dict, Optional
 import re
+from typing import Any, Dict, Optional
 
 from dark8_core.logger import logger
 
@@ -80,8 +80,7 @@ class RateLimiter:
 
         # Remove old requests
         self.requests[client_id] = [
-            req_time for req_time in self.requests[client_id]
-            if req_time > cutoff
+            req_time for req_time in self.requests[client_id] if req_time > cutoff
         ]
 
         if len(self.requests[client_id]) >= self.max_requests:
@@ -99,12 +98,7 @@ class AuditLogger:
         self.db = db
 
     def log_operation(
-        self,
-        action: str,
-        user: str,
-        resource: str,
-        result: str,
-        details: Optional[Dict] = None
+        self, action: str, user: str, resource: str, result: str, details: Optional[Dict] = None
     ):
         """Log security-relevant operation"""
 
@@ -116,7 +110,7 @@ class AuditLogger:
                     action=action,
                     parameters={"user": user, "resource": resource},
                     result=result,
-                    error_message=None
+                    error_message=None,
                 )
             except Exception as e:
                 logger.error(f"Audit logging failed: {e}")

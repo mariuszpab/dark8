@@ -1,9 +1,8 @@
 # dark8_core.py
 # DARK8 OS — główny runtime komend (NLP + shell-like)
 
-from dark8_mark01.nlp.intent_runtime import IntentClassifier
 from dark8_mark01.core.dispatcher import dispatch
-
+from dark8_mark01.nlp.intent_runtime import IntentClassifier
 
 classifier = IntentClassifier()
 

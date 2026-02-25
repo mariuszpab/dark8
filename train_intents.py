@@ -1,14 +1,14 @@
-import os
 import json
+import os
 
 from datasets import load_dataset
+from evaluate import load as load_metric
 from transformers import (
-    AutoTokenizer,
     AutoModelForSequenceClassification,
+    AutoTokenizer,
     Trainer,
     TrainingArguments,
 )
-from evaluate import load as load_metric
 
 # ŚCIEŻKI I MODEL
 MODEL_NAME = "dkleczek/bert-base-polish-uncased-v1"
@@ -35,6 +35,7 @@ print("Tokenizuję...")
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
+
 def preprocess(example):
     enc = tokenizer(
         example["text"],
@@ -44,6 +45,7 @@ def preprocess(example):
     )
     enc["labels"] = label2id[example["label"]]
     return enc
+
 
 # MAPOWANIE + USUNIĘCIE STARYCH KOLUMN
 tokenized = dataset.map(preprocess)
@@ -65,7 +67,7 @@ model = AutoModelForSequenceClassification.from_pretrained(
 # ARGUMENTY TRENINGU – kompatybilne z nowszym transformers
 args = TrainingArguments(
     output_dir=os.path.join(OUTPUT_DIR, "checkpoints"),
-    eval_strategy="epoch",          # nowe API zamiast evaluation_strategy
+    eval_strategy="epoch",  # nowe API zamiast evaluation_strategy
     save_strategy="epoch",
     logging_steps=20,
     num_train_epochs=3,
@@ -78,10 +80,12 @@ args = TrainingArguments(
 
 metric = load_metric("accuracy")
 
+
 def compute_metrics(eval_pred):
     logits, labels_ids = eval_pred
     preds = logits.argmax(axis=-1)
     return metric.compute(predictions=preds, references=labels_ids)
+
 
 trainer = Trainer(
     model=model,

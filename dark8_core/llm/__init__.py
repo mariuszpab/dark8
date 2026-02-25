@@ -3,16 +3,16 @@
 Integration with local Ollama LLM backend for advanced reasoning.
 """
 
-from typing import Optional, Dict, List, AsyncGenerator
 import json
+from typing import AsyncGenerator, Dict, List, Optional
 
-from dark8_core.logger import logger
 from dark8_core.config import config
+from dark8_core.logger import logger
 
 
 class OllamaClient:
     """Client for Ollama LLM backend"""
-    
+
     def __init__(self, host: str = None, model: str = None):
         self.host = host or config.OLLAMA_HOST
         self.model = model or config.OLLAMA_MODEL
@@ -20,13 +20,14 @@ class OllamaClient:
         self.context_window = config.OLLAMA_CONTEXT_WINDOW
         self.available = False
         self._check_availability()
-    
+
     def _check_availability(self):
         """Check if Ollama is available"""
         try:
-            import httpx
             import asyncio
-            
+
+            import httpx
+
             async def check():
                 try:
                     async with httpx.AsyncClient(timeout=5) as client:
@@ -34,12 +35,12 @@ class OllamaClient:
                         return response.status_code == 200
                 except Exception:
                     return False
-            
+
             # Run sync check
             loop = asyncio.new_event_loop()
             self.available = loop.run_until_complete(check())
             loop.close()
-            
+
             if self.available:
                 logger.info(f"✓ Ollama available at {self.host}")
             else:
@@ -47,39 +48,36 @@ class OllamaClient:
         except Exception as e:
             logger.warning(f"Ollama check failed: {e}")
             self.available = False
-    
+
     async def generate(self, prompt: str, context: List[int] = None) -> str:
         """
         Generate text using Ollama.
-        
+
         Args:
             prompt: Text prompt
             context: Previous context window (for multi-turn)
-        
+
         Returns:
             Generated text
         """
         if not self.available:
             logger.warning("Ollama not available, returning default response")
             return "Ollama is not available. Please install and start Ollama."
-        
+
         try:
             import httpx
-            
+
             payload = {
                 "model": self.model,
                 "prompt": prompt,
                 "temperature": self.temperature,
                 "stream": False,
-                "context": context or []
+                "context": context or [],
             }
-            
+
             async with httpx.AsyncClient(timeout=60) as client:
-                response = await client.post(
-                    f"{self.host}/api/generate",
-                    json=payload
-                )
-                
+                response = await client.post(f"{self.host}/api/generate", json=payload)
+
                 if response.status_code == 200:
                     data = response.json()
                     return data.get("response", "")
@@ -89,32 +87,30 @@ class OllamaClient:
         except Exception as e:
             logger.error(f"Generate error: {e}")
             return ""
-    
+
     async def generate_stream(self, prompt: str) -> AsyncGenerator[str, None]:
         """
         Generate text with streaming response.
-        
+
         Yields chunks as they arrive.
         """
         if not self.available:
             yield "Ollama is not available..."
             return
-        
+
         try:
             import httpx
-            
+
             payload = {
                 "model": self.model,
                 "prompt": prompt,
                 "temperature": self.temperature,
                 "stream": True,
             }
-            
+
             async with httpx.AsyncClient(timeout=60) as client:
                 async with client.stream(
-                    "POST",
-                    f"{self.host}/api/generate",
-                    json=payload
+                    "POST", f"{self.host}/api/generate", json=payload
                 ) as response:
                     async for line in response.aiter_lines():
                         if line:
@@ -124,25 +120,25 @@ class OllamaClient:
                                 yield chunk
         except Exception as e:
             logger.error(f"Stream error: {e}")
-    
+
     async def list_models(self) -> List[Dict]:
         """List available models"""
         try:
             import httpx
-            
+
             async with httpx.AsyncClient(timeout=10) as client:
                 response = await client.get(f"{self.host}/api/tags")
                 if response.status_code == 200:
                     return response.json().get("models", [])
         except Exception as e:
             logger.error(f"List models error: {e}")
-        
+
         return []
 
 
 class ReasoningEngine:
     """LLM-powered reasoning for agent decisions"""
-    
+
     def __init__(self):
         self.client = OllamaClient()
         self.system_prompt = """You are DARK8, an autonomous AI operating system assistant.
@@ -157,11 +153,11 @@ You should:
 
 Always respond in the same language as the user (Polish or English).
 Be concise but informative."""
-    
+
     async def reason(self, user_input: str, context: str = "") -> str:
         """
         Reason about a user command and suggest approach.
-        
+
         Returns strategy/plan for execution.
         """
         prompt = f"""Context: {context}
@@ -175,9 +171,9 @@ Analyze the request and provide:
 4. Any potential challenges
 
 Response (be concise):"""
-        
+
         return await self.client.generate(prompt)
-    
+
     async def code_review(self, code: str) -> str:
         """
         Review code and provide suggestions.
@@ -193,9 +189,9 @@ Code:
 {code}
 
 Review (be concise):"""
-        
+
         return await self.client.generate(prompt)
-    
+
     async def explain_error(self, error: str, context: str = "") -> str:
         """
         Explain an error and suggest fix.
@@ -212,7 +208,7 @@ Please:
 3. Give an example fix
 
 Response (be concise):"""
-        
+
         return await self.client.generate(prompt)
 
 

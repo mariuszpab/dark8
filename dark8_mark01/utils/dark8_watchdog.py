@@ -1,14 +1,13 @@
+import os
 import socket
 import subprocess
-import time
 import threading
-import os
-
+import time
 
 OLLAMA_HOST = "127.0.0.1"
 OLLAMA_PORT = 11434
-CHECK_INTERVAL = 5          # co ile sekund watchdog sprawdza backend
-RESTART_COOLDOWN = 10       # minimalny odstęp między restartami
+CHECK_INTERVAL = 5  # co ile sekund watchdog sprawdza backend
+RESTART_COOLDOWN = 10  # minimalny odstęp między restartami
 LOG_PATH = "dark8_logs/watchdog.log"
 
 

@@ -1,5 +1,7 @@
 """VM for new IRProgram format (stack-based)."""
+
 from typing import Any
+
 from lang.ir.types import IRProgram, OpCode
 from lang.runtime import builtins as runtime_builtins
 

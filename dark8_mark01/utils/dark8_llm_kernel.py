@@ -1,6 +1,7 @@
 import json
+from typing import Literal, Optional
+
 import requests
-from typing import Optional, Literal
 
 # Adres backendu Ollama
 OLLAMA_HOST = "http://127.0.0.1:11434"
@@ -9,21 +10,19 @@ OLLAMA_HOST = "http://127.0.0.1:11434"
 LLMModelName = Literal["llama_main", "qwen_boost"]
 
 LLM_MODELS: dict[LLMModelName, str] = {
-    "llama_main": "llama3.2:1b",       # stabilny, szybki, idealny do kernela
-    "qwen_boost": "qwen2.5:1.5b",      # mocniejszy, do analizy i auto-fix
+    "llama_main": "llama3.2:1b",  # stabilny, szybki, idealny do kernela
+    "qwen_boost": "qwen2.5:1.5b",  # mocniejszy, do analizy i auto-fix
 }
 
 
 class LLMKernelError(Exception):
     """Błąd warstwy kernela LLM."""
+
     pass
 
 
 def _ollama_generate_raw(
-    model: str,
-    prompt: str,
-    system_prompt: Optional[str] = None,
-    timeout: float = 120.0
+    model: str, prompt: str, system_prompt: Optional[str] = None, timeout: float = 120.0
 ) -> str:
     """
     Niski poziom: bezpośrednie wywołanie /api/generate.

@@ -5,8 +5,8 @@ import os
 import shutil
 import subprocess
 
-
 # --- APLIKACJE / PROCESY ---
+
 
 def run_app(app_name: str):
     try:
@@ -25,6 +25,7 @@ def run_python_script(path: str):
 
 
 # --- SYSTEM PLIKÓW ---
+
 
 def delete_file(path: str):
     try:
@@ -102,6 +103,7 @@ def move_file(src: str, dst: str):
 
 
 # --- KATALOGI / SHELL ---
+
 
 def list_dir(path: str = "."):
     try:

@@ -2,7 +2,6 @@
 # Warstwa self-diagnostics dla DARK8
 
 import os
-import sqlite3
 
 from dark8_mark01.dark8_core_paths import DB_PATH, PROJECT_ROOT
 from dark8_mark01.migrations import migration_manager
@@ -25,7 +24,9 @@ def check_migrations_visibility():
     issues = []
 
     if "0004_pending_actions" not in names:
-        issues.append("Migracja 0004_pending_actions NIE jest widoczna w migration_manager.list_available_migrations().")
+        issues.append(
+            "Migracja 0004_pending_actions NIE jest widoczna w migration_manager.list_available_migrations()."
+        )
 
     return {
         "available": names,
@@ -41,15 +42,13 @@ def check_pending_actions_table():
         issues.append("Baza nie istnieje, więc tabela pending_actions też nie istnieje.")
         return {"exists": False, "issues": issues}
 
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='pending_actions'"
-    )
-    row = cur.fetchone()
-    conn.close()
+    from dark8_core.agent.tools.db import run_query
 
-    if row:
+    res = run_query(
+        DB_PATH, "SELECT name FROM sqlite_master WHERE type='table' AND name='pending_actions'"
+    )
+    rows = res.get("rows", []) if res.get("success") else []
+    if rows:
         exists = True
     else:
         issues.append("Brak tabeli pending_actions w bazie.")

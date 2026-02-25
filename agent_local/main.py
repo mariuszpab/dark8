@@ -1,14 +1,15 @@
-from fastapi import FastAPI, HTTPException, Body
-from fastapi.staticfiles import StaticFiles
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from pathlib import Path
 import subprocess
-import yaml
+from pathlib import Path
+
 import requests
+import yaml
+from fastapi import Body, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from fastapi.responses import StreamingResponse
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 CONFIG_PATH = BASE_DIR / "config" / "ollama.yaml"
@@ -57,7 +58,7 @@ def fs_read(path: str):
         raise HTTPException(status_code=404, detail="Not found")
     if safe_path.is_dir():
         return {"type": "dir", "path": str(safe_path)}
-    return {"type": "file", "content": safe_path.read_text(encoding='utf-8')}
+    return {"type": "file", "content": safe_path.read_text(encoding="utf-8")}
 
 
 @app.post("/fs/write")
@@ -71,7 +72,7 @@ def fs_write(path: str, content: str = Body(...)):
         import json
 
         content = json.dumps(content, indent=2, ensure_ascii=False)
-    safe_path.write_text(str(content), encoding='utf-8')
+    safe_path.write_text(str(content), encoding="utf-8")
     return {"ok": True, "path": str(safe_path)}
 
 
@@ -162,4 +163,4 @@ def agent_chat_stream(req: ChatRequest):
         finally:
             r.close()
 
-    return StreamingResponse(iter_stream(), media_type='text/plain')
+    return StreamingResponse(iter_stream(), media_type="text/plain")

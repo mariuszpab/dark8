@@ -4,11 +4,11 @@ Web search and browsing capabilities.
 DuckDuckGo integration for privacy-respecting search.
 """
 
-from typing import List, Dict, Optional
 import re
+from typing import Dict, List, Optional
 
-from dark8_core.logger import logger
 from dark8_core.config import config
+from dark8_core.logger import logger
 
 
 class SearchEngine:
@@ -30,17 +30,14 @@ class SearchEngine:
             import httpx
 
             params = {
-                'q': query,
-                'format': 'json',
+                "q": query,
+                "format": "json",
             }
 
             logger.info(f"[SEARCH] DuckDuckGo: {query}")
 
             async with httpx.AsyncClient(timeout=10) as client:
-                response = await client.get(
-                    'https://api.duckduckgo.com/',
-                    params=params
-                )
+                response = await client.get("https://api.duckduckgo.com/", params=params)
 
                 if response.status_code == 200:
                     data = response.json()
@@ -48,21 +45,25 @@ class SearchEngine:
                     results = []
 
                     # Abstract results
-                    if data.get('AbstractText'):
-                        results.append({
-                            'title': data.get('AbstractTitle', 'Definition'),
-                            'snippet': data.get('AbstractText'),
-                            'url': data.get('AbstractURL', '')
-                        })
+                    if data.get("AbstractText"):
+                        results.append(
+                            {
+                                "title": data.get("AbstractTitle", "Definition"),
+                                "snippet": data.get("AbstractText"),
+                                "url": data.get("AbstractURL", ""),
+                            }
+                        )
 
                     # Related results
-                    for item in data.get('RelatedTopics', [])[:max_results]:
-                        if 'Text' in item:
-                            results.append({
-                                'title': item.get('Text', '')[:100],
-                                'snippet': item.get('Text', ''),
-                                'url': item.get('FirstURL', '')
-                            })
+                    for item in data.get("RelatedTopics", [])[:max_results]:
+                        if "Text" in item:
+                            results.append(
+                                {
+                                    "title": item.get("Text", "")[:100],
+                                    "snippet": item.get("Text", ""),
+                                    "url": item.get("FirstURL", ""),
+                                }
+                            )
 
                     return results[:max_results]
 
@@ -125,8 +126,8 @@ class WebBrowser:
     async def navigate(self, url: str) -> str:
         """Navigate to URL"""
         # Ensure URL has protocol
-        if not url.startswith('http'):
-            url = 'https://' + url
+        if not url.startswith("http"):
+            url = "https://" + url
 
         return await self.fetch_page(url)
 
@@ -135,16 +136,16 @@ class WebBrowser:
         search = SearchEngine()
         results = await search.search_web(query, max_results=1)
 
-        if results and results[0].get('url'):
-            return await self.navigate(results[0]['url'])
+        if results and results[0].get("url"):
+            return await self.navigate(results[0]["url"])
 
         return "No results found"
 
     def extract_text(self, html: str) -> str:
         """Extract readable text from HTML"""
         # Simple HTML stripping (in production use BeautifulSoup)
-        text = re.sub('<[^<]+?>', '', html)
-        text = re.sub('\s+', ' ', text)
+        text = re.sub("<[^<]+?>", "", html)
+        text = re.sub("\s+", " ", text)
         return text.strip()[:1000]
 
 
@@ -161,11 +162,11 @@ class WebAnalyzer:
     async def extract_text_blocks(html: str) -> List[str]:
         """Extract text blocks from HTML"""
         # Remove scripts and styles
-        html = re.sub(r'<script[^>]*>.*?</script>', '', html, flags=re.DOTALL)
-        html = re.sub(r'<style[^>]*>.*?</style>', '', html, flags=re.DOTALL)
+        html = re.sub(r"<script[^>]*>.*?</script>", "", html, flags=re.DOTALL)
+        html = re.sub(r"<style[^>]*>.*?</style>", "", html, flags=re.DOTALL)
 
         # Extract text from common elements
-        blocks = re.findall(r'<(?:p|li|h[1-6])[^>]*>([^<]+)</(?:p|li|h[1-6])>', html)
+        blocks = re.findall(r"<(?:p|li|h[1-6])[^>]*>([^<]+)</(?:p|li|h[1-6])>", html)
         return [block.strip() for block in blocks if block.strip()]
 
 

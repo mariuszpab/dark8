@@ -1,7 +1,6 @@
 from ..command_registry import register_command
 from ..mpx_parser import parse_mpx_file
 
-
 # Słownik makr: nazwa → treść
 _macros = {}
 

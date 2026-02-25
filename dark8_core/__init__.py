@@ -24,6 +24,7 @@ def get_config():
     Use this instead of importing `config` at module import time.
     """
     from .config import config as _config
+
     return _config
 
 
@@ -33,6 +34,7 @@ def get_logger():
     Avoids importing logging machinery until required.
     """
     from .logger import logger as _logger
+
     return _logger
 
 

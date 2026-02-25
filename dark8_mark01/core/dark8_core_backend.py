@@ -1,7 +1,7 @@
-from dark8_mark01.core.vfs.dark8_vfs_manager import Dark8VFSManager
+from dark8_mark01.core.kernel.dark8_ipc_bus import Dark8IPC
 from dark8_mark01.core.kernel.dark8_kernel_scheduler import Dark8KernelScheduler
 from dark8_mark01.core.kernel.dark8_user_task import Dark8UserTask
-from dark8_mark01.core.kernel.dark8_ipc_bus import Dark8IPC
+from dark8_mark01.core.vfs.dark8_vfs_manager import Dark8VFSManager
 
 
 class Dark8CoreBackend:

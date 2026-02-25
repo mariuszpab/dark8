@@ -2,27 +2,24 @@
 # DARK8 OS — Tryb dialogowy (chat) z personą + meta-agentem + migracjami + pending actions
 
 from dark8_mark01.agent.agent_core import (
-    run_agent,
     handle_shell_like,
-    interactive_memory_commands,
     interactive_jobs_commands,
+    interactive_memory_commands,
+    run_agent,
 )
-
 from dark8_mark01.meta.meta_agent import (
     meta_analyze,
-    meta_refactor,
-    meta_extend,
     meta_create,
-    meta_upgrade_dark8_raw,
+    meta_extend,
+    meta_refactor,
     meta_status_dark8,
+    meta_upgrade_dark8_raw,
 )
-
 from dark8_mark01.migrations.pending_actions import (
     create_pending_action,
-    get_latest_pending_action,
     delete_pending_action,
+    get_latest_pending_action,
 )
-
 
 PERSONA = {
     "name": "DARK8",
@@ -75,11 +72,32 @@ def _classify_intent(user_input: str) -> str:
         return "meta_create"
 
     # CELE / AGENT
-    if text.startswith("cel:") or text.startswith("goal:") or "stwórz aplikację" in text or "zbuduj" in text:
+    if (
+        text.startswith("cel:")
+        or text.startswith("goal:")
+        or "stwórz aplikację" in text
+        or "zbuduj" in text
+    ):
         return "goal_agent"
 
     # SHELL
-    if text.startswith(("dir", "ls", "cd ", "python ", "mkdir ", "rmdir ", "rm ", "del ", "cp ", "mv ", "touch ", "cat ", "type ")):
+    if text.startswith(
+        (
+            "dir",
+            "ls",
+            "cd ",
+            "python ",
+            "mkdir ",
+            "rmdir ",
+            "rm ",
+            "del ",
+            "cp ",
+            "mv ",
+            "touch ",
+            "cat ",
+            "type ",
+        )
+    ):
         return "shell"
 
     # PAMIĘĆ
@@ -91,7 +109,12 @@ def _classify_intent(user_input: str) -> str:
         return "jobs"
 
     # META-KONSULTACJA
-    if "przeanalizuj cały kod" in text or "cały dark8" in text or "usprawnij architekturę" in text or "proponuj usprawnienia" in text:
+    if (
+        "przeanalizuj cały kod" in text
+        or "cały dark8" in text
+        or "usprawnij architekturę" in text
+        or "proponuj usprawnienia" in text
+    ):
         return "meta_consult"
 
     return "chat"
@@ -120,7 +143,7 @@ def _handle_meta(user_input: str) -> str:
         )
         return (
             f"Mariusz, chcesz zrefaktorować plik `{path}` zgodnie z instrukcją:\n"
-            f"\"{instruction}\"\n\n"
+            f'"{instruction}"\n\n'
             "Zanim wykonam tę zmianę, chcę mieć Twoje potwierdzenie.\n"
             "Czy mam działać? tak / nie"
         )
@@ -137,7 +160,7 @@ def _handle_meta(user_input: str) -> str:
         )
         return (
             f"Mariusz, chcesz rozszerzyć plik `{path}` zgodnie z instrukcją:\n"
-            f"\"{instruction}\"\n\n"
+            f'"{instruction}"\n\n'
             "Zanim wykonam tę zmianę, chcę mieć Twoje potwierdzenie.\n"
             "Czy mam działać? tak / nie"
         )
@@ -154,7 +177,7 @@ def _handle_meta(user_input: str) -> str:
         )
         return (
             f"Mariusz, chcesz stworzyć nowy moduł `{path}` zgodnie z instrukcją:\n"
-            f"\"{instruction}\"\n\n"
+            f'"{instruction}"\n\n'
             "Zanim wykonam tę zmianę, chcę mieć Twoje potwierdzenie.\n"
             "Czy mam działać? tak / nie"
         )
@@ -187,7 +210,7 @@ def _handle_goal(user_input: str) -> str:
 
     run_agent(goal)
     return (
-        f"Zrealizowałem cel:\n\"{goal}\"\n\n"
+        f'Zrealizowałem cel:\n"{goal}"\n\n'
         f"Plan został wykonany. Jeśli chcesz, mogę teraz pomóc Ci przejrzeć efekty lub zaproponować kolejny krok."
     )
 
@@ -306,7 +329,7 @@ def _execute_pending_action_on_confirm() -> str:
         delete_pending_action(action_id)
         return (
             f"Zastosowałem refaktor pliku `{path}` zgodnie z instrukcją:\n"
-            f"\"{instruction}\"\n\n"
+            f'"{instruction}"\n\n'
             f"Wynik operacji:\n{result}"
         )
 
@@ -317,7 +340,7 @@ def _execute_pending_action_on_confirm() -> str:
         delete_pending_action(action_id)
         return (
             f"Rozszerzyłem plik `{path}` zgodnie z instrukcją:\n"
-            f"\"{instruction}\"\n\n"
+            f'"{instruction}"\n\n'
             f"Wynik operacji:\n{result}"
         )
 
@@ -328,7 +351,7 @@ def _execute_pending_action_on_confirm() -> str:
         delete_pending_action(action_id)
         return (
             f"Stworzyłem nowy moduł `{path}` zgodnie z instrukcją:\n"
-            f"\"{instruction}\"\n\n"
+            f'"{instruction}"\n\n'
             f"Wynik operacji:\n{result}"
         )
 
@@ -360,7 +383,11 @@ def chat_step(user_input: str) -> str:
     if intent == "meta_migration_status":
         return _handle_migration_status()
 
-    if intent.startswith("meta_") and intent not in ["meta_consult", "meta_migration_upgrade", "meta_migration_status"]:
+    if intent.startswith("meta_") and intent not in [
+        "meta_consult",
+        "meta_migration_upgrade",
+        "meta_migration_status",
+    ]:
         return _handle_meta(text)
 
     if intent == "goal_agent":

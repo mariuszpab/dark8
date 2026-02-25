@@ -4,8 +4,8 @@ Core tools for agent execution.
 File ops, shell, git, web client, etc.
 """
 
-import os
 import asyncio
+import os
 from typing import Dict, Optional
 
 from dark8_core.logger import logger
@@ -18,10 +18,10 @@ class FileOperations:
     async def read_file(path: str, max_lines: Optional[int] = None) -> str:
         """Read file content"""
         try:
-            with open(path, 'r') as f:
+            with open(path, "r") as f:
                 content = f.read()
                 if max_lines:
-                    return '\n'.join(content.split('\n')[:max_lines])
+                    return "\n".join(content.split("\n")[:max_lines])
                 return content
         except Exception as e:
             return f"Error reading {path}: {e}"
@@ -30,7 +30,7 @@ class FileOperations:
     async def write_file(path: str, content: str, append: bool = False) -> str:
         """Write to file"""
         try:
-            mode = 'a' if append else 'w'
+            mode = "a" if append else "w"
             os.makedirs(os.path.dirname(path), exist_ok=True)
             with open(path, mode) as f:
                 f.write(content)
@@ -64,6 +64,7 @@ class FileOperations:
         """Copy file"""
         try:
             import shutil
+
             shutil.copy2(src, dst)
             return f"✓ Copied {src} → {dst}"
         except Exception as e:
@@ -89,10 +90,7 @@ class ShellOperations:
             )
 
             try:
-                stdout, stderr = await asyncio.wait_for(
-                    process.communicate(),
-                    timeout=timeout
-                )
+                stdout, stderr = await asyncio.wait_for(process.communicate(), timeout=timeout)
             except asyncio.TimeoutError:
                 process.kill()
                 return f"Command timeout (>{timeout}s)"
@@ -148,6 +146,7 @@ class WebClient:
         """Fetch URL content"""
         try:
             import httpx
+
             async with httpx.AsyncClient(timeout=10) as client:
                 response = await client.get(url)
                 return response.text[:1000]  # First 1000 chars
@@ -159,6 +158,7 @@ class WebClient:
         """POST to URL"""
         try:
             import httpx
+
             async with httpx.AsyncClient(timeout=10) as client:
                 response = await client.post(url, json=data)
                 return response.text[:1000]
@@ -174,11 +174,12 @@ class SystemOperations:
         """Get system information"""
         try:
             import psutil
+
             return {
-                'cpu_percent': psutil.cpu_percent(),
-                'memory_percent': psutil.virtual_memory().percent,
-                'disk_percent': psutil.disk_usage('/').percent,
-                'platform': os.name,
+                "cpu_percent": psutil.cpu_percent(),
+                "memory_percent": psutil.virtual_memory().percent,
+                "disk_percent": psutil.disk_usage("/").percent,
+                "platform": os.name,
             }
         except Exception as e:
             logger.error(f"Error getting system info: {e}")
@@ -190,19 +191,19 @@ class ToolRegistry:
 
     def __init__(self):
         self.tools = {
-            'file_read': FileOperations.read_file,
-            'file_write': FileOperations.write_file,
-            'file_list': FileOperations.list_dir,
-            'file_delete': FileOperations.delete_file,
-            'file_copy': FileOperations.copy_file,
-            'shell_execute': ShellOperations.execute,
-            'shell_which': ShellOperations.which,
-            'git_clone': GitOperations.clone,
-            'git_commit': GitOperations.commit,
-            'git_push': GitOperations.push,
-            'web_fetch': WebClient.fetch,
-            'web_post': WebClient.post,
-            'sys_info': SystemOperations.get_system_info,
+            "file_read": FileOperations.read_file,
+            "file_write": FileOperations.write_file,
+            "file_list": FileOperations.list_dir,
+            "file_delete": FileOperations.delete_file,
+            "file_copy": FileOperations.copy_file,
+            "shell_execute": ShellOperations.execute,
+            "shell_which": ShellOperations.which,
+            "git_clone": GitOperations.clone,
+            "git_commit": GitOperations.commit,
+            "git_push": GitOperations.push,
+            "web_fetch": WebClient.fetch,
+            "web_post": WebClient.post,
+            "sys_info": SystemOperations.get_system_info,
         }
 
     async def execute(self, tool_name: str, **kwargs) -> str:

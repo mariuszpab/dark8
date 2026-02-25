@@ -1,37 +1,38 @@
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QWidget
+
 from PySide6.QtCore import QTimer
+from PySide6.QtWidgets import QApplication, QHBoxLayout, QMainWindow, QWidget
 
-from dark8_mark01.ui.shell.dark8_shell_sidebar import Dark8SideBar
-from dark8_mark01.ui.dark8_ui_main import Dark8MainWindow
 from dark8_mark01.core.dark8_core_backend import Dark8CoreBackend
-
-# Aplikacje systemowe
-from dark8_mark01.ui.terminal.dark8_terminal_window import Dark8TerminalWindow
-from dark8_mark01.ui.dark8_ui_device_manager import DeviceManagerPanel
-from dark8_mark01.ui.file_manager.dark8_file_window import Dark8FileWindow
-from dark8_mark01.ui.settings.dark8_settings_window import Dark8SettingsWindow
-from dark8_mark01.ui.launcher.dark8_launcher_window import Dark8LauncherWindow
-from dark8_mark01.ui.process_manager.dark8_process_manager_window import Dark8ProcessManagerWindow
-from dark8_mark01.ui.system_log.dark8_system_log_window import Dark8SystemLogWindow
-
-# Powiadomienia
-from dark8_mark01.ui.notifications.dark8_notification_toast import Dark8Toast
-from dark8_mark01.ui.notifications.dark8_notification_center import Dark8NotificationCenter
-
-# System Log Bus
-from dark8_mark01.ui.system_log.dark8_system_log_bus import Dark8SystemLogBus
+from dark8_mark01.core.kernel.dark8_kernel_event_dispatcher import Dark8KernelEventDispatcher
 
 # Kernel
 from dark8_mark01.core.kernel.dark8_kernel_heartbeat import Dark8KernelHeartbeat
-from dark8_mark01.core.kernel.dark8_kernel_event_dispatcher import Dark8KernelEventDispatcher
-from dark8_mark01.core.kernel.dark8_kernel_system_monitor import Dark8KernelSystemMonitor
 from dark8_mark01.core.kernel.dark8_kernel_panic import Dark8KernelPanic
 from dark8_mark01.core.kernel.dark8_kernel_scheduler import Dark8KernelScheduler
+from dark8_mark01.core.kernel.dark8_kernel_system_monitor import Dark8KernelSystemMonitor
 from dark8_mark01.core.kernel.dark8_kernel_task import Dark8KernelTask
+from dark8_mark01.ui.dark8_ui_device_manager import DeviceManagerPanel
+from dark8_mark01.ui.dark8_ui_main import Dark8MainWindow
+from dark8_mark01.ui.file_manager.dark8_file_window import Dark8FileWindow
 
 # Kernel Panic UI
 from dark8_mark01.ui.kernel.dark8_kernel_panic_screen import Dark8KernelPanicScreen
+from dark8_mark01.ui.launcher.dark8_launcher_window import Dark8LauncherWindow
+from dark8_mark01.ui.notifications.dark8_notification_center import Dark8NotificationCenter
+
+# Powiadomienia
+from dark8_mark01.ui.notifications.dark8_notification_toast import Dark8Toast
+from dark8_mark01.ui.process_manager.dark8_process_manager_window import Dark8ProcessManagerWindow
+from dark8_mark01.ui.settings.dark8_settings_window import Dark8SettingsWindow
+from dark8_mark01.ui.shell.dark8_shell_sidebar import Dark8SideBar
+
+# System Log Bus
+from dark8_mark01.ui.system_log.dark8_system_log_bus import Dark8SystemLogBus
+from dark8_mark01.ui.system_log.dark8_system_log_window import Dark8SystemLogWindow
+
+# Aplikacje systemowe
+from dark8_mark01.ui.terminal.dark8_terminal_window import Dark8TerminalWindow
 
 
 class Dark8Shell(QMainWindow):

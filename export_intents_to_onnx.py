@@ -1,6 +1,7 @@
 import os
+
 import torch
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 MODEL_DIR = r"C:\DARK8_MARK01\dark8_mark01\nlp\models\intent_trained"
 ONNX_PATH = r"C:\DARK8_MARK01\dark8_mark01\nlp\models\intent_trained\intent_classifier.onnx"

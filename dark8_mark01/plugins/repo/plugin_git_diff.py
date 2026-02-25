@@ -1,6 +1,7 @@
 # plugin_git_diff.py
 import subprocess
 
+
 def handle_GIT_DIFF(task: dict, context: dict) -> dict:
     path = task.get("path")
 
@@ -8,11 +9,7 @@ def handle_GIT_DIFF(task: dict, context: dict) -> dict:
         return {"error": "GIT_DIFF wymaga pola 'path'"}
 
     try:
-        result = subprocess.run(
-            ["git", "-C", path, "diff"],
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(["git", "-C", path, "diff"], capture_output=True, text=True)
         return {
             "status": "ok",
             "path": path,

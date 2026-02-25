@@ -3,10 +3,10 @@
 
 from dark8_mark01.utils.dark8_llm import llm_generate
 
-
 # ============================================================
 # 1. ULEPSZANIE PLANU
 # ============================================================
+
 
 def improve_plan(plan, task_description):
     """
@@ -41,6 +41,7 @@ def improve_plan(plan, task_description):
 # 2. ULEPSZANIE MPX
 # ============================================================
 
+
 def improve_mpx(mpx_text, task_description):
     """
     Ulepsza wygenerowany MPX.
@@ -62,6 +63,7 @@ def improve_mpx(mpx_text, task_description):
 # 3. DIAGNOSTYKA
 # ============================================================
 
+
 def run_self_diagnostics():
     print("=== DIAGNOSTYKA SYSTEMU DARK8 ===")
     print("[OK] Moduł self-improve działa poprawnie.")
@@ -71,6 +73,7 @@ def run_self_diagnostics():
 # ============================================================
 # 4. SAMONAPRAWA
 # ============================================================
+
 
 def run_self_repair():
     print("=== AUTOMATYCZNA NAPRAWA DARK8 ===")

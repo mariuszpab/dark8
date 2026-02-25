@@ -3,16 +3,17 @@
 Enhanced agent with multi-step planning and reasoning.
 """
 
-from typing import List, Dict, Optional
 from dataclasses import dataclass
+from typing import Dict, List, Optional
 
 from dark8_core.logger import logger
-from dark8_core.nlp.advanced import get_advanced_nlp, ParsedCommand
+from dark8_core.nlp.advanced import ParsedCommand, get_advanced_nlp
 
 
 @dataclass
 class ExecutionPlan:
     """Represents a plan to execute a command"""
+
     goal: str
     steps: List[Dict]  # [{"action": "...", "params": {...}, "depends_on": [...]}]
     estimated_time: float
@@ -22,10 +23,10 @@ class ExecutionPlan:
 
 class PlanningEngine:
     """Generate execution plans from commands"""
-    
+
     def __init__(self):
         self.plan_templates = self._load_templates()
-    
+
     def _load_templates(self) -> Dict:
         """Load pre-built execution templates"""
         return {
@@ -62,12 +63,12 @@ class PlanningEngine:
                 "risk": "low",
             },
         }
-    
+
     def generate_plan(self, command: ParsedCommand) -> ExecutionPlan:
         """Generate execution plan from parsed command"""
-        
+
         template = self.plan_templates.get(command.intent)
-        
+
         if not template:
             # Generic plan
             steps = [{"action": "execute", "params": {"intent": command.intent}}]
@@ -77,23 +78,22 @@ class PlanningEngine:
             steps = template["steps"]
             estimated_time = template["estimated_time"]
             risk = template["risk"]
-        
+
         # Adjust based on dependencies
         if command.dependencies:
-            steps.insert(0, {
-                "action": "resolve_dependencies",
-                "params": {"missing": command.dependencies}
-            })
+            steps.insert(
+                0, {"action": "resolve_dependencies", "params": {"missing": command.dependencies}}
+            )
             estimated_time += 30
-        
+
         return ExecutionPlan(
             goal=command.original,
             steps=steps,
             estimated_time=estimated_time,
             risk_level=risk,
-            rollback_plan=self._generate_rollback_plan(command.intent)
+            rollback_plan=self._generate_rollback_plan(command.intent),
         )
-    
+
     def _generate_rollback_plan(self, intent: str) -> Optional[List[Dict]]:
         """Generate rollback plan for risky operations"""
         if intent in ["DEPLOY", "DELETE"]:
@@ -106,16 +106,16 @@ class PlanningEngine:
 
 class ReasoningAgent:
     """Agent with advanced reasoning capabilities"""
-    
+
     def __init__(self):
         self.planning_engine = PlanningEngine()
         self.nlp = get_advanced_nlp()
         self.reasoning_depth = 3  # Max reasoning steps
-    
+
     async def reason_about(self, user_input: str) -> Dict:
         """
         Perform multi-step reasoning about user input.
-        
+
         Returns reasoning chain: {
             'command': ParsedCommand,
             'plan': ExecutionPlan,
@@ -124,11 +124,11 @@ class ReasoningAgent:
             'confidence': float,
         }
         """
-        
+
         # Step 1: Parse command
         command = self.nlp.process(user_input)
         logger.info(f"[REASON-1] Command parsed: {command.intent} ({command.confidence:.1%})")
-        
+
         # Step 2: Check if more context needed
         if command.context_needed and command.dependencies:
             logger.info(f"[REASON-2] Missing context: {command.dependencies}")
@@ -136,23 +136,25 @@ class ReasoningAgent:
                 "status": "need_context",
                 "command": command,
                 "missing": command.dependencies,
-                "suggestion": f"Please provide: {', '.join(command.dependencies)}"
+                "suggestion": f"Please provide: {', '.join(command.dependencies)}",
             }
-        
+
         # Step 3: Generate plan
         plan = self.planning_engine.generate_plan(command)
-        logger.info(f"[REASON-3] Plan generated: {len(plan.steps)} steps, ~{plan.estimated_time}s, risk={plan.risk_level}")
-        
+        logger.info(
+            f"[REASON-3] Plan generated: {len(plan.steps)} steps, ~{plan.estimated_time}s, risk={plan.risk_level}"
+        )
+
         # Step 4: Generate alternatives if risky
         alternatives = []
         if plan.risk_level == "high":
             alternatives = self._generate_alternatives(command, plan)
             logger.info(f"[REASON-4] Generated {len(alternatives)} alternatives")
-        
+
         # Step 5: Recommendation
         recommendation = self._make_recommendation(plan, command.confidence)
         logger.info(f"[REASON-5] Recommendation: {recommendation}")
-        
+
         return {
             "status": "ready",
             "command": command,
@@ -161,13 +163,15 @@ class ReasoningAgent:
             "recommendation": recommendation,
             "confidence": command.confidence,
         }
-    
-    def _generate_alternatives(self, command: ParsedCommand, primary_plan: ExecutionPlan) -> List[ExecutionPlan]:
+
+    def _generate_alternatives(
+        self, command: ParsedCommand, primary_plan: ExecutionPlan
+    ) -> List[ExecutionPlan]:
         """Generate alternative approaches"""
         # This would generate different strategies
         # For now, return empty list
         return []
-    
+
     def _make_recommendation(self, plan: ExecutionPlan, confidence: float) -> str:
         """Make recommendation based on plan quality"""
         if confidence < 0.5:
@@ -180,36 +184,38 @@ class ReasoningAgent:
 
 class AdvancedAgent:
     """Agent combining planning, reasoning, and execution"""
-    
+
     def __init__(self):
         self.reasoning_agent = ReasoningAgent()
         self.execution_history: List[Dict] = []
-    
+
     async def process_with_reasoning(self, user_input: str) -> Dict:
         """Process command with full reasoning"""
-        
+
         logger.info(f"[AGENT] Processing: {user_input[:50]}...")
-        
+
         # Get reasoning result
         reasoning_result = await self.reasoning_agent.reason_about(user_input)
-        
+
         if reasoning_result["status"] == "need_context":
             logger.warning("Command needs more context")
             return reasoning_result
-        
+
         # Ready to execute
         plan = reasoning_result["plan"]
         command = reasoning_result["command"]
-        
+
         logger.info(f"[EXECUTE] Starting plan: {plan.goal}")
-        
+
         # Log to history
-        self.execution_history.append({
-            "input": user_input,
-            "intent": command.intent,
-            "plan_steps": len(plan.steps),
-        })
-        
+        self.execution_history.append(
+            {
+                "input": user_input,
+                "intent": command.intent,
+                "plan_steps": len(plan.steps),
+            }
+        )
+
         return reasoning_result
 
 

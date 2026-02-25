@@ -7,7 +7,6 @@ from loguru import logger as loguru_logger
 
 from dark8_core.config import config
 
-
 # Remove default handler
 loguru_logger.remove()
 

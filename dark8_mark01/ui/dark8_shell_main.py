@@ -1,13 +1,13 @@
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QWidget
+
 from PySide6.QtCore import QTimer
+from PySide6.QtWidgets import QApplication, QHBoxLayout, QMainWindow, QWidget
 
-from dark8_mark01.ui.shell.dark8_shell_sidebar import Dark8SideBar
-from dark8_mark01.ui.dark8_ui_main import Dark8MainWindow
 from dark8_mark01.core.dark8_core_backend import Dark8CoreBackend
-
-from dark8_mark01.ui.terminal.dark8_terminal_window import Dark8TerminalWindow
 from dark8_mark01.ui.dark8_ui_device_manager import DeviceManagerPanel
+from dark8_mark01.ui.dark8_ui_main import Dark8MainWindow
+from dark8_mark01.ui.shell.dark8_shell_sidebar import Dark8SideBar
+from dark8_mark01.ui.terminal.dark8_terminal_window import Dark8TerminalWindow
 
 
 class Dark8Shell(QMainWindow):

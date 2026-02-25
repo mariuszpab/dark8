@@ -1,8 +1,8 @@
 # task_runner.py
 # Główny silnik wykonywania scenariuszy .mpx
 
-from dark8_mark01.core.task_router import TaskRouter
 from dark8_mark01.core.task_context import TaskContext
+from dark8_mark01.core.task_router import TaskRouter
 
 
 class TaskRunner:

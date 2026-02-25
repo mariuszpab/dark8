@@ -2,8 +2,7 @@
 # DARK8 OS — Warstwa procesów / jobów
 
 import time
-from typing import Dict, Any, List
-
+from typing import Any, Dict, List
 
 _jobs: Dict[int, Dict[str, Any]] = {}
 _next_id: int = 1

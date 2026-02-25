@@ -4,7 +4,7 @@ Web browser with automation capabilities.
 JavaScript execution, form filling, screenshots.
 """
 
-from typing import Optional, List, Dict
+from typing import Dict, List, Optional
 
 from dark8_core.logger import logger
 
@@ -43,7 +43,7 @@ class WebAutomation:
         result = {
             "success": False,
             "filled_fields": len(form_data),
-            "message": "Form filling not yet implemented"
+            "message": "Form filling not yet implemented",
         }
         return result
 
@@ -66,10 +66,7 @@ class AdvancedBrowser:
         self.visited_urls: List[str] = []
 
     async def search_and_analyze(
-        self,
-        query: str,
-        max_results: int = 5,
-        analyze_content: bool = True
+        self, query: str, max_results: int = 5, analyze_content: bool = True
     ) -> Dict:
         """
         Search and analyze results in depth.
@@ -86,7 +83,7 @@ class AdvancedBrowser:
             }]
         }
         """
-        from dark8_core.browser import search_web, fetch_webpage, analyze_content
+        from dark8_core.browser import analyze_content, fetch_webpage, search_web
 
         logger.info(f"🔍 Advanced search: {query}")
 
@@ -94,7 +91,7 @@ class AdvancedBrowser:
 
         analyzed = []
         for result in results[:max_results]:
-            url = result.get('url', '')
+            url = result.get("url", "")
 
             # Fetch full content
             content = await fetch_webpage(url)
@@ -102,7 +99,7 @@ class AdvancedBrowser:
             # Analyze if requested
             if analyze_content and content:
                 summary = analyze_content(content)
-                result['content_summary'] = summary
+                result["content_summary"] = summary
 
             analyzed.append(result)
             self.visited_urls.append(url)

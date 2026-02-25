@@ -1,8 +1,8 @@
-import sys
 import os
+import sys
 
+from .commands import exec_ops, file_ops, flow_ops, patch_ops
 from .mpx_parser import parse_mpx_file
-from .commands import file_ops, patch_ops, exec_ops, flow_ops
 from .plugins import load_plugins
 
 

@@ -3,8 +3,8 @@
 Multi-language code generation with ML/AI support.
 """
 
-from typing import Dict, List, Optional
 from dataclasses import dataclass
+from typing import Dict, List, Optional
 
 from dark8_core.logger import logger
 
@@ -12,6 +12,7 @@ from dark8_core.logger import logger
 @dataclass
 class CodeTemplate:
     """Represents a code template"""
+
     name: str
     language: str
     description: str
@@ -22,7 +23,7 @@ class CodeTemplate:
 
 class LanguageSupport:
     """Language-specific code generation rules"""
-    
+
     LANGUAGES = {
         "python": {
             "ext": ".py",
@@ -79,7 +80,7 @@ class LanguageSupport:
             "entry": "Main.java",
         },
     }
-    
+
     @classmethod
     def get_language_config(cls, language: str) -> Optional[Dict]:
         """Get language configuration"""
@@ -88,10 +89,10 @@ class LanguageSupport:
 
 class AdvancedCodeGenerator:
     """Generate production-quality code in multiple languages"""
-    
+
     def __init__(self):
         self.templates: Dict[str, List[CodeTemplate]] = self._load_templates()
-    
+
     def _load_templates(self) -> Dict:
         """Load code generation templates"""
         return {
@@ -102,7 +103,7 @@ class AdvancedCodeGenerator:
             "rust": self._rust_templates(),
             "java": self._java_templates(),
         }
-    
+
     def _python_templates(self) -> List[CodeTemplate]:
         """Python code templates"""
         return [
@@ -110,7 +111,7 @@ class AdvancedCodeGenerator:
                 name="FastAPI Server",
                 language="python",
                 description="FastAPI REST API server",
-                content='''from fastapi import FastAPI
+                content="""from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
 
@@ -149,7 +150,7 @@ async def delete_item(item_id: int) -> dict:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)
-''',
+""",
                 variables=["project_name"],
                 min_confidence=0.8,
             ),
@@ -177,7 +178,7 @@ class ${Model}(models.Model):
                 min_confidence=0.75,
             ),
         ]
-    
+
     def _javascript_templates(self) -> List[CodeTemplate]:
         """JavaScript code templates"""
         return [
@@ -211,53 +212,43 @@ app.listen(PORT, () => {
                 min_confidence=0.8,
             ),
         ]
-    
+
     def _typescript_templates(self) -> List[CodeTemplate]:
         """TypeScript code templates"""
         return []
-    
+
     def _go_templates(self) -> List[CodeTemplate]:
         """Go code templates"""
         return []
-    
+
     def _rust_templates(self) -> List[CodeTemplate]:
         """Rust code templates"""
         return []
-    
+
     def _java_templates(self) -> List[CodeTemplate]:
         """Java code templates"""
         return []
-    
-    def generate_code(
-        self,
-        template_name: str,
-        language: str,
-        variables: Dict[str, str]
-    ) -> str:
+
+    def generate_code(self, template_name: str, language: str, variables: Dict[str, str]) -> str:
         """Generate code from template"""
-        
+
         templates = self.templates.get(language, [])
         template = next((t for t in templates if t.name == template_name), None)
-        
+
         if not template:
             logger.error(f"Template not found: {template_name}")
             return ""
-        
+
         code = template.content
         for var, value in variables.items():
             code = code.replace(f"${{{var}}}", value)
-        
+
         logger.info(f"✓ Generated {language} code: {template_name}")
         return code
-    
-    def generate_test_file(
-        self,
-        language: str,
-        function_name: str,
-        function_code: str
-    ) -> str:
+
+    def generate_test_file(self, language: str, function_name: str, function_code: str) -> str:
         """Generate test file for a function"""
-        
+
         if language == "python":
             return f'''import pytest
 from .{function_name.lower()} import {function_name}
@@ -273,7 +264,7 @@ def test_{function_name}_error_handling():
         {function_name}(None)
 '''
         elif language == "javascript":
-            return f'''const {function_name} = require('./{{function_name.toLowerCase()}}');
+            return f"""const {function_name} = require('./{{function_name.toLowerCase()}}');
 
 describe('{function_name}', () => {{
   test('should work', () => {{
@@ -285,12 +276,12 @@ describe('{function_name}', () => {{
     expect(() => {function_name}(null)).toThrow();
   }});
 }});
-'''
+"""
         return ""
-    
+
     def suggest_architecture(self, project_type: str, language: str) -> Dict:
         """Suggest architecture for project type"""
-        
+
         suggestions = {
             "api": {
                 "structure": ["app", "models", "routes", "middleware", "tests", "config"],
@@ -310,19 +301,19 @@ describe('{function_name}', () => {{
                 "entry_point": "cli.main",
             },
         }
-        
+
         return suggestions.get(project_type, {})
 
 
 class TestGenerator:
     """Generate comprehensive test suites"""
-    
+
     @staticmethod
     def generate_unit_tests(code: str, language: str) -> str:
         """Generate unit tests from code"""
         # Placeholder for test generation
         return f"# Unit tests for {language}"
-    
+
     @staticmethod
     def generate_integration_tests(services: List[str], language: str) -> str:
         """Generate integration tests"""

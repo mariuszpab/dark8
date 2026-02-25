@@ -1,6 +1,7 @@
 # memory_context.py
 # Pamięć krótkotrwała (sesyjna)
 
+
 class MemoryContext:
     def __init__(self):
         self.session = {}

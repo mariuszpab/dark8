@@ -1,20 +1,12 @@
 # dark8_web_integration.py
 # Integracja web_fetch, web_search i web_analyze z DARK8
 
-from dark8_mark01.utils.dark8_web_fetch import (
-    fetch_page,
-    fetch_file,
-)
-from dark8_mark01.utils.dark8_web_search import (
-    simple_search,
-)
-from dark8_mark01.utils.dark8_web_analyze import (
-    extract_text_from_html,
-    analyze_html,
-)
-
+from dark8_mark01.utils.dark8_web_analyze import analyze_html, extract_text_from_html
+from dark8_mark01.utils.dark8_web_fetch import fetch_file, fetch_page
+from dark8_mark01.utils.dark8_web_search import simple_search
 
 # === HANDLERY INTERNETOWE ===
+
 
 def handle_web_fetch(cmd: str) -> str:
     """

@@ -1,11 +1,11 @@
 import sys
 
-from PySide6.QtWidgets import QApplication, QMainWindow, QSplitter, QWidget
 from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication, QMainWindow, QSplitter, QWidget
 
-from dark8_mark01.ui.dark8_ui_theme import Dark8Theme
 from dark8_mark01.ui.dark8_ui_ai_panel import AIPanel
 from dark8_mark01.ui.dark8_ui_desktop import DesktopPanel
+from dark8_mark01.ui.dark8_ui_theme import Dark8Theme
 
 
 class Dark8MainWindow(QMainWindow):
@@ -33,13 +33,11 @@ class Dark8MainWindow(QMainWindow):
         self._apply_styles()
 
     def _apply_styles(self):
-        self.setStyleSheet(
-            """
+        self.setStyleSheet("""
             QMainWindow {
                 background-color: #05060A;
             }
-            """
-        )
+            """)
 
 
 def main():

@@ -1,5 +1,5 @@
-from dark8_mark01.agent.agent_runner import run_agent_task
 from dark8_mark01.agent.agent_plan import build_plan
+from dark8_mark01.agent.agent_runner import run_agent_task
 
 
 def run_autonomic_task(task_description: str):
@@ -11,8 +11,4 @@ def run_autonomic_task(task_description: str):
     plan = build_plan(task_description)
     result = run_agent_task(task_description)
 
-    return {
-        "task": task_description,
-        "plan": plan,
-        "result": result
-    }
+    return {"task": task_description, "plan": plan, "result": result}

@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
-from PySide6.QtCore import Qt, QTimer, QPropertyAnimation, QRect, QEasingCurve
+from PySide6.QtCore import QEasingCurve, QPropertyAnimation, QRect, Qt, QTimer
+from PySide6.QtWidgets import QLabel, QVBoxLayout, QWidget
 
 
 class Dark8Toast(QWidget):

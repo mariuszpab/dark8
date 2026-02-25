@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QApplication, QPushButton
-from PySide6.QtCore import QPropertyAnimation, QRect, QEasingCurve, Qt, Signal
+from PySide6.QtCore import QEasingCurve, QPropertyAnimation, QRect, Qt, Signal
+from PySide6.QtWidgets import QApplication, QHBoxLayout, QPushButton, QWidget
 
 from dark8_mark01.ui.launcher.dark8_launcher_panel import Dark8LauncherPanel
 

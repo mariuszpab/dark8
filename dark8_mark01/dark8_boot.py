@@ -4,21 +4,15 @@
 import time
 
 from dark8_mark01.agent.agent_core import (
+    handle_shell_like,
+    interactive_jobs_commands,
+    interactive_memory_commands,
+    mode_meta,
     run_agent,
     run_agent_as_job,
-    handle_shell_like,
-    interactive_memory_commands,
-    interactive_jobs_commands,
-    mode_meta,
 )
-
-from dark8_mark01.memory.memory_manager import (
-    get_projects,
-    get_goals,
-)
-
 from dark8_mark01.dark8_chat import run_chat_loop
-
+from dark8_mark01.memory.memory_manager import get_goals, get_projects
 
 BANNER = r"""
 ██████╗  █████╗ ██████╗ ██╗  ██╗ █████╗ 

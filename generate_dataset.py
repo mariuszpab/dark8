@@ -1,6 +1,6 @@
 import json
-import random
 import os
+import random
 
 OUTPUT_PATH = r"C:\DARK8_MARK01\dataset_intents.jsonl"
 
@@ -83,7 +83,6 @@ INTENTS = {
         "znajdź dokument {file} w katalogu {path}",
         "wyszukaj {file} na dysku",
     ],
-
     # ===== APLIKACJE =====
     "RUN_APP": [
         "uruchom {app}",
@@ -155,7 +154,6 @@ INTENTS = {
         "startuj {app} jako administrator",
         "uruchom program {app} z uprawnieniami admina",
     ],
-
     # ===== SYSTEM =====
     "SHUTDOWN": [
         "wyłącz komputer",
@@ -227,7 +225,6 @@ INTENTS = {
         "posprzątaj pliki tymczasowe",
         "wyczyść śmieci systemowe",
     ],
-
     # ===== SIEĆ =====
     "CHECK_CONNECTION": [
         "sprawdź połączenie z internetem",
@@ -285,7 +282,6 @@ INTENTS = {
         "pokaż szczegóły połączenia sieciowego",
         "wyświetl parametry sieci",
     ],
-
     # ===== USŁUGI =====
     "START_SERVICE": [
         "uruchom usługę {service}",
@@ -322,7 +318,6 @@ INTENTS = {
         "pokaż usługi systemowe",
         "wyświetl serwisy systemowe",
     ],
-
     # ===== LOGI =====
     "LOG": [
         "zapisz log systemowy",
@@ -341,28 +336,71 @@ INTENTS = {
 }
 
 NAMES = [
-    "test", "backup", "logi", "projekty", "dane", "temp", "config", "raporty",
-    "system", "archiwum", "debug", "output", "sesje", "cache", "obrazy"
+    "test",
+    "backup",
+    "logi",
+    "projekty",
+    "dane",
+    "temp",
+    "config",
+    "raporty",
+    "system",
+    "archiwum",
+    "debug",
+    "output",
+    "sesje",
+    "cache",
+    "obrazy",
 ]
 
 FILES = [
-    "log.txt", "dane.txt", "raport.docx", "config.ini", "output.log",
-    "backup.zip", "test.txt", "dane.csv", "debug.log", "system.log"
+    "log.txt",
+    "dane.txt",
+    "raport.docx",
+    "config.ini",
+    "output.log",
+    "backup.zip",
+    "test.txt",
+    "dane.csv",
+    "debug.log",
+    "system.log",
 ]
 
 FILES2 = [
-    "nowy_log.txt", "nowe_dane.txt", "raport2.docx", "config2.ini",
-    "output2.log", "backup2.zip", "test2.txt", "dane2.csv"
+    "nowy_log.txt",
+    "nowe_dane.txt",
+    "raport2.docx",
+    "config2.ini",
+    "output2.log",
+    "backup2.zip",
+    "test2.txt",
+    "dane2.csv",
 ]
 
 APPS = [
-    "Chrome", "Notepad", "VLC", "Spotify", "Discord", "Steam",
-    "Visual Studio Code", "PowerShell", "Explorer", "Teams"
+    "Chrome",
+    "Notepad",
+    "VLC",
+    "Spotify",
+    "Discord",
+    "Steam",
+    "Visual Studio Code",
+    "PowerShell",
+    "Explorer",
+    "Teams",
 ]
 
 PROCS = [
-    "chrome.exe", "explorer.exe", "vlc.exe", "spotify.exe", "discord.exe",
-    "steam.exe", "code.exe", "powershell.exe", "cmd.exe", "teams.exe"
+    "chrome.exe",
+    "explorer.exe",
+    "vlc.exe",
+    "spotify.exe",
+    "discord.exe",
+    "steam.exe",
+    "code.exe",
+    "powershell.exe",
+    "cmd.exe",
+    "teams.exe",
 ]
 
 PATHS = [
@@ -376,8 +414,14 @@ PATHS = [
 ]
 
 HOSTS = [
-    "google.com", "microsoft.com", "github.com", "onet.pl", "wp.pl",
-    "localhost", "192.168.0.1", "8.8.8.8"
+    "google.com",
+    "microsoft.com",
+    "github.com",
+    "onet.pl",
+    "wp.pl",
+    "localhost",
+    "192.168.0.1",
+    "8.8.8.8",
 ]
 
 URLS = [
@@ -389,18 +433,32 @@ URLS = [
 ]
 
 SERVICES = [
-    "Spooler", "W32Time", "Dhcp", "Dnscache", "WinDefend",
-    "MpsSvc", "BITS", "EventLog", "LanmanServer", "LanmanWorkstation"
+    "Spooler",
+    "W32Time",
+    "Dhcp",
+    "Dnscache",
+    "WinDefend",
+    "MpsSvc",
+    "BITS",
+    "EventLog",
+    "LanmanServer",
+    "LanmanWorkstation",
 ]
 
 SETTINGS = [
-    "głośność", "jasność ekranu", "tryb zasilania", "tapetę", "język systemu",
-    "czas systemowy", "strefę czasową", "rozmiar czcionki", "tryb nocny", "aktualizacje automatyczne"
+    "głośność",
+    "jasność ekranu",
+    "tryb zasilania",
+    "tapetę",
+    "język systemu",
+    "czas systemowy",
+    "strefę czasową",
+    "rozmiar czcionki",
+    "tryb nocny",
+    "aktualizacje automatyczne",
 ]
 
-SSIDS = [
-    "DomWiFi", "BiuroNet", "Hotspot", "Siec5G", "Router123"
-]
+SSIDS = ["DomWiFi", "BiuroNet", "Hotspot", "Siec5G", "Router123"]
 
 
 def generate_examples_for_intent(intent, templates, count):

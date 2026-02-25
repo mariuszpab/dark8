@@ -3,11 +3,10 @@
 System initialization and startup sequence.
 """
 
-
-from dark8_core.logger import logger
-from dark8_core.config import config
-from dark8_core.nlp import get_nlp_engine
 from dark8_core.agent import get_agent
+from dark8_core.config import config
+from dark8_core.logger import logger
+from dark8_core.nlp import get_nlp_engine
 
 
 async def check_system():
@@ -17,9 +16,9 @@ async def check_system():
     from dark8_core.tools import ShellOperations
 
     requirements = {
-        'python': 'python3 --version',
-        'git': 'git --version',
-        'curl': 'curl --version',
+        "python": "python3 --version",
+        "git": "git --version",
+        "curl": "curl --version",
     }
 
     available = {}
@@ -38,11 +37,12 @@ async def check_ollama():
 
     try:
         import httpx
+
         async with httpx.AsyncClient(timeout=5) as client:
             response = await client.get(f"{config.OLLAMA_HOST}/api/tags")
             if response.status_code == 200:
                 logger.info("✓ Ollama is running")
-                models = response.json().get('models', [])
+                models = response.json().get("models", [])
                 logger.info(f"  Available models: {len(models)}")
                 return True
     except Exception as e:
@@ -55,13 +55,22 @@ async def check_ollama():
 async def initialize_database():
     """Initialize database"""
     logger.info("Initializing database...")
-
     try:
-        # TODO: Create SQLite database and tables
-        logger.info("✓ Database initialized")
-        return True
+        # Delegate bootstrap to agent DB tool for consistency
+        try:
+            from dark8_core.agent.tools.db import db_execute
+
+            res = await db_execute({"action": "bootstrap"})
+            if res.get("success"):
+                logger.info("✓ Database initialized")
+                return True
+            logger.error("✗ Database initialization failed: %s", res.get("error"))
+            return False
+        except Exception as e:
+            logger.error("✗ Database initialization delegate failed: %s", e)
+            return False
     except Exception as e:
-        logger.error(f"✗ Database initialization failed: {e}")
+        logger.error("✗ Database initialization failed: %s", e)
         return False
 
 

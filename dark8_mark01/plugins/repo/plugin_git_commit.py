@@ -1,6 +1,7 @@
 # plugin_git_commit.py
 import subprocess
 
+
 def handle_GIT_COMMIT(task: dict, context: dict) -> dict:
     path = task.get("path")
     message = task.get("message")
@@ -12,16 +13,10 @@ def handle_GIT_COMMIT(task: dict, context: dict) -> dict:
         return {"error": "GIT_COMMIT wymaga pola 'message'"}
 
     try:
-        _add = subprocess.run(
-            ["git", "-C", path, "add", "."],
-            capture_output=True,
-            text=True
-        )
+        _add = subprocess.run(["git", "-C", path, "add", "."], capture_output=True, text=True)
 
         commit = subprocess.run(
-            ["git", "-C", path, "commit", "-m", message],
-            capture_output=True,
-            text=True
+            ["git", "-C", path, "commit", "-m", message], capture_output=True, text=True
         )
 
         return {

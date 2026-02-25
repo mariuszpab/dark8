@@ -4,27 +4,30 @@ This module preserves the old tuple-based `generate_ir` for backward
 compatibility but also exposes `generate_ir_program` which builds a
 structured `IRProgram` (see `lang.ir.types`).
 """
+
 from typing import List
+
 from lang.ast.nodes import (
-    Module,
-    VarDecl,
-    FunctionDef,
-    Literal,
     BinaryOp,
-    VarRef,
-    Expr,
-    Return,
-    Call,
-    If,
-    While,
     Break,
+    Call,
     Continue,
+    Expr,
+    FunctionDef,
+    If,
+    Literal,
+    Module,
+    Return,
+    VarDecl,
+    VarRef,
+    While,
 )
-from lang.ir.types import OpCode, Instruction, IRProgram
+from lang.ir.types import Instruction, IRProgram, OpCode
 
 
 class IRGenerator:
     """Backward-compatible generator that emits simple tuple-style IR."""
+
     def __init__(self):
         self.instructions = []
 
@@ -42,6 +45,7 @@ class IRGenerator:
 
     def gen_node(self, node):
         from lang.ir.generator import IRGenerator  # noqa: F401
+
         if isinstance(node, VarDecl):
             self.gen_expr(node.value)
             self.instructions.append(("STORE", node.name))

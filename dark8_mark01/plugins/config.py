@@ -1,8 +1,8 @@
-import os
 import json
+import os
+
 from ..command_registry import register_command
 from ..commands.patch_ops import load_json_lenient
-
 
 # Globalna konfiguracja
 _config = {}
@@ -11,6 +11,7 @@ _config = {}
 # ---------------------------------------------------------
 # Pomocnicze funkcje do pracy ze ścieżkami
 # ---------------------------------------------------------
+
 
 def _set_path(data, path, value):
     keys = path.split(".")
@@ -35,6 +36,7 @@ def _get_path(data, path):
 # ---------------------------------------------------------
 # Komendy CONFIG
 # ---------------------------------------------------------
+
 
 def handle_config_load(command, args, block):
     path = args.strip()
@@ -110,6 +112,7 @@ def handle_config_get(command, args, block):
 # ---------------------------------------------------------
 # Rejestracja pluginu
 # ---------------------------------------------------------
+
 
 def register():
     register_command("CONFIG_LOAD", handle_config_load)

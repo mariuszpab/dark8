@@ -1,4 +1,4 @@
-from ..command_registry import register_command, list_commands
+from ..command_registry import list_commands, register_command
 
 
 def handle_command_list(command, args, block):

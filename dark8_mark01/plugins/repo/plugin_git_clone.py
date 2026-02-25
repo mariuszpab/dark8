@@ -1,6 +1,7 @@
 # plugin_git_clone.py
 import subprocess
 
+
 def handle_GIT_CLONE(task: dict, context: dict) -> dict:
     url = task.get("url")
     dest = task.get("path")
@@ -12,11 +13,7 @@ def handle_GIT_CLONE(task: dict, context: dict) -> dict:
         return {"error": "GIT_CLONE wymaga pola 'path'"}
 
     try:
-        result = subprocess.run(
-            ["git", "clone", url, dest],
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(["git", "clone", url, dest], capture_output=True, text=True)
         return {
             "status": "ok",
             "url": url,

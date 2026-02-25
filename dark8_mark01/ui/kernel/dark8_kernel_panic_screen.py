@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout
 from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QLabel, QPushButton, QVBoxLayout, QWidget
 
 
 class Dark8KernelPanicScreen(QWidget):
@@ -13,9 +13,7 @@ class Dark8KernelPanicScreen(QWidget):
 
         # pełny ekran, bez ramek, zawsze na wierzchu
         self.setWindowFlags(
-            Qt.FramelessWindowHint |
-            Qt.WindowStaysOnTopHint |
-            Qt.CustomizeWindowHint
+            Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.CustomizeWindowHint
         )
         self.showFullScreen()
 

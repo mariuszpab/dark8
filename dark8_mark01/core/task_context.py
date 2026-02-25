@@ -1,6 +1,7 @@
 # task_context.py
 # Kontekst wykonywania zadań DARK8
 
+
 class TaskContext:
     """
     Kontekst wykonywania scenariusza .mpx:

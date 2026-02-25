@@ -1,4 +1,5 @@
 import pytest
+
 import dark8_mark01.plugins as plugins
 
 
@@ -17,7 +18,7 @@ plugins._registered.append('{name}')
 """
     names = ["file", "web", "tools", "core", "extra"]
     for n in names:
-        _write_module(tmp_path, n, content.replace('{name}', n))
+        _write_module(tmp_path, n, content.replace("{name}", n))
 
     # point package __path__ to tmp_path
     monkeypatch.setattr(plugins, "__path__", [str(tmp_path)])
@@ -59,8 +60,8 @@ def register():
     if hasattr(plugins, "_registered"):
         delattr(plugins, "_registered")
     plugins.load_plugins(paths=[str(tmp_path)], package_name=plugins.__name__)
-    assert 'parent' in plugins._registered
-    assert 'parent.child' in plugins._registered
+    assert "parent" in plugins._registered
+    assert "parent.child" in plugins._registered
 
 
 def test_end_to_end_call_plugin_function(tmp_path, monkeypatch):
@@ -88,8 +89,8 @@ def register():
 
     plugins.load_plugins(paths=[str(tmp_path)], package_name=plugins.__name__)
 
-    assert 'do_work_plugin' in plugins._registered
-    assert hasattr(plugins, 'do_work')
+    assert "do_work_plugin" in plugins._registered
+    assert hasattr(plugins, "do_work")
     assert plugins.do_work(3) == 6
 
 

@@ -1,6 +1,7 @@
 # plugin_write_file.py
 import os
 
+
 def handle_WRITE_FILE(task: dict, context: dict) -> dict:
     path = task.get("path")
     content = task.get("content")

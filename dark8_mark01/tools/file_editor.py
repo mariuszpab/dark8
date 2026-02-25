@@ -1,6 +1,7 @@
 # file_editor.py
 # DARK8 OS — Tools Layer: edycja plików
 
+
 def append_to_file(path: str, content: str):
     try:
         with open(path, "a", encoding="utf-8") as f:

@@ -4,13 +4,14 @@ FastAPI backend for web dashboard.
 Real-time monitoring, metrics, agent status.
 """
 
-from typing import Dict, List
 from dataclasses import dataclass
+from typing import Dict, List
 
 
 @dataclass
 class DashboardMetric:
     """Single dashboard metric"""
+
     name: str
     value: float
     unit: str
@@ -20,14 +21,14 @@ class DashboardMetric:
 
 class DashboardDataProvider:
     """Provide real-time data for dashboard"""
-    
+
     def __init__(self):
         self.metrics_cache: Dict = {}
         self.update_interval = 5  # seconds
-    
+
     def get_system_overview(self) -> Dict:
         """Get overall system status"""
-        
+
         return {
             "status": "operational",
             "uptime_hours": 48,
@@ -39,12 +40,12 @@ class DashboardDataProvider:
                 "learning_system": {"status": "operational", "tasks_learned": 347},
                 "code_generator": {"status": "operational", "languages": 6},
                 "security": {"status": "operational", "rbac_enabled": True},
-            }
+            },
         }
-    
+
     def get_performance_metrics(self) -> Dict:
         """Get performance metrics"""
-        
+
         return {
             "cpu_percent": 23.5,
             "memory_percent": 45.2,
@@ -55,10 +56,10 @@ class DashboardDataProvider:
             "errors_per_hour": 2,
             "uptime_percent": 99.98,
         }
-    
+
     def get_nlp_metrics(self) -> Dict:
         """NLP engine metrics"""
-        
+
         return {
             "intents_processed": 1247,
             "average_confidence": 0.845,
@@ -67,10 +68,10 @@ class DashboardDataProvider:
             "entities_recognized": 5847,
             "languages_supported": 1,  # Polish
         }
-    
+
     def get_agent_metrics(self) -> Dict:
         """Multi-agent system metrics"""
-        
+
         return {
             "total_agents": 5,
             "agents_active": 5,
@@ -80,10 +81,10 @@ class DashboardDataProvider:
             "coordination_efficiency": 0.93,
             "message_throughput": 234,
         }
-    
+
     def get_learning_metrics(self) -> Dict:
         """Learning system metrics"""
-        
+
         return {
             "patterns_learned": 342,
             "success_rate_improvement": 0.12,  # 12%
@@ -92,16 +93,16 @@ class DashboardDataProvider:
             "anti_patterns_detected": 18,
             "knowledge_base_entries": 2847,
         }
-    
+
     def get_task_history(self, limit: int = 10) -> List[Dict]:
         """Recent task history"""
-        
+
         return [
             {
                 "task_id": f"task_{i}",
                 "intent": "BUILD_APP",
                 "status": "completed",
-                "duration_seconds": 234 + i*10,
+                "duration_seconds": 234 + i * 10,
                 "success": True,
                 "timestamp": str(__import__("datetime").datetime.now()),
             }
@@ -111,11 +112,11 @@ class DashboardDataProvider:
 
 class DashboardEndpoints:
     """FastAPI endpoint definitions"""
-    
+
     @staticmethod
     def get_endpoints() -> List[Dict]:
         """List all dashboard endpoints"""
-        
+
         return [
             {
                 "path": "/dashboard/overview",
@@ -164,24 +165,24 @@ class DashboardEndpoints:
 
 class RealtimeUpdater:
     """Push real-time updates to dashboard"""
-    
+
     def __init__(self):
         self.connected_clients: List = []
         self.update_queue: List[Dict] = []
-    
+
     def broadcast_update(self, update: Dict) -> int:
         """Broadcast update to all connected clients"""
-        
+
         self.update_queue.append(update)
-        
+
         # In real implementation, would use WebSocket
         clients_notified = len(self.connected_clients)
-        
+
         return clients_notified
-    
+
     def get_pending_updates(self) -> List[Dict]:
         """Get updates waiting to be sent"""
-        
+
         updates = self.update_queue.copy()
         self.update_queue.clear()
         return updates
@@ -189,12 +190,12 @@ class RealtimeUpdater:
 
 class DashboardHTML:
     """Generate dashboard HTML"""
-    
+
     @staticmethod
     def get_dashboard_html() -> str:
         """Get complete HTML for dashboard"""
-        
-        return '''
+
+        return """
 <!DOCTYPE html>
 <html>
 <head>
@@ -294,7 +295,7 @@ class DashboardHTML:
     </script>
 </body>
 </html>
-        '''
+        """
 
 
 __all__ = [

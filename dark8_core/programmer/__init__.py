@@ -4,12 +4,12 @@ Code generation, analysis, and automation.
 Build complete applications from natural language specifications.
 """
 
+import json
 from pathlib import Path
 from typing import Dict, List
-import json
 
-from dark8_core.logger import logger
 from dark8_core.config import config
+from dark8_core.logger import logger
 
 
 class ProjectScaffold:
@@ -48,20 +48,23 @@ if __name__ == "__main__":
     }
 
     REACT_SCAFFOLD = {
-        "package.json": json.dumps({
-            "name": "dark8-react-app",
-            "version": "0.1.0",
-            "dependencies": {
-                "react": "^18.2.0",
-                "react-dom": "^18.2.0",
-                "react-scripts": "5.0.1"
+        "package.json": json.dumps(
+            {
+                "name": "dark8-react-app",
+                "version": "0.1.0",
+                "dependencies": {
+                    "react": "^18.2.0",
+                    "react-dom": "^18.2.0",
+                    "react-scripts": "5.0.1",
+                },
+                "scripts": {
+                    "start": "react-scripts start",
+                    "build": "react-scripts build",
+                    "test": "react-scripts test",
+                },
             },
-            "scripts": {
-                "start": "react-scripts start",
-                "build": "react-scripts build",
-                "test": "react-scripts test"
-            }
-        }, indent=2),
+            indent=2,
+        ),
         "public/index.html": """<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -99,12 +102,12 @@ class CodeGenerator:
         # Generate models
         models_code = "from django.db import models\n\n"
         for model in models:
-            fields = model.get('fields', [])
-            model_name = model.get('name', 'Model')
+            fields = model.get("fields", [])
+            model_name = model.get("name", "Model")
             models_code += f"class {model_name}(models.Model):\n"
             for field in fields:
-                field_type = field.get('type', 'CharField')
-                field_name = field.get('name', 'field')
+                field_type = field.get("type", "CharField")
+                field_name = field.get("name", "field")
                 models_code += f"    {field_name} = models.{field_type}()\n"
             models_code += "\n"
 
@@ -122,9 +125,9 @@ class CodeGenerator:
         # Generate routes
         routes_code = "\nfrom fastapi import FastAPI\napp = FastAPI()\n\n"
         for endpoint in endpoints:
-            method = endpoint.get('method', 'GET').lower()
-            path = endpoint.get('path', '/')
-            description = endpoint.get('description', '')
+            method = endpoint.get("method", "GET").lower()
+            path = endpoint.get("path", "/")
+            description = endpoint.get("description", "")
 
             routes_code += f'@app.{method}("{path}")\n'
             routes_code += f'def {path.replace("/", "_")}():\n'
@@ -165,19 +168,19 @@ class CodeAnalyzer:
 
             # Write code to temp file
             temp_file = "/tmp/dark8_analyze.py"
-            with open(temp_file, 'w') as f:
+            with open(temp_file, "w") as f:
                 f.write(code)
 
             # Run pylint
             result = await ShellOperations.execute(f"pylint {temp_file} --disable=all --enable=E,F")
 
             return {
-                'status': 'analyzed',
-                'errors': result,
+                "status": "analyzed",
+                "errors": result,
             }
         except Exception as e:
             logger.error(f"Analysis error: {e}")
-            return {'status': 'error', 'message': str(e)}
+            return {"status": "error", "message": str(e)}
 
 
 class ApplicationBuilder:
@@ -192,15 +195,17 @@ class ApplicationBuilder:
             logger.info(f"Building Python app: {project_dir}")
 
             # Install dependencies
-            result = await ShellOperations.execute(f"cd {project_dir} && pip install -r requirements.txt")
+            result = await ShellOperations.execute(
+                f"cd {project_dir} && pip install -r requirements.txt"
+            )
 
             return {
-                'status': 'success',
-                'message': 'Application built successfully',
-                'build_output': result,
+                "status": "success",
+                "message": "Application built successfully",
+                "build_output": result,
             }
         except Exception as e:
-            return {'status': 'error', 'message': str(e)}
+            return {"status": "error", "message": str(e)}
 
     @staticmethod
     async def build_docker(project_dir: str, app_name: str) -> str:
@@ -241,21 +246,23 @@ class MasterProgrammer:
             'database': 'postgresql|sqlite',
         }
         """
-        app_name = spec.get('name', 'dark8_app')
-        app_type = spec.get('type', 'fastapi')
+        app_name = spec.get("name", "dark8_app")
+        app_type = spec.get("type", "fastapi")
 
         logger.info(f"[MASTER] Building {app_type} application: {app_name}")
 
         try:
             # Step 1: Generate code
-            if app_type == 'django':
-                files = self.code_generator.generate_django_app(app_name, spec.get('models', []))
-            elif app_type == 'fastapi':
-                files = self.code_generator.generate_fastapi_app(app_name, spec.get('endpoints', []))
-            elif app_type == 'react':
-                files = self.code_generator.generate_react_app(app_name, spec.get('components', []))
+            if app_type == "django":
+                files = self.code_generator.generate_django_app(app_name, spec.get("models", []))
+            elif app_type == "fastapi":
+                files = self.code_generator.generate_fastapi_app(
+                    app_name, spec.get("endpoints", [])
+                )
+            elif app_type == "react":
+                files = self.code_generator.generate_react_app(app_name, spec.get("components", []))
             else:
-                return {'status': 'error', 'message': f'Unknown app type: {app_type}'}
+                return {"status": "error", "message": f"Unknown app type: {app_type}"}
 
             # Step 2: Create project structure
             project_dir = config.DATA_DIR / app_name
@@ -270,16 +277,16 @@ class MasterProgrammer:
             build_result = await self.builder.build_python_app(str(project_dir))
 
             return {
-                'status': 'success',
-                'app_name': app_name,
-                'app_type': app_type,
-                'project_dir': str(project_dir),
-                'files_created': len(files),
-                'build': build_result,
+                "status": "success",
+                "app_name": app_name,
+                "app_type": app_type,
+                "project_dir": str(project_dir),
+                "files_created": len(files),
+                "build": build_result,
             }
         except Exception as e:
             logger.error(f"Build error: {e}")
-            return {'status': 'error', 'message': str(e)}
+            return {"status": "error", "message": str(e)}
 
 
 __all__ = [

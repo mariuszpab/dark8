@@ -4,15 +4,14 @@ Database models, migrations, and storage abstractions.
 """
 
 from datetime import datetime
-from typing import Optional, List, Dict
+from typing import Dict, List, Optional
 
-from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, JSON, Float
+from sqlalchemy import JSON, Column, DateTime, Float, Integer, String, Text, create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session, sessionmaker
 
 from dark8_core.config import config
 from dark8_core.logger import logger
-
 
 # SQLAlchemy setup
 Base = declarative_base()
@@ -22,8 +21,10 @@ Base = declarative_base()
 # Models
 # ============================================================================
 
+
 class Project(Base):
     """Represents a saved project"""
+
     __tablename__ = "projects"
 
     id = Column(Integer, primary_key=True)
@@ -38,6 +39,7 @@ class Project(Base):
 
 class Conversation(Base):
     """Represents a user-AI conversation"""
+
     __tablename__ = "conversations"
 
     id = Column(Integer, primary_key=True)
@@ -52,6 +54,7 @@ class Conversation(Base):
 
 class Task(Base):
     """Represents an executed task"""
+
     __tablename__ = "tasks"
 
     id = Column(String(100), primary_key=True)
@@ -66,6 +69,7 @@ class Task(Base):
 
 class KnowledgeItem(Base):
     """Code snippets, patterns, templates in knowledge base"""
+
     __tablename__ = "knowledge_base"
 
     id = Column(Integer, primary_key=True)
@@ -80,6 +84,7 @@ class KnowledgeItem(Base):
 
 class AuditLog(Base):
     """Audit trail for security and debugging"""
+
     __tablename__ = "audit_log"
 
     id = Column(Integer, primary_key=True)
@@ -94,6 +99,7 @@ class AuditLog(Base):
 # ============================================================================
 # Database Manager
 # ============================================================================
+
 
 class DatabaseManager:
     """Manage database operations"""
@@ -130,7 +136,9 @@ class DatabaseManager:
         """Get database session"""
         return self.SessionLocal()
 
-    def add_project(self, name: str, description: str, path: str, app_type: str, metadata: Dict = None) -> Project:
+    def add_project(
+        self, name: str, description: str, path: str, app_type: str, metadata: Dict = None
+    ) -> Project:
         """Add project to database"""
         session = self.get_session()
         try:
@@ -139,7 +147,7 @@ class DatabaseManager:
                 description=description,
                 path=path,
                 app_type=app_type,
-                metadata=metadata or {}
+                metadata=metadata or {},
             )
             session.add(project)
             session.commit()
@@ -168,7 +176,15 @@ class DatabaseManager:
         finally:
             session.close()
 
-    def add_conversation(self, user_input: str, ai_response: str, intent: str, confidence: float, entities: Dict = None, context: Dict = None) -> Conversation:
+    def add_conversation(
+        self,
+        user_input: str,
+        ai_response: str,
+        intent: str,
+        confidence: float,
+        entities: Dict = None,
+        context: Dict = None,
+    ) -> Conversation:
         """Save conversation"""
         session = self.get_session()
         try:
@@ -178,7 +194,7 @@ class DatabaseManager:
                 intent=intent,
                 confidence=confidence,
                 entities=entities or {},
-                context=context or {}
+                context=context or {},
             )
             session.add(conversation)
             session.commit()
@@ -195,11 +211,23 @@ class DatabaseManager:
         """Get recent conversations"""
         session = self.get_session()
         try:
-            return session.query(Conversation).order_by(Conversation.timestamp.desc()).limit(limit).all()
+            return (
+                session.query(Conversation)
+                .order_by(Conversation.timestamp.desc())
+                .limit(limit)
+                .all()
+            )
         finally:
             session.close()
 
-    def add_audit_log(self, action: str, user_input: str, parameters: Dict = None, result: str = "success", error_message: str = None) -> AuditLog:
+    def add_audit_log(
+        self,
+        action: str,
+        user_input: str,
+        parameters: Dict = None,
+        result: str = "success",
+        error_message: str = None,
+    ) -> AuditLog:
         """Log audit event"""
         session = self.get_session()
         try:
@@ -208,7 +236,7 @@ class DatabaseManager:
                 user_input=user_input,
                 parameters=parameters or {},
                 result=result,
-                error_message=error_message
+                error_message=error_message,
             )
             session.add(log)
             session.commit()

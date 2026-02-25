@@ -1,5 +1,6 @@
 """Simple stack VM for DARK8 IR."""
-from typing import List, Tuple, Any, Dict
+
+from typing import Any, Dict, List, Tuple
 
 Instr = Tuple
 

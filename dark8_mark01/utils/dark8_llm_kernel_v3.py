@@ -1,6 +1,7 @@
 import json
+from typing import Literal, Optional
+
 import requests
-from typing import Optional, Literal
 
 OLLAMA_HOST = "http://127.0.0.1:11434"
 
@@ -15,10 +16,13 @@ LLM_MODELS: dict[LLMModelName, str] = {
 
 class LLMKernelError(Exception):
     """Błąd warstwy kernela LLM (do logów / auto-fix / watchdog)."""
+
     pass
 
 
-def _ollama_generate_raw(model: str, prompt: str, system_prompt: Optional[str] = None, timeout: Optional[float] = 120.0) -> str:
+def _ollama_generate_raw(
+    model: str, prompt: str, system_prompt: Optional[str] = None, timeout: Optional[float] = 120.0
+) -> str:
     """
     Niski poziom: bezpośrednie wywołanie /api/generate.
     - timeout w sekundach (None = brak limitu, ale lepiej mieć twardy limit)
@@ -40,7 +44,9 @@ def _ollama_generate_raw(model: str, prompt: str, system_prompt: Optional[str] =
     except requests.exceptions.Timeout as e:
         raise LLMKernelError(f"[LLM TIMEOUT] Model '{model}' przekroczył limit czasu: {e}") from e
     except requests.exceptions.ConnectionError as e:
-        raise LLMKernelError(f"[LLM CONNECTION] Brak połączenia z Ollama na {OLLAMA_HOST}: {e}") from e
+        raise LLMKernelError(
+            f"[LLM CONNECTION] Brak połączenia z Ollama na {OLLAMA_HOST}: {e}"
+        ) from e
     except Exception as e:
         raise LLMKernelError(f"[LLM ERROR] Wyjątek HTTP podczas komunikacji z Ollama: {e}") from e
 

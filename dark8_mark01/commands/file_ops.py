@@ -1,5 +1,6 @@
 import os
 import shutil
+
 from ..command_registry import register_command
 
 
@@ -14,6 +15,7 @@ def log_error(msg):
 # ---------------------------------------------------------
 # GŁÓWNY HANDLER
 # ---------------------------------------------------------
+
 
 def handle(command, args, block):
     """
@@ -55,6 +57,7 @@ def handle(command, args, block):
 # ---------------------------------------------------------
 # IMPLEMENTACJE KOMEND
 # ---------------------------------------------------------
+
 
 def write_file(path, block):
     path = path.strip()
@@ -188,6 +191,7 @@ def list_dir(path):
 # ---------------------------------------------------------
 # REJESTRACJA KOMEND W SYSTEMIE
 # ---------------------------------------------------------
+
 
 def register():
     """

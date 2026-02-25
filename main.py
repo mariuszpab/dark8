@@ -1,6 +1,10 @@
 import tkinter as tk
 from tkinter import scrolledtext
+
+from dark8_mark01.command_registry import get_handler
+from dark8_mark01.commands import register_all_commands
 from dark8_mark01.nlp.nlp_engine import interpret as interpret_polish
+from dark8_mark01.plugins import load_plugins
 from dark8_mark01.utils.dark8_backend import ensure_backend_ready
 from dark8_mark01.utils.dark8_watchdog import start_watchdog
 
@@ -8,9 +12,6 @@ from dark8_mark01.utils.dark8_watchdog import start_watchdog
 # 1. ŁADOWANIE DARK8 (core + pluginy)
 # ---------------------------------------------------------
 
-from dark8_mark01.commands import register_all_commands
-from dark8_mark01.plugins import load_plugins
-from dark8_mark01.command_registry import get_handler
 
 # Rejestracja komend core
 register_all_commands()
@@ -22,7 +23,6 @@ load_plugins()
 # ---------------------------------------------------------
 # 2. NLP — silnik interpretacji języka naturalnego
 # ---------------------------------------------------------
-
 
 
 # ---------------------------------------------------------
@@ -39,6 +39,7 @@ start_watchdog()
 # ---------------------------------------------------------
 # 4. Wykonanie komendy DARK8 z przechwyceniem outputu
 # ---------------------------------------------------------
+
 
 def execute_dark8_command(cmd, args, block, log_callback):
     handler = get_handler(cmd)
@@ -68,6 +69,7 @@ def execute_dark8_command(cmd, args, block, log_callback):
 # ---------------------------------------------------------
 # 5. UI — okno dialogowe
 # ---------------------------------------------------------
+
 
 def start_ui():
     root = tk.Tk()

@@ -1,7 +1,7 @@
-from dark8_mark01.core.kernel.dark8_kernel_task import Dark8KernelTask, Dark8TaskState
-from dark8_mark01.core.kernel.dark8_kernel_event_dispatcher import Dark8KernelEventDispatcher
-from dark8_mark01.core.kernel.dark8_ipc_bus import Dark8IPC
 from dark8_mark01.core.kernel.dark8_init_task import Dark8InitTask
+from dark8_mark01.core.kernel.dark8_ipc_bus import Dark8IPC
+from dark8_mark01.core.kernel.dark8_kernel_event_dispatcher import Dark8KernelEventDispatcher
+from dark8_mark01.core.kernel.dark8_kernel_task import Dark8KernelTask, Dark8TaskState
 
 
 class Dark8KernelScheduler:

@@ -11,7 +11,7 @@ def scan_wifi_networks():
         result = subprocess.check_output(
             ["nmcli", "-t", "-f", "SSID,SIGNAL", "device", "wifi", "list"],
             encoding="utf-8",
-            errors="ignore"
+            errors="ignore",
         )
     except Exception:
         return []

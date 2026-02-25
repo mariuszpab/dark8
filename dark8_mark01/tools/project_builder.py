@@ -1,5 +1,6 @@
 import os
 
+
 def create_project(path: str, template: str = "default"):
     os.makedirs(path, exist_ok=True)
 

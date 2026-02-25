@@ -1,11 +1,11 @@
-import time
-import threading
 import os
-import psutil
 import socket
+import threading
+import time
+
+import psutil
 
 from dark8_mark01.utils.dark8_backend import ensure_backend_ready
-
 
 STATE_LOG = "dark8_logs/state_monitor.log"
 CHECK_INTERVAL = 10  # sekundy
@@ -61,9 +61,7 @@ def _monitor_loop():
 
         # 3. Zapisz stan
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-        _log(
-            f"[{timestamp}] Backend={backend_status} | CPU={cpu}% | RAM={ram}% | PROC={processes}"
-        )
+        _log(f"[{timestamp}] Backend={backend_status} | CPU={cpu}% | RAM={ram}% | PROC={processes}")
 
         time.sleep(CHECK_INTERVAL)
 

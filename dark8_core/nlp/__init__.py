@@ -4,7 +4,7 @@ NLP module for Polish language understanding.
 Handles intent classification, entity extraction, and semantic parsing.
 """
 
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Optional, Tuple
 
 from dark8_core.logger import logger
 
@@ -87,8 +87,15 @@ class PolishParser:
         """Simple tokenization for Polish text"""
         # Replace Polish characters
         replacements = {
-            'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l',
-            'ń': 'n', 'ó': 'o', 'ś': 's', 'ź': 'z', 'ż': 'z'
+            "ą": "a",
+            "ć": "c",
+            "ę": "e",
+            "ł": "l",
+            "ń": "n",
+            "ó": "o",
+            "ś": "s",
+            "ź": "z",
+            "ż": "z",
         }
 
         for old, new in replacements.items():
@@ -141,12 +148,12 @@ class NLPEngine:
         entities = self.entity_extractor.extract(normalized)
 
         result = {
-            'original_text': user_input,
-            'normalized_text': normalized,
-            'tokens': tokens,
-            'intent': intent,
-            'confidence': confidence,
-            'entities': entities,
+            "original_text": user_input,
+            "normalized_text": normalized,
+            "tokens": tokens,
+            "intent": intent,
+            "confidence": confidence,
+            "entities": entities,
         }
 
         return result
@@ -154,7 +161,7 @@ class NLPEngine:
     def is_valid_command(self, user_input: str, min_confidence: float = 0.5) -> bool:
         """Check if input is a valid command"""
         result = self.understand(user_input)
-        return result['confidence'] >= min_confidence and result['intent'] != 'UNKNOWN'
+        return result["confidence"] >= min_confidence and result["intent"] != "UNKNOWN"
 
 
 # Singleton instance

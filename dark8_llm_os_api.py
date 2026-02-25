@@ -13,11 +13,7 @@ def _call_ollama(model: str, prompt: str) -> str:
     """
     Niskopoziomowe wywołanie backendu LLM.
     """
-    payload = {
-        "model": model,
-        "prompt": prompt,
-        "stream": False
-    }
+    payload = {"model": model, "prompt": prompt, "stream": False}
 
     try:
         response = requests.post(OLLAMA_URL, json=payload, timeout=TIMEOUT)
@@ -32,6 +28,7 @@ def _call_ollama(model: str, prompt: str) -> str:
 # 1. ANALIZA KODU
 # ---------------------------------------------------------
 
+
 def llm_analysis_task(prompt: str) -> str:
     """
     Analiza kodu — model techniczny.
@@ -42,6 +39,7 @@ def llm_analysis_task(prompt: str) -> str:
 # ---------------------------------------------------------
 # 2. AUTO-FIX KODU
 # ---------------------------------------------------------
+
 
 def llm_fix_task(prompt: str) -> str:
     """
@@ -54,6 +52,7 @@ def llm_fix_task(prompt: str) -> str:
 # 3. PLANOWANIE ZADAŃ (AGENT)
 # ---------------------------------------------------------
 
+
 def llm_plan_task(prompt: str) -> str:
     """
     Tworzenie planu działania — model reasoning.
@@ -64,6 +63,7 @@ def llm_plan_task(prompt: str) -> str:
 # ---------------------------------------------------------
 # 4. WYKONANIE ZADAŃ (AGENT)
 # ---------------------------------------------------------
+
 
 def llm_execute_task(prompt: str) -> str:
     """

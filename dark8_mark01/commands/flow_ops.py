@@ -1,7 +1,8 @@
-from ..command_registry import register_command
-import time
-import sys
 import os
+import sys
+import time
+
+from ..command_registry import register_command
 
 
 def log_info(msg):
@@ -31,6 +32,7 @@ def is_block_active():
 # GŁÓWNY HANDLER
 # ---------------------------------------------------------
 
+
 def handle(command, args, block):
     if command == "LOG":
         return log_command(args, block)
@@ -57,6 +59,7 @@ def handle(command, args, block):
 # LOG
 # ---------------------------------------------------------
 
+
 def log_command(args, block):
     if block and block.strip():
         msg = block.strip()
@@ -74,6 +77,7 @@ def log_command(args, block):
 # SLEEP
 # ---------------------------------------------------------
 
+
 def sleep_command(args):
     try:
         seconds = float(args.strip())
@@ -89,6 +93,7 @@ def sleep_command(args):
 # ---------------------------------------------------------
 # EXIT
 # ---------------------------------------------------------
+
 
 def exit_command(args):
     code = 0
@@ -106,6 +111,7 @@ def exit_command(args):
 # ---------------------------------------------------------
 # IF_EXISTS / IF_NOT_EXISTS / END_IF
 # ---------------------------------------------------------
+
 
 def if_exists(path):
     path = path.strip()
@@ -143,6 +149,7 @@ def end_if():
 # ---------------------------------------------------------
 # REJESTRACJA KOMEND
 # ---------------------------------------------------------
+
 
 def register():
     for cmd in [

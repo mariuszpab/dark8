@@ -13,8 +13,8 @@ from requests.exceptions import RequestException
 
 from dark8_mark01.utils.dark8_security import validate_url_or_raise
 
-
 # === DUCKDUCKGO SEARCH ===
+
 
 def search_duckduckgo(query: str) -> dict:
     """
@@ -35,15 +35,13 @@ def search_duckduckgo(query: str) -> dict:
 
 # === WIKIPEDIA SEARCH ===
 
+
 def search_wikipedia(query: str, lang: str = "pl") -> dict:
     """
     Wyszukiwanie przez Wikipedia API.
     Zwraca streszczenie i podstawowe dane.
     """
-    url = (
-        f"https://{lang}.wikipedia.org/api/rest_v1/page/summary/"
-        f"{query.replace(' ', '_')}"
-    )
+    url = f"https://{lang}.wikipedia.org/api/rest_v1/page/summary/" f"{query.replace(' ', '_')}"
 
     validate_url_or_raise(url)
 
@@ -56,6 +54,7 @@ def search_wikipedia(query: str, lang: str = "pl") -> dict:
 
 
 # === WYSZUKIWANIE ŁĄCZONE ===
+
 
 def web_search(query: str, lang: str = "pl") -> dict:
     """
@@ -87,6 +86,7 @@ def web_search(query: str, lang: str = "pl") -> dict:
 
 # === WYSZUKIWANIE PROSTE (tekstowe) ===
 
+
 def simple_search(query: str) -> str:
     """
     Zwraca prosty tekstowy wynik wyszukiwania:
@@ -110,4 +110,3 @@ def simple_search(query: str) -> str:
         pass
 
     return f"Brak wyników dla: {query}"
-

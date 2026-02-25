@@ -1,6 +1,7 @@
 # agent_mpx_builder.py
 # Budowanie prostego scenariusza .mpx z planu
 
+
 def build_mpx_from_plan(plan: list[dict], task_description: str) -> str:
     """
     Z listy kroków buduje prosty scenariusz .mpx.

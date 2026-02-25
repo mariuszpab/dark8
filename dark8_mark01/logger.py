@@ -1,4 +1,5 @@
 """Simple logger for dark8_mark01 (ASCII-only, safe fallback)."""
+
 try:
     from loguru import logger as _logger
 except Exception:

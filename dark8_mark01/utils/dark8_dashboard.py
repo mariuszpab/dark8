@@ -1,9 +1,9 @@
 import curses
-import time
 import os
 import socket
-import psutil
+import time
 
+import psutil
 
 LOG_DIR = "dark8_logs"
 BACKEND_LOG = os.path.join(LOG_DIR, "backend.log")
@@ -51,11 +51,11 @@ def _draw_dashboard(stdscr):
     stdscr.nodelay(True)
 
     curses.start_color()
-    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)   # normal
-    curses.init_pair(2, curses.COLOR_BLUE, curses.COLOR_BLACK)    # box
-    curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)    # title
-    curses.init_pair(4, curses.COLOR_GREEN, curses.COLOR_BLACK)   # OK
-    curses.init_pair(5, curses.COLOR_RED, curses.COLOR_BLACK)     # ERROR
+    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)  # normal
+    curses.init_pair(2, curses.COLOR_BLUE, curses.COLOR_BLACK)  # box
+    curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)  # title
+    curses.init_pair(4, curses.COLOR_GREEN, curses.COLOR_BLACK)  # OK
+    curses.init_pair(5, curses.COLOR_RED, curses.COLOR_BLACK)  # ERROR
     curses.init_pair(6, curses.COLOR_YELLOW, curses.COLOR_BLACK)  # WARN
 
     while True:

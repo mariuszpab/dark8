@@ -9,10 +9,9 @@
 # Ten moduł ma chronić przed przypadkowym rozwaleniem systemu,
 # ale NIE ma ograniczać samorozwoju, samoaktualizacji ani pracy na dużych plikach.
 
-import os
 import ipaddress
+import os
 from urllib.parse import urlparse
-
 
 # Katalog sandboxowy na pliki pobierane / tworzone przez DARK8
 DEFAULT_DOWNLOAD_DIR = "dark8_downloads"
@@ -20,16 +19,19 @@ DEFAULT_DOWNLOAD_DIR = "dark8_downloads"
 
 class SecurityError(Exception):
     """Bazowy wyjątek bezpieczeństwa."""
+
     pass
 
 
 class UnsafeURLError(SecurityError):
     """Niebezpieczny lub niedozwolony URL."""
+
     pass
 
 
 class UnsafePathError(SecurityError):
     """Niebezpieczna ścieżka pliku."""
+
     pass
 
 
@@ -44,6 +46,7 @@ def ensure_download_dir(download_dir: str = DEFAULT_DOWNLOAD_DIR) -> str:
 
 
 # === URL SECURITY ===
+
 
 def is_safe_url(url: str) -> bool:
     """
@@ -92,6 +95,7 @@ def validate_url_or_raise(url: str) -> None:
 
 # === PATH / SANDBOX SECURITY ===
 
+
 def sanitize_filename(name: str) -> str:
     """
     Proste czyszczenie nazwy pliku:
@@ -137,6 +141,7 @@ def is_path_within_root(path: str, root_dir: str) -> bool:
 
 
 # === HIGH-LEVEL API ===
+
 
 def prepare_download_target(
     url: str,

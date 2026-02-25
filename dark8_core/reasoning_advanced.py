@@ -4,13 +4,14 @@ Chain-of-Thought prompting and multi-step reasoning.
 Complex task decomposition and solving.
 """
 
-from typing import List, Dict
 from dataclasses import dataclass
+from typing import Dict, List
 
 
 @dataclass
 class ReasoningStep:
     """Single step in reasoning chain"""
+
     step_number: int
     thought: str
     action: str
@@ -202,8 +203,7 @@ class ComplexReasoningEngine:
             "reliability": 0.3,
         }
         rankings = self.tot_engine.evaluate_branches(
-            [[a for a in app] for app in approaches],
-            criteria
+            [[a for a in app] for app in approaches], criteria
         )
 
         # Select best approach

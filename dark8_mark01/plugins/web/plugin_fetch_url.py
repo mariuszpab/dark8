@@ -4,8 +4,8 @@
 # Użycie w .mpx:
 # FETCH_URL https://example.com
 
-from dark8_mark01.utils.dark8_web_fetch import fetch_page
 from dark8_mark01.utils.dark8_web_analyze import extract_text_from_html
+from dark8_mark01.utils.dark8_web_fetch import fetch_page
 
 
 def handle_FETCH_URL(task: dict, context: dict) -> dict:

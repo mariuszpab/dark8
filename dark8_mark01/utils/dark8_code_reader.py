@@ -1,4 +1,5 @@
 import os
+
 from dark8_llm_os_api import llm_analysis_task
 
 MAX_FILE_CHARS = 8000
@@ -50,7 +51,10 @@ def analyze_dark8_project(root_dir):
         code = _read_file_safe(path)
 
         if len(code) > MAX_FILE_CHARS:
-            code = code[:MAX_FILE_CHARS] + f"\n\n# [DARK8] Plik przycięty do {MAX_FILE_CHARS} znaków.\n"
+            code = (
+                code[:MAX_FILE_CHARS]
+                + f"\n\n# [DARK8] Plik przycięty do {MAX_FILE_CHARS} znaków.\n"
+            )
 
         prompt = f"""
 Jesteś modułem analitycznym DARK8-OS.

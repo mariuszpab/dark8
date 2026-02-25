@@ -1,11 +1,10 @@
+import os
 import threading
 import time
-import os
 
-from dark8_mark01.utils.dark8_code_reader import analyze_dark8_project
 from dark8_mark01.utils.dark8_auto_fix import auto_fix_dark8_project
 from dark8_mark01.utils.dark8_backend import ensure_backend_ready
-
+from dark8_mark01.utils.dark8_code_reader import analyze_dark8_project
 
 # Co ile minut wykonywać snapshot
 SNAPSHOT_INTERVAL_MIN = 15

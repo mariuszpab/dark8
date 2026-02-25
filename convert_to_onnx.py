@@ -1,8 +1,8 @@
-import os
 import json
-import torch
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
+import os
 
+import torch
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 MODEL_NAME = "dkleczek/bert-base-polish-uncased-v1"
 OUTPUT_DIR = "C:/DARK8_MARK01/dark8_mark01/nlp/models/intent_onnx"
@@ -17,7 +17,7 @@ LABELS = [
     "MAKE_DIR",
     "APPEND_FILE",
     "RUN_UPDATES",
-    "LOG"
+    "LOG",
 ]
 
 with open(os.path.join(OUTPUT_DIR, "labels.json"), "w", encoding="utf-8") as f:
@@ -25,10 +25,7 @@ with open(os.path.join(OUTPUT_DIR, "labels.json"), "w", encoding="utf-8") as f:
 
 print("Pobieram tokenizer i model...")
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-model = AutoModelForSequenceClassification.from_pretrained(
-    MODEL_NAME,
-    num_labels=len(LABELS)
-)
+model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=len(LABELS))
 
 print("Tworzę przykładowe wejście...")
 dummy = tokenizer("test", return_tensors="pt")
@@ -43,9 +40,9 @@ torch.onnx.export(
     dynamic_axes={
         "input_ids": {0: "batch", 1: "sequence"},
         "attention_mask": {0: "batch", 1: "sequence"},
-        "logits": {0: "batch"}
+        "logits": {0: "batch"},
     },
-    opset_version=14
+    opset_version=14,
 )
 
 print("Zapisuję tokenizer...")

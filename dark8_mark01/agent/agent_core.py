@@ -3,34 +3,25 @@
 
 from dark8_mark01.agent.planner import plan_from_goal
 from dark8_mark01.agent.task_manager import execute_plan
-
+from dark8_mark01.core.dispatcher import dispatch
+from dark8_mark01.jobs.job_manager import (
+    create_job,
+    fail_job,
+    finish_job,
+    get_job,
+    kill_job,
+    list_jobs,
+    start_job,
+)
 from dark8_mark01.memory.memory_manager import (
+    get_goals,
+    get_history,
+    get_projects,
     remember_goal,
     remember_project,
     remember_step,
-    get_projects,
-    get_goals,
-    get_history,
 )
-
-from dark8_mark01.core.dispatcher import dispatch
-
-from dark8_mark01.jobs.job_manager import (
-    create_job,
-    start_job,
-    finish_job,
-    fail_job,
-    list_jobs,
-    get_job,
-    kill_job,
-)
-
-from dark8_mark01.meta.meta_agent import (
-    meta_analyze,
-    meta_refactor,
-    meta_extend,
-    meta_create,
-)
+from dark8_mark01.meta.meta_agent import meta_analyze, meta_create, meta_extend, meta_refactor
 
 
 def handle_shell_like(text: str):
@@ -116,9 +107,7 @@ def interactive_jobs_commands(text: str):
             return "JOBS_LIST", "Brak aktywnych jobów."
         lines = []
         for j in jobs:
-            lines.append(
-                f"[{j['id']}] {j['status']} | {j['goal']} | created: {j['created_at']}"
-            )
+            lines.append(f"[{j['id']}] {j['status']} | {j['goal']} | created: {j['created_at']}")
         return "JOBS_LIST", "\n".join(lines)
 
     if stripped.startswith("job "):

@@ -3,7 +3,6 @@
 
 from dark8_mark01.dark8_intents_pl import rozpoznaj_intencje
 
-
 SEPARATORY = [
     " i ",
     " oraz ",

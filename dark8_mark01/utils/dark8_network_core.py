@@ -16,13 +16,10 @@
 import requests
 from requests.exceptions import RequestException
 
-from dark8_mark01.utils.dark8_security import (
-    validate_url_or_raise,
-    prepare_download_target,
-)
-
+from dark8_mark01.utils.dark8_security import prepare_download_target, validate_url_or_raise
 
 # === Pobieranie tekstu / HTML ===
+
 
 def fetch_text(url: str, encoding: str | None = None) -> str:
     """
@@ -45,6 +42,7 @@ def fetch_text(url: str, encoding: str | None = None) -> str:
 
 # === Pobieranie JSON ===
 
+
 def fetch_json(url: str) -> dict:
     """
     Pobiera JSON z internetu.
@@ -64,7 +62,10 @@ def fetch_json(url: str) -> dict:
 
 # === Pobieranie plików (dowolnych, bez limitów) ===
 
-def download_file(url: str, filename: str | None = None, download_dir: str = "dark8_downloads") -> str:
+
+def download_file(
+    url: str, filename: str | None = None, download_dir: str = "dark8_downloads"
+) -> str:
     """
     Pobiera dowolny plik z internetu — bez limitu rozmiaru i czasu.
     Zapisuje go do sandboxa (dark8_downloads).
@@ -90,6 +91,7 @@ def download_file(url: str, filename: str | None = None, download_dir: str = "da
 
 
 # === Pobieranie strumieniowe (np. duże modele AI) ===
+
 
 def stream_download(url: str, chunk_size: int = 1024 * 1024 * 10):
     """

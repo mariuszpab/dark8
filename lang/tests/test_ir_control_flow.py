@@ -1,17 +1,11 @@
-from lang.lexer import Lexer
-from lang.parser import Parser
 from lang.ir.generator import generate_ir_program
 from lang.ir.types import OpCode
+from lang.lexer import Lexer
+from lang.parser import Parser
 
 
 def test_if_without_else():
-    src = (
-        'fn main() {\n'
-        '  if (1) {\n'
-        '    let x = 2\n'
-        '  }\n'
-        '}\n'
-    )
+    src = "fn main() {\n" "  if (1) {\n" "    let x = 2\n" "  }\n" "}\n"
     toks = list(Lexer(src))
     p = Parser(toks)
     mod = p.parse_module()
@@ -23,13 +17,13 @@ def test_if_without_else():
 
 def test_if_with_else():
     src = (
-        'fn main() {\n'
-        '  if (0) {\n'
-        '    let x = 1\n'
-        '  } else {\n'
-        '    let y = 2\n'
-        '  }\n'
-        '}\n'
+        "fn main() {\n"
+        "  if (0) {\n"
+        "    let x = 1\n"
+        "  } else {\n"
+        "    let y = 2\n"
+        "  }\n"
+        "}\n"
     )
     toks = list(Lexer(src))
     p = Parser(toks)
@@ -41,13 +35,7 @@ def test_if_with_else():
 
 
 def test_while_loop():
-    src = (
-        'fn main() {\n'
-        '  while (0) {\n'
-        '    let x = 1\n'
-        '  }\n'
-        '}\n'
-    )
+    src = "fn main() {\n" "  while (0) {\n" "    let x = 1\n" "  }\n" "}\n"
     toks = list(Lexer(src))
     p = Parser(toks)
     mod = p.parse_module()

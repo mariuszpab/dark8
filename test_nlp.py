@@ -1,4 +1,5 @@
 import json
+
 import numpy as np
 import onnxruntime as ort
 from transformers import AutoTokenizer
@@ -15,13 +16,11 @@ tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR)
 # Sesja ONNX
 session = ort.InferenceSession(f"{MODEL_DIR}/model.onnx")
 
+
 def predict_intent(text):
     inputs = tokenizer(text, return_tensors="np")
 
-    ort_inputs = {
-        "input_ids": inputs["input_ids"],
-        "attention_mask": inputs["attention_mask"]
-    }
+    ort_inputs = {"input_ids": inputs["input_ids"], "attention_mask": inputs["attention_mask"]}
 
     outputs = session.run(None, ort_inputs)
     logits = outputs[0][0]
@@ -41,7 +40,7 @@ tests = [
     "dopisz tekst do pliku",
     "wyświetl listę plików",
     "zainstaluj aktualizacje",
-    "zapisz log systemowy"
+    "zapisz log systemowy",
 ]
 
 for t in tests:

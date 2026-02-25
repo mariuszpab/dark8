@@ -14,11 +14,12 @@
 # Pracuje na danych pobranych przez web_fetch.
 
 import re
-from bs4 import BeautifulSoup
 from collections import Counter
 
+from bs4 import BeautifulSoup
 
 # === CZYSZCZENIE HTML ===
+
 
 def extract_text_from_html(html: str) -> str:
     """
@@ -40,6 +41,7 @@ def extract_text_from_html(html: str) -> str:
 
 # === EKSTRAKCJA NAGŁÓWKÓW ===
 
+
 def extract_headings(html: str) -> list:
     """
     Zwraca listę nagłówków H1–H6 w kolejności występowania.
@@ -49,15 +51,13 @@ def extract_headings(html: str) -> list:
 
     for level in ["h1", "h2", "h3", "h4", "h5", "h6"]:
         for tag in soup.find_all(level):
-            headings.append({
-                "tag": level,
-                "text": tag.get_text(strip=True)
-            })
+            headings.append({"tag": level, "text": tag.get_text(strip=True)})
 
     return headings
 
 
 # === EKSTRAKCJA LINKÓW ===
+
 
 def extract_links(html: str) -> list:
     """
@@ -67,15 +67,13 @@ def extract_links(html: str) -> list:
     links = []
 
     for a in soup.find_all("a", href=True):
-        links.append({
-            "href": a["href"],
-            "text": a.get_text(strip=True)
-        })
+        links.append({"href": a["href"], "text": a.get_text(strip=True)})
 
     return links
 
 
 # === STRESZCZENIE TEKSTU ===
+
 
 def summarize_text(text: str, max_sentences: int = 5) -> str:
     """
@@ -90,6 +88,7 @@ def summarize_text(text: str, max_sentences: int = 5) -> str:
 
 # === SŁOWA KLUCZOWE ===
 
+
 def extract_keywords(text: str, top_n: int = 20) -> list:
     """
     Wyciąga najczęściej występujące słowa (prosty algorytm).
@@ -98,9 +97,36 @@ def extract_keywords(text: str, top_n: int = 20) -> list:
     words = re.findall(r"[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9]+", text)
 
     stopwords = {
-        "i", "oraz", "a", "w", "na", "do", "z", "że", "to", "jest", "się",
-        "o", "po", "nie", "tak", "jak", "ale", "dla", "tego", "co", "czy",
-        "by", "być", "ma", "od", "za", "przez", "który", "która", "które"
+        "i",
+        "oraz",
+        "a",
+        "w",
+        "na",
+        "do",
+        "z",
+        "że",
+        "to",
+        "jest",
+        "się",
+        "o",
+        "po",
+        "nie",
+        "tak",
+        "jak",
+        "ale",
+        "dla",
+        "tego",
+        "co",
+        "czy",
+        "by",
+        "być",
+        "ma",
+        "od",
+        "za",
+        "przez",
+        "który",
+        "która",
+        "które",
     }
 
     filtered = [w for w in words if w not in stopwords]
@@ -110,6 +136,7 @@ def extract_keywords(text: str, top_n: int = 20) -> list:
 
 
 # === ANALIZA KOMPLEKSOWA ===
+
 
 def analyze_html(html: str) -> dict:
     """

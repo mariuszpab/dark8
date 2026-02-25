@@ -1,9 +1,9 @@
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QListWidget
+from PySide6.QtWidgets import QHBoxLayout, QListWidget, QVBoxLayout, QWidget
 
 from dark8_mark01.ui.settings.dark8_settings_panels import (
-    SettingsThemePanel,
-    SettingsSystemPanel,
     SettingsAboutPanel,
+    SettingsSystemPanel,
+    SettingsThemePanel,
 )
 
 

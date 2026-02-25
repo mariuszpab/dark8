@@ -1,6 +1,6 @@
+from dark8_mark01.core.kernel.dark8_ipc_bus import Dark8IPC
 from dark8_mark01.core.kernel.dark8_kernel_task import Dark8KernelTask, Dark8TaskState
 from dark8_mark01.core.kernel.dark8_user_task import Dark8UserTask
-from dark8_mark01.core.kernel.dark8_ipc_bus import Dark8IPC
 
 
 class Dark8InitTask(Dark8KernelTask):
@@ -81,6 +81,7 @@ class Dark8InitTask(Dark8KernelTask):
             print(f"[INIT] message from {msg.sender_pid}: {msg.message}")
 
         from dark8_mark01.core.kernel.dark8_kernel_scheduler import Dark8KernelScheduler
+
         scheduler = Dark8KernelScheduler.instance()
 
         # runlevel: boot → start usług

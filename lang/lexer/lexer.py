@@ -44,13 +44,13 @@ class Lexer:
     }
 
     token_specification = [
-        ("NUMBER",   r"\d+(?:\.\d+)?"),
-        ("IDENT",    r"[A-Za-z_][A-Za-z0-9_]*"),
-        ("STRING",   r'"(?:\\.|[^"\\])*"'),
-        ("OP",       r"==|!=|<=|>=|->|\+\+|--|\+|-|\*|/|%|=|<|>|\(|\)|\{|\}|\[|\]|,|:|;|\.|\\"),
-        ("NEWLINE",  r"\n"),
-        ("SKIP",     r"[ \t]+"),
-        ("COMMENT",  r"//.*"),
+        ("NUMBER", r"\d+(?:\.\d+)?"),
+        ("IDENT", r"[A-Za-z_][A-Za-z0-9_]*"),
+        ("STRING", r'"(?:\\.|[^"\\])*"'),
+        ("OP", r"==|!=|<=|>=|->|\+\+|--|\+|-|\*|/|%|=|<|>|\(|\)|\{|\}|\[|\]|,|:|;|\.|\\"),
+        ("NEWLINE", r"\n"),
+        ("SKIP", r"[ \t]+"),
+        ("COMMENT", r"//.*"),
     ]
 
     tok_regex = "|".join(f"(?P<{name}>{pattern})" for name, pattern in token_specification)
@@ -67,7 +67,9 @@ class Lexer:
         while self.pos < self.end:
             m = self.get_token(self.text, self.pos)
             if not m:
-                raise LexerError(f"Unexpected character at {self.line}:{self.col}: '{self.text[self.pos]}'")
+                raise LexerError(
+                    f"Unexpected character at {self.line}:{self.col}: '{self.text[self.pos]}'"
+                )
             kind = m.lastgroup
             value = m.group(kind)
             if kind == "NUMBER":

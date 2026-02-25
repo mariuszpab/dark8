@@ -1,7 +1,7 @@
-from .task_runner import TaskRunner
+from ..plugins import load_all_plugins
 from .command_router import CommandRouter
 from .context import Context
-from ..plugins import load_all_plugins
+from .task_runner import TaskRunner
 
 
 class Agent:

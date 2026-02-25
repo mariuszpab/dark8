@@ -2,8 +2,8 @@
 # Rozpoznawanie intencji z komend w języku polskim + integracja z uczeniem
 
 import re
-from dark8_mark01.dark8_learning import merge_learned_intents
 
+from dark8_mark01.dark8_learning import merge_learned_intents
 
 INTENT_PATTERNS = [
     # DIAGNOSTYKA

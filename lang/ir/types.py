@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import List, Any, Dict
+from typing import Any, Dict, List
 
 
 class OpCode(Enum):

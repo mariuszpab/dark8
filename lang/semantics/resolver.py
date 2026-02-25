@@ -1,18 +1,19 @@
 from typing import List
+
 from lang.ast.nodes import (
-    Module,
-    VarDecl,
-    FunctionDef,
-    VarRef,
-    Call,
     BinaryOp,
-    Literal,
-    If,
-    While,
     Break,
+    Call,
     Continue,
-    Return,
     Expr,
+    FunctionDef,
+    If,
+    Literal,
+    Module,
+    Return,
+    VarDecl,
+    VarRef,
+    While,
 )
 from lang.semantics.scope import Scope, Symbol
 
@@ -37,7 +38,7 @@ class Resolver:
         for node in module.body:
             self._resolve_node(node)
         if self.errors:
-            raise SemanticError('\n'.join(self.errors))
+            raise SemanticError("\n".join(self.errors))
         return module
 
     def _push_scope(self):
@@ -56,14 +57,16 @@ class Resolver:
             if self.current_scope.has_in_current(node.name):
                 self.error(f"Duplicate variable declaration: {node.name}")
             else:
-                self.current_scope.define(Symbol(name=node.name, kind='var', node=node))
+                self.current_scope.define(Symbol(name=node.name, kind="var", node=node))
 
         elif isinstance(node, FunctionDef):
             # define function in current scope first (allow recursion)
             if self.current_scope.has_in_current(node.name):
                 self.error(f"Duplicate function declaration: {node.name}")
             else:
-                self.current_scope.define(Symbol(name=node.name, kind='func', params=node.params, node=node))
+                self.current_scope.define(
+                    Symbol(name=node.name, kind="func", params=node.params, node=node)
+                )
             # resolve body in new scope
             self._push_scope()
             # define params as variables in function scope
@@ -71,7 +74,7 @@ class Resolver:
                 if self.current_scope.has_in_current(p):
                     self.error(f"Duplicate parameter name: {p} in function {node.name}")
                 else:
-                    self.current_scope.define(Symbol(name=p, kind='var', node=node))
+                    self.current_scope.define(Symbol(name=p, kind="var", node=node))
             prev_in_function = self.in_function
             self.in_function = True
             for stmt in node.body:
@@ -147,12 +150,14 @@ class Resolver:
             if sym is None:
                 self.error(f"Call to undeclared function: {expr.name}")
             else:
-                if sym.kind != 'func':
+                if sym.kind != "func":
                     self.error(f"Symbol is not callable: {expr.name}")
                 else:
                     expected = len(sym.params) if sym.params else 0
                     if expected != len(expr.args):
-                        self.error(f"Arity mismatch in call to {expr.name}: expected {expected}, got {len(expr.args)}")
+                        self.error(
+                            f"Arity mismatch in call to {expr.name}: expected {expected}, got {len(expr.args)}"
+                        )
                     else:
                         # attach resolved function symbol
                         try:

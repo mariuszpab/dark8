@@ -1,6 +1,7 @@
 # plugin_patch_diff.py
 import difflib
 
+
 def handle_PATCH_DIFF(task: dict, context: dict) -> dict:
     path = task.get("path")
     diff_text = task.get("content")

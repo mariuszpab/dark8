@@ -4,18 +4,19 @@ Systemy backupu, recovery i continuity of operations
 Autor: DARK8 Development Team
 """
 
+import hashlib
 import json
 import time
-import hashlib
-from datetime import datetime
-from typing import Dict, List, Optional
-from dataclasses import dataclass, asdict
-from enum import Enum
 from collections import deque
+from dataclasses import asdict, dataclass
+from datetime import datetime
+from enum import Enum
+from typing import Dict, List, Optional
 
 
 class BackupType(Enum):
     """Typy backupu"""
+
     FULL = "full"
     INCREMENTAL = "incremental"
     DIFFERENTIAL = "differential"
@@ -24,6 +25,7 @@ class BackupType(Enum):
 
 class BackupStatus(Enum):
     """Status backupu"""
+
     PENDING = "pending"
     RUNNING = "running"
     COMPLETED = "completed"
@@ -33,6 +35,7 @@ class BackupStatus(Enum):
 
 class RecoveryPriority(Enum):
     """Priorytet recovery"""
+
     CRITICAL = "critical"
     HIGH = "high"
     MEDIUM = "medium"
@@ -42,6 +45,7 @@ class RecoveryPriority(Enum):
 @dataclass
 class Backup:
     """Reprezentacja backupu"""
+
     backup_id: str
     backup_type: BackupType
     source: str  # np. 'database', 'filesystem', 'kubernetes'
@@ -60,10 +64,10 @@ class Backup:
     def to_dict(self) -> dict:
         """Konwersja do słownika"""
         d = asdict(self)
-        d['backup_type'] = self.backup_type.value
-        d['status'] = self.status.value
-        d['started_at'] = self.started_at.isoformat()
-        d['completed_at'] = self.completed_at.isoformat() if self.completed_at else None
+        d["backup_type"] = self.backup_type.value
+        d["status"] = self.status.value
+        d["started_at"] = self.started_at.isoformat()
+        d["completed_at"] = self.completed_at.isoformat() if self.completed_at else None
         return d
 
     def duration_seconds(self) -> float:
@@ -75,6 +79,7 @@ class Backup:
 @dataclass
 class RecoveryPoint:
     """Punkt do odtworzenia (RPO)"""
+
     recovery_point_id: str
     timestamp: datetime
     backup_id: str
@@ -98,10 +103,12 @@ class DisasterRecoveryManager:
         self.rto_targets: Dict[str, float] = {}  # resource -> minutes
         self.created_at = datetime.now()
 
-    def create_backup(self,
-                     source: str,
-                     backup_type: BackupType = BackupType.FULL,
-                     destination: str = "s3://dark8-backups") -> Backup:
+    def create_backup(
+        self,
+        source: str,
+        backup_type: BackupType = BackupType.FULL,
+        destination: str = "s3://dark8-backups",
+    ) -> Backup:
         """
         Tworzenie backupu
 
@@ -121,17 +128,15 @@ class DisasterRecoveryManager:
             source=source,
             destination=destination,
             status=BackupStatus.PENDING,
-            started_at=datetime.now()
+            started_at=datetime.now(),
         )
 
         self.backups[backup_id] = backup
 
         # Zapis do historii
-        self.backup_history.append({
-            'backup_id': backup_id,
-            'action': 'created',
-            'timestamp': datetime.now().isoformat()
-        })
+        self.backup_history.append(
+            {"backup_id": backup_id, "action": "created", "timestamp": datetime.now().isoformat()}
+        )
 
         return backup
 
@@ -156,13 +161,14 @@ class DisasterRecoveryManager:
 
             # Symulacja zmiany rozmiaru danych
             import random
+
             backup.size_bytes = random.randint(1000000, 10000000)
 
             # Generowanie checksumów
             backup.data_checksums = {
-                'data.db': hashlib.md5(f"data_{backup_id}".encode()).hexdigest(),
-                'files.tar': hashlib.md5(f"files_{backup_id}".encode()).hexdigest(),
-                'config.yaml': hashlib.md5(f"config_{backup_id}".encode()).hexdigest()
+                "data.db": hashlib.md5(f"data_{backup_id}".encode()).hexdigest(),
+                "files.tar": hashlib.md5(f"files_{backup_id}".encode()).hexdigest(),
+                "config.yaml": hashlib.md5(f"config_{backup_id}".encode()).hexdigest(),
             }
 
             backup.completed_at = datetime.now()
@@ -172,13 +178,15 @@ class DisasterRecoveryManager:
             backup.status = BackupStatus.VERIFIED
 
             # Zapis do historii
-            self.backup_history.append({
-                'backup_id': backup_id,
-                'action': 'completed',
-                'duration_seconds': backup.duration_seconds(),
-                'size_bytes': backup.size_bytes,
-                'timestamp': datetime.now().isoformat()
-            })
+            self.backup_history.append(
+                {
+                    "backup_id": backup_id,
+                    "action": "completed",
+                    "duration_seconds": backup.duration_seconds(),
+                    "size_bytes": backup.size_bytes,
+                    "timestamp": datetime.now().isoformat(),
+                }
+            )
 
             return True
 
@@ -187,10 +195,9 @@ class DisasterRecoveryManager:
             print(f"❌ Błąd wykonania backup: {e}")
             return False
 
-    def create_recovery_point(self,
-                             backup_id: str,
-                             data_loss_risk_minutes: float = 5,
-                             recovery_time_minutes: float = 15) -> Optional[RecoveryPoint]:
+    def create_recovery_point(
+        self, backup_id: str, data_loss_risk_minutes: float = 5, recovery_time_minutes: float = 15
+    ) -> Optional[RecoveryPoint]:
         """
         Tworzenie punktu recovery (RPO)
 
@@ -212,17 +219,16 @@ class DisasterRecoveryManager:
             timestamp=datetime.now(),
             backup_id=backup_id,
             data_loss_risk_minutes=data_loss_risk_minutes,
-            recovery_time_minutes=recovery_time_minutes
+            recovery_time_minutes=recovery_time_minutes,
         )
 
         self.recovery_points[recovery_point_id] = recovery_point
 
         return recovery_point
 
-    def set_sla_targets(self,
-                       resource_name: str,
-                       rpo_minutes: float = 60,
-                       rto_minutes: float = 240) -> bool:
+    def set_sla_targets(
+        self, resource_name: str, rpo_minutes: float = 60, rto_minutes: float = 240
+    ) -> bool:
         """
         Ustawienie celów SLA (RPO i RTO)
 
@@ -258,9 +264,7 @@ class DisasterRecoveryManager:
             print(f"❌ Błąd weryfikacji backup: {e}")
             return False
 
-    def restore_from_backup(self,
-                           backup_id: str,
-                           restore_path: str = "/data/restore") -> bool:
+    def restore_from_backup(self, backup_id: str, restore_path: str = "/data/restore") -> bool:
         """
         Odtworzenie z backupu
 
@@ -284,12 +288,14 @@ class DisasterRecoveryManager:
                 return False
 
             # Zapis do historii
-            self.backup_history.append({
-                'backup_id': backup_id,
-                'action': 'restored',
-                'restore_path': restore_path,
-                'timestamp': datetime.now().isoformat()
-            })
+            self.backup_history.append(
+                {
+                    "backup_id": backup_id,
+                    "action": "restored",
+                    "restore_path": restore_path,
+                    "timestamp": datetime.now().isoformat(),
+                }
+            )
 
             print(f"✅ Restore completed: {restore_path}")
             return True
@@ -305,15 +311,12 @@ class DisasterRecoveryManager:
         total_size = sum(b.size_bytes for b in self.backups.values())
 
         return {
-            'total_backups': len(self.backups),
-            'completed_backups': completed,
-            'failed_backups': failed,
-            'total_size_bytes': total_size,
-            'sla_targets': {
-                'rpo': self.rpo_targets,
-                'rto': self.rto_targets
-            },
-            'uptime_seconds': (datetime.now() - self.created_at).total_seconds()
+            "total_backups": len(self.backups),
+            "completed_backups": completed,
+            "failed_backups": failed,
+            "total_size_bytes": total_size,
+            "sla_targets": {"rpo": self.rpo_targets, "rto": self.rto_targets},
+            "uptime_seconds": (datetime.now() - self.created_at).total_seconds(),
         }
 
     def get_recovery_history(self, limit: int = 20) -> List[Dict]:
@@ -321,7 +324,7 @@ class DisasterRecoveryManager:
         history = []
 
         for event in reversed(list(self.backup_history)[-limit:]):
-            if event['action'] in ['restored', 'failed']:
+            if event["action"] in ["restored", "failed"]:
                 history.append(event)
 
         return history
@@ -337,21 +340,25 @@ class DisasterRecoveryPlan:
         self.contact_list: List[Dict] = []
         self.site_list: List[Dict] = []
 
-    def add_resource(self,
-                    resource_id: str,
-                    resource_type: str,
-                    priority: RecoveryPriority,
-                    rpo_minutes: float = 60,
-                    rto_minutes: float = 240) -> bool:
+    def add_resource(
+        self,
+        resource_id: str,
+        resource_type: str,
+        priority: RecoveryPriority,
+        rpo_minutes: float = 60,
+        rto_minutes: float = 240,
+    ) -> bool:
         """Dodanie zasobu do planu"""
-        self.resources.append({
-            'resource_id': resource_id,
-            'type': resource_type,
-            'priority': priority.value,
-            'rpo_minutes': rpo_minutes,
-            'rto_minutes': rto_minutes,
-            'added_at': datetime.now().isoformat()
-        })
+        self.resources.append(
+            {
+                "resource_id": resource_id,
+                "type": resource_type,
+                "priority": priority.value,
+                "rpo_minutes": rpo_minutes,
+                "rto_minutes": rto_minutes,
+                "added_at": datetime.now().isoformat(),
+            }
+        )
         return True
 
     def add_runbook(self, scenario: str, instructions: str) -> bool:
@@ -359,44 +366,34 @@ class DisasterRecoveryPlan:
         self.runbooks[scenario] = instructions
         return True
 
-    def add_contact(self,
-                   name: str,
-                   role: str,
-                   phone: str,
-                   email: str) -> bool:
+    def add_contact(self, name: str, role: str, phone: str, email: str) -> bool:
         """Dodanie kontaktu"""
-        self.contact_list.append({
-            'name': name,
-            'role': role,
-            'phone': phone,
-            'email': email
-        })
+        self.contact_list.append({"name": name, "role": role, "phone": phone, "email": email})
         return True
 
-    def add_recovery_site(self,
-                         site_id: str,
-                         location: str,
-                         capacity_percent: float = 100) -> bool:
+    def add_recovery_site(self, site_id: str, location: str, capacity_percent: float = 100) -> bool:
         """Dodanie site'u recovery"""
-        self.site_list.append({
-            'site_id': site_id,
-            'location': location,
-            'capacity_percent': capacity_percent,
-            'added_at': datetime.now().isoformat()
-        })
+        self.site_list.append(
+            {
+                "site_id": site_id,
+                "location": location,
+                "capacity_percent": capacity_percent,
+                "added_at": datetime.now().isoformat(),
+            }
+        )
         return True
 
     def get_plan_summary(self) -> Dict:
         """Podsumowanie planu"""
-        critical_resources = sum(1 for r in self.resources if r['priority'] == 'critical')
+        critical_resources = sum(1 for r in self.resources if r["priority"] == "critical")
 
         return {
-            'resources': len(self.resources),
-            'critical_resources': critical_resources,
-            'runbooks': len(self.runbooks),
-            'contacts': len(self.contact_list),
-            'recovery_sites': len(self.site_list),
-            'created_at': datetime.now().isoformat()
+            "resources": len(self.resources),
+            "critical_resources": critical_resources,
+            "runbooks": len(self.runbooks),
+            "contacts": len(self.contact_list),
+            "recovery_sites": len(self.site_list),
+            "created_at": datetime.now().isoformat(),
         }
 
 
@@ -408,13 +405,13 @@ def test_disaster_recovery():
     dr = DisasterRecoveryManager()
 
     # Ustawienie SLA
-    dr.set_sla_targets('postgres', rpo_minutes=30, rto_minutes=120)
-    dr.set_sla_targets('redis', rpo_minutes=5, rto_minutes=30)
+    dr.set_sla_targets("postgres", rpo_minutes=30, rto_minutes=120)
+    dr.set_sla_targets("redis", rpo_minutes=5, rto_minutes=30)
 
     print("✅ SLA targets ustawione")
 
     # Tworzenie backupu
-    backup = dr.create_backup('postgres', BackupType.FULL)
+    backup = dr.create_backup("postgres", BackupType.FULL)
     print(f"✅ Backup created: {backup.backup_id}")
 
     # Wykonanie backupu
@@ -435,13 +432,13 @@ def test_disaster_recovery():
 
     # DR Plan
     plan = DisasterRecoveryPlan()
-    plan.add_resource('postgres-prod', 'database', RecoveryPriority.CRITICAL)
-    plan.add_contact('John Doe', 'DBA', '+48123456789', 'john@dark8.pl')
-    plan.add_recovery_site('backup-site', 'Secondary Datacenter', 100)
+    plan.add_resource("postgres-prod", "database", RecoveryPriority.CRITICAL)
+    plan.add_contact("John Doe", "DBA", "+48123456789", "john@dark8.pl")
+    plan.add_recovery_site("backup-site", "Secondary Datacenter", 100)
 
     plan_summary = plan.get_plan_summary()
     print(f"✅ Plan summary: {json.dumps(plan_summary, indent=2)}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_disaster_recovery()

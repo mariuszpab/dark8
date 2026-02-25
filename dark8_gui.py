@@ -61,7 +61,7 @@ class Dark8GUI:
             fg="#f0f0f0",
             insertbackground="#f0f0f0",
             relief=tk.FLAT,
-            borderwidth=0
+            borderwidth=0,
         )
         self.text_area.pack(fill=tk.BOTH, expand=True, padx=10, pady=(10, 5))
 
@@ -72,7 +72,7 @@ class Dark8GUI:
             anchor="w",
             justify=tk.LEFT,
             bg="#101010",
-            fg="#888888"
+            fg="#888888",
         )
         self.status_label.pack(fill=tk.X, padx=12, pady=(0, 4))
 
@@ -88,7 +88,7 @@ class Dark8GUI:
             fg="#f0f0f0",
             insertbackground="#f0f0f0",
             relief=tk.FLAT,
-            borderwidth=4
+            borderwidth=4,
         )
         self.entry.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.entry.bind("<Return>", self._on_enter)
@@ -102,7 +102,7 @@ class Dark8GUI:
             fg="#ffffff",
             relief=tk.FLAT,
             padx=12,
-            pady=6
+            pady=6,
         )
         send_button.pack(side=tk.LEFT, padx=(8, 0))
 
@@ -151,6 +151,7 @@ class Dark8GUI:
 
     def _run_command_background(self, cmd: str):
         import sys
+
         old_stdout = sys.stdout
         sys.stdout = Dark8ConsoleCapture(lambda txt: self._append_system(txt.rstrip("\n")))
 

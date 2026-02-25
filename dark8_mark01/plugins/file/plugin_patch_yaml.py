@@ -1,6 +1,8 @@
 # plugin_patch_yaml.py
-import yaml
 import os
+
+import yaml
+
 
 def handle_PATCH_YAML(task: dict, context: dict) -> dict:
     path = task.get("path")

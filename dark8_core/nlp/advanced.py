@@ -4,8 +4,8 @@ Enhanced NLP engine with learning capabilities.
 Uses transformer models and learns from user interactions.
 """
 
-from typing import Dict, List, Tuple, Optional
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
+from typing import Dict, List, Optional, Tuple
 
 from dark8_core.logger import logger
 from dark8_core.persistence import get_database
@@ -14,6 +14,7 @@ from dark8_core.persistence import get_database
 @dataclass
 class ParsedCommand:
     """Structured command after full NLP processing"""
+
     original: str
     normalized: str
     intent: str
@@ -49,7 +50,7 @@ class AdvancedIntentClassifier:
             "STATUS": {"keywords": ["status", "stan"], "priority": 3},
             "HELP": {"keywords": ["pomoc", "help"], "priority": 4},
             "CONFIG": {"keywords": ["konfiguruj", "ustawienia"], "priority": 3},
-        }
+        },
     }
 
     def __init__(self):
@@ -98,7 +99,9 @@ class AdvancedIntentClassifier:
                     if keyword in text_lower:
                         priority = config_dict["priority"]
                         # Confidence = keyword match + priority bonus
-                        confidence = 0.6 + (0.1 * (len(keyword) / len(text_lower))) + (0.04 / priority)
+                        confidence = (
+                            0.6 + (0.1 * (len(keyword) / len(text_lower))) + (0.04 / priority)
+                        )
 
                         if confidence > best_confidence:
                             best_confidence = min(confidence, 1.0)
@@ -114,31 +117,37 @@ class EntityExtractorAdvanced:
     ENTITY_PATTERNS = {
         "FILE_PATH": {
             "patterns": [".py", ".js", ".java", "/", "plik", "katalog", "folder"],
-            "type": "location"
+            "type": "location",
         },
         "FRAMEWORK": {
-            "patterns": ["django", "flask", "fastapi", "react", "vue", "angular", "node", "express"],
-            "type": "technology"
+            "patterns": [
+                "django",
+                "flask",
+                "fastapi",
+                "react",
+                "vue",
+                "angular",
+                "node",
+                "express",
+            ],
+            "type": "technology",
         },
         "LANGUAGE": {
             "patterns": ["python", "javascript", "java", "cpp", "rust", "go", "php", "ruby"],
-            "type": "technology"
+            "type": "technology",
         },
         "DATABASE": {
             "patterns": ["postgresql", "mysql", "mongodb", "redis", "sqlite", "firestore"],
-            "type": "technology"
+            "type": "technology",
         },
         "TOOL": {
             "patterns": ["git", "docker", "kubernetes", "npm", "pip", "npm", "gradle"],
-            "type": "technology"
+            "type": "technology",
         },
-        "NUMBER": {
-            "patterns": ["\\d+", "liczba", "ilość"],
-            "type": "quantity"
-        },
+        "NUMBER": {"patterns": ["\\d+", "liczba", "ilość"], "type": "quantity"},
         "TIME": {
             "patterns": ["teraz", "jutro", "dziś", "dzisiaj", "godzina", "minuta"],
-            "type": "temporal"
+            "type": "temporal",
         },
     }
 
@@ -156,11 +165,9 @@ class EntityExtractorAdvanced:
 
             for pattern in config_dict["patterns"]:
                 if pattern in text_lower:
-                    entities[entity_type].append({
-                        "value": pattern,
-                        "confidence": 0.8,
-                        "category": config_dict["type"]
-                    })
+                    entities[entity_type].append(
+                        {"value": pattern, "confidence": 0.8, "category": config_dict["type"]}
+                    )
 
         return {k: v for k, v in entities.items() if v}
 
@@ -233,8 +240,9 @@ class AdvancedNLPEngine:
     def _tokenize(self, text: str) -> List[str]:
         """Tokenize Polish text"""
         import re
+
         # Remove punctuation
-        text = re.sub(r'[.,!?;:]', '', text)
+        text = re.sub(r"[.,!?;:]", "", text)
         tokens = text.split()
         return [t for t in tokens if t]
 
@@ -261,7 +269,7 @@ class AdvancedNLPEngine:
                 intent=command.intent,
                 confidence=command.confidence,
                 entities=asdict(command.entities),
-                context={"success": success, "priority": command.priority}
+                context={"success": success, "priority": command.priority},
             )
 
             # Update learned patterns

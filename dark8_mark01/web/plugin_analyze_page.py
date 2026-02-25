@@ -1,6 +1,7 @@
 # plugin_analyze_page.py
-from dark8_mark01.utils.dark8_web_fetch import fetch_page
 from dark8_mark01.utils.dark8_web_analyze import analyze_html
+from dark8_mark01.utils.dark8_web_fetch import fetch_page
+
 
 def handle_ANALYZE_PAGE(task: dict, context: dict) -> dict:
     url = task.get("url")

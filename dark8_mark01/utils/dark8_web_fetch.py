@@ -10,9 +10,9 @@
 # - gotowe do użycia z UCI / agentem / pluginami
 
 from dark8_mark01.utils.dark8_network_core import (
-    fetch_text,
-    fetch_json,
     download_file,
+    fetch_json,
+    fetch_text,
     stream_download,
 )
 

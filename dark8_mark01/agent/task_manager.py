@@ -2,6 +2,7 @@
 
 from dark8_mark01.core.dispatcher import dispatch
 
+
 def execute_plan(steps: list[dict]) -> list[dict]:
     """
     Wykonuje kolejne kroki planu.
@@ -16,12 +17,14 @@ def execute_plan(steps: list[dict]) -> list[dict]:
 
         result = dispatch(intent, args)
 
-        results.append({
-            "index": i,
-            "intent": intent,
-            "description": desc,
-            "args": args,
-            "result": result,
-        })
+        results.append(
+            {
+                "index": i,
+                "intent": intent,
+                "description": desc,
+                "args": args,
+                "result": result,
+            }
+        )
 
     return results

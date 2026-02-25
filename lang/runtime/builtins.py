@@ -8,14 +8,14 @@ def builtin_print(vm, args: List[Any]):
 
 
 def builtin_input(vm, args: List[Any]):
-    prompt = args[0] if args else ''
+    prompt = args[0] if args else ""
     try:
         return input(prompt)
     except Exception:
-        return ''
+        return ""
 
 
 BUILTINS = {
-    'print': builtin_print,
-    'input': builtin_input,
+    "print": builtin_print,
+    "input": builtin_input,
 }

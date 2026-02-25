@@ -8,7 +8,6 @@
 # - listę tasków kompatybilną z TaskRunnerem
 
 
-
 class MaxscriptParser:
     """
     Parser plików .mpx:

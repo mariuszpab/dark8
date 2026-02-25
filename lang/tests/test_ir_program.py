@@ -1,13 +1,11 @@
-from lang.lexer import Lexer
-from lang.parser import Parser
 from lang.ir.generator import generate_ir_program
 from lang.ir.types import IRProgram, OpCode
+from lang.lexer import Lexer
+from lang.parser import Parser
 
 
 def test_generate_ir_program_simple():
-    src = (
-        'let x = 2 + 3\n'
-    )
+    src = "let x = 2 + 3\n"
     toks = list(Lexer(src))
     p = Parser(toks)
     mod = p.parse_module()
@@ -16,8 +14,8 @@ def test_generate_ir_program_simple():
     # constants should contain 2 and 3
     assert 2 in prog.constants and 3 in prog.constants
     # variables should contain x
-    assert 'x' in prog.variables
+    assert "x" in prog.variables
     # last instruction should be STORE_VAR for x
     assert prog.code[-1].op == OpCode.STORE_VAR
-    vidx = prog.variables.index('x')
+    vidx = prog.variables.index("x")
     assert prog.code[-1].arg1 == vidx

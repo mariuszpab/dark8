@@ -1,9 +1,16 @@
-from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QLabel, QPushButton,
-    QTableWidget, QTableWidgetItem, QHeaderView,
-    QHBoxLayout, QLineEdit, QMessageBox
-)
 from PySide6.QtCore import Qt, QTimer
+from PySide6.QtWidgets import (
+    QHBoxLayout,
+    QHeaderView,
+    QLabel,
+    QLineEdit,
+    QMessageBox,
+    QPushButton,
+    QTableWidget,
+    QTableWidgetItem,
+    QVBoxLayout,
+    QWidget,
+)
 
 from dark8_mark01.core.kernel.dark8_kernel_scheduler import Dark8KernelScheduler
 from dark8_mark01.core.kernel.dark8_kernel_task import Dark8KernelTask

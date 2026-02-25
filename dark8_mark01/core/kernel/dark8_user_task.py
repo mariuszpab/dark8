@@ -1,5 +1,5 @@
-from dark8_mark01.core.kernel.dark8_kernel_task import Dark8KernelTask
 from dark8_mark01.core.kernel.dark8_ipc_bus import Dark8IPC
+from dark8_mark01.core.kernel.dark8_kernel_task import Dark8KernelTask
 
 
 class Dark8UserTask(Dark8KernelTask):

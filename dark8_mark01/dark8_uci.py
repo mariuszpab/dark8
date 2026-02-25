@@ -4,8 +4,9 @@ This module provides a safe `run_agent_auto(cmd)` function used by the UI.
 Implementations are minimal stubs and use ASCII-only docstrings to avoid
 parser issues reported by linters.
 """
+
 import os
-from typing import Dict, Any
+from typing import Any, Dict
 
 
 def ensure_backend_ready() -> None:

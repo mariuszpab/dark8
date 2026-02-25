@@ -1,6 +1,12 @@
 from PySide6.QtWidgets import (
-    QWidget, QHBoxLayout, QVBoxLayout, QLabel, QListWidget,
-    QPushButton, QLineEdit, QMessageBox
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QListWidget,
+    QMessageBox,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
 )
 
 from dark8_mark01.core.vfs.dark8_vfs_manager import Dark8VFSManager

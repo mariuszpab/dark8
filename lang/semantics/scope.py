@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, Dict, List
+from typing import Dict, List, Optional
 
 
 @dataclass
@@ -11,7 +11,7 @@ class Symbol:
 
 
 class Scope:
-    def __init__(self, parent: Optional['Scope'] = None):
+    def __init__(self, parent: Optional["Scope"] = None):
         self.parent = parent
         self.symbols: Dict[str, Symbol] = {}
 

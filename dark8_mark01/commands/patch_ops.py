@@ -1,7 +1,9 @@
-import os
 import json
-import yaml
+import os
 import re
+
+import yaml
+
 from ..command_registry import register_command
 
 
@@ -17,6 +19,7 @@ def log_error(msg):
 # GŁÓWNY HANDLER
 # ---------------------------------------------------------
 
+
 def handle(command, args, block):
     if command == "PATCH_FILE":
         return patch_file(args, block)
@@ -30,6 +33,7 @@ def handle(command, args, block):
 # ---------------------------------------------------------
 # JSON5 / JSONC — parser tolerujący komentarze i trailing commas
 # ---------------------------------------------------------
+
 
 def load_json_lenient(text):
     """
@@ -67,6 +71,7 @@ def load_json_lenient(text):
 # ---------------------------------------------------------
 # PATCH_FILE — JSON/YAML z listą operacji
 # ---------------------------------------------------------
+
 
 def patch_file(path, patch_text):
     path = path.strip()
@@ -131,6 +136,7 @@ def patch_file(path, patch_text):
 # OPERACJE PATCHA
 # ---------------------------------------------------------
 
+
 def apply_operation(data, op):
     operation = op.get("op")
     path = op.get("path")
@@ -194,6 +200,7 @@ def merge_value(data, keys, value):
 # PATCH_DIFF — pełny parser unified diff
 # ---------------------------------------------------------
 
+
 def patch_diff(path, diff_text):
     path = path.strip()
     if not path:
@@ -212,10 +219,7 @@ def patch_diff(path, diff_text):
         return
 
     try:
-        patched_lines = apply_unified_diff(
-            original_lines,
-            diff_text.splitlines(keepends=False)
-        )
+        patched_lines = apply_unified_diff(original_lines, diff_text.splitlines(keepends=False))
     except Exception as e:
         log_error(f"Nie można zastosować diff: {e}")
         return
@@ -246,13 +250,18 @@ def apply_unified_diff(original_lines, diff_lines):
     while i < n:
         line = diff_lines[i]
 
-        if line.startswith('---') or line.startswith('+++'):
+        if line.startswith("---") or line.startswith("+++"):
             i += 1
             continue
 
-        if line.startswith('@@'):
+        if line.startswith("@@"):
             i += 1
-            while i < n and not diff_lines[i].startswith('@@') and not diff_lines[i].startswith('---') and not diff_lines[i].startswith('+++'):
+            while (
+                i < n
+                and not diff_lines[i].startswith("@@")
+                and not diff_lines[i].startswith("---")
+                and not diff_lines[i].startswith("+++")
+            ):
                 hline = diff_lines[i]
                 if not hline:
                     i += 1
@@ -261,18 +270,18 @@ def apply_unified_diff(original_lines, diff_lines):
                 prefix = hline[0]
                 content = hline[1:] + "\n"
 
-                if prefix == ' ':
+                if prefix == " ":
                     if orig_index < len(original_lines):
                         result.append(original_lines[orig_index])
                         orig_index += 1
                     else:
                         result.append(content)
 
-                elif prefix == '-':
+                elif prefix == "-":
                     if orig_index < len(original_lines):
                         orig_index += 1
 
-                elif prefix == '+':
+                elif prefix == "+":
                     result.append(content)
 
                 else:
@@ -292,6 +301,7 @@ def apply_unified_diff(original_lines, diff_lines):
 # ---------------------------------------------------------
 # REJESTRACJA KOMEND
 # ---------------------------------------------------------
+
 
 def register():
     for cmd in ["PATCH_FILE", "PATCH_DIFF"]:

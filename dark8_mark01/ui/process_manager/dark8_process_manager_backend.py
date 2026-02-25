@@ -13,7 +13,7 @@ class Dark8ProcessBackend:
 
     def get_process_list(self):
         processes = []
-        for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent']):
+        for proc in psutil.process_iter(["pid", "name", "cpu_percent", "memory_percent"]):
             try:
                 info = proc.info
                 processes.append(info)

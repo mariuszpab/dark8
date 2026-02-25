@@ -2,7 +2,7 @@ from lang.lexer import Lexer, TokenType
 
 
 def test_basic_tokens():
-    code = 'let x = 42\nfn add(a, b) { return a + b } // end'
+    code = "let x = 42\nfn add(a, b) { return a + b } // end"
     lex = Lexer(code)
     toks = list(lex)
     # expect sequence: KEYWORD(let), IDENT(x), OP('='), NUMBER(42), NEWLINE, KEYWORD(fn), IDENT(add)
@@ -19,4 +19,4 @@ def test_string_token():
     toks = list(lex)
     strings = [t for t in toks if t.type == TokenType.STRING]
     assert len(strings) == 1
-    assert strings[0].value == 'hello\\nworld'
+    assert strings[0].value == "hello\\nworld"

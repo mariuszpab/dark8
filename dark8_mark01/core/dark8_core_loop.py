@@ -1,10 +1,10 @@
-import time
 import threading
+import time
 
-from dark8_mark01.utils.dark8_backend import ensure_backend_ready
-from dark8_mark01.utils.dark8_watchdog import start_watchdog
-from dark8_mark01.utils.dark8_scheduler import start_scheduler
 from dark8_mark01.agent.autonomic_agent import run_autonomic_task
+from dark8_mark01.utils.dark8_backend import ensure_backend_ready
+from dark8_mark01.utils.dark8_scheduler import start_scheduler
+from dark8_mark01.utils.dark8_watchdog import start_watchdog
 
 
 class Dark8CoreLoop:

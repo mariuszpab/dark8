@@ -28,11 +28,7 @@ class Dark8KernelEventDispatcher:
         """
         Emituje zdarzenie kernela.
         """
-        event = {
-            "type": event_type,
-            "source": source,
-            "payload": payload or {}
-        }
+        event = {"type": event_type, "source": source, "payload": payload or {}}
 
         # log systemowy
         self.bus.log(f"KernelEvent:{event_type}", f"{source} → {payload}")

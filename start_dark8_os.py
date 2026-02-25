@@ -1,10 +1,10 @@
 import time
 
+from dark8_mark01.core.dark8_core_loop import Dark8CoreLoop
 from dark8_mark01.utils.dark8_backend import ensure_backend_ready
-from dark8_mark01.utils.dark8_watchdog import start_watchdog
 from dark8_mark01.utils.dark8_scheduler import start_scheduler
 from dark8_mark01.utils.dark8_state_monitor import start_state_monitor
-from dark8_mark01.core.dark8_core_loop import Dark8CoreLoop
+from dark8_mark01.utils.dark8_watchdog import start_watchdog
 
 
 def main():
@@ -13,7 +13,9 @@ def main():
     # 1. Upewnij się, że backend LLM działa
     backend_ok = ensure_backend_ready()
     if not backend_ok:
-        print("[START] Błąd krytyczny: backend LLM nie działa. Sprawdź logi w dark8_logs/backend.log")
+        print(
+            "[START] Błąd krytyczny: backend LLM nie działa. Sprawdź logi w dark8_logs/backend.log"
+        )
         return
 
     # 2. Uruchom watchdog backendu

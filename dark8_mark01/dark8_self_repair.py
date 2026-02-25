@@ -2,26 +2,32 @@
 # Warstwa self-repair dla DARK8
 
 import os
-import sqlite3
 
 from dark8_mark01.dark8_core_paths import DB_PATH, ensure_dirs
-from dark8_mark01.migrations import migration_manager
 from dark8_mark01.dark8_self_diagnostics import full_diagnostics
+from dark8_mark01.migrations import migration_manager
 
 
 def ensure_db_exists():
     ensure_dirs()
     if not os.path.exists(DB_PATH):
-        conn = sqlite3.connect(DB_PATH)
-        conn.close()
-    migration_manager.init_db()
+        # Create empty DB file
+        open(DB_PATH, "a").close()
+    # Ensure migrations table exists
+    try:
+        from dark8_core.agent.tools.db import db_execute
+
+        # delegate bootstrap to centralized DB helper
+        db_execute({"action": "bootstrap", "db_path": DB_PATH})
+    except Exception:
+        # fallback to migration manager init
+        migration_manager.init_db()
 
 
 def ensure_pending_actions_table():
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute(
-        """
+    from dark8_core.agent.tools.db import run_query
+
+    sql = """
         CREATE TABLE IF NOT EXISTS pending_actions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             kind TEXT NOT NULL,
@@ -29,9 +35,7 @@ def ensure_pending_actions_table():
             created_at TEXT NOT NULL
         )
         """
-    )
-    conn.commit()
-    conn.close()
+    run_query(DB_PATH, sql)
 
 
 def force_migrations():

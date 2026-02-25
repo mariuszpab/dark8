@@ -1,8 +1,7 @@
+import os
 import socket
 import subprocess
 import time
-import os
-
 
 OLLAMA_HOST = "127.0.0.1"
 OLLAMA_PORT = 11434

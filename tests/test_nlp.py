@@ -1,6 +1,6 @@
 """Unit tests for NLP module"""
 
-from dark8_core.nlp import IntentClassifier, EntityExtractor, PolishParser, NLPEngine
+from dark8_core.nlp import EntityExtractor, IntentClassifier, NLPEngine, PolishParser
 
 
 class TestIntentClassifier:
@@ -52,10 +52,10 @@ class TestNLPEngine:
         nlp = NLPEngine()
         result = nlp.understand("zbuduj aplikację todo w Django z bazą danych")
 
-        assert result['intent'] == "BUILD_APP"
-        assert result['confidence'] > 0.5
-        assert 'django' in str(result['entities']).lower()
-        assert len(result['tokens']) > 0
+        assert result["intent"] == "BUILD_APP"
+        assert result["confidence"] > 0.5
+        assert "django" in str(result["entities"]).lower()
+        assert len(result["tokens"]) > 0
 
     def test_is_valid_command(self):
         nlp = NLPEngine()

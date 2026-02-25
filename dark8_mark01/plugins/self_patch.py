@@ -1,5 +1,5 @@
 from ..command_registry import register_command
-from ..commands.patch_ops import patch_file, patch_diff
+from ..commands.patch_ops import patch_diff, patch_file
 
 
 def handle_self_patch_file(command, args, block):

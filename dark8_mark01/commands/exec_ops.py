@@ -1,8 +1,9 @@
+import locale
+import os
 import subprocess
 import sys
 import tempfile
-import os
-import locale
+
 from ..command_registry import register_command
 
 
@@ -18,6 +19,7 @@ def log_error(msg):
 # SYSTEMOWE KODOWANIE (Windows / Linux / macOS)
 # ---------------------------------------------------------
 
+
 def _get_system_encoding():
     """
     Zwraca preferowane kodowanie systemowe.
@@ -32,6 +34,7 @@ def _get_system_encoding():
 # GŁÓWNY HANDLER
 # ---------------------------------------------------------
 
+
 def handle(command, args, block):
     if command == "RUN":
         return run_command(block)
@@ -45,6 +48,7 @@ def handle(command, args, block):
 # ---------------------------------------------------------
 # RUN — wykonanie komendy systemowej
 # ---------------------------------------------------------
+
 
 def run_command(cmd_text):
     if not cmd_text:
@@ -62,7 +66,7 @@ def run_command(cmd_text):
             capture_output=True,
             text=True,
             encoding=encoding,
-            errors="replace"
+            errors="replace",
         )
 
         if result.stdout:
@@ -82,6 +86,7 @@ def run_command(cmd_text):
 # ---------------------------------------------------------
 # RUN_PYTHON — sandbox Python
 # ---------------------------------------------------------
+
 
 def run_python(code):
     if not code:
@@ -104,7 +109,7 @@ def run_python(code):
             capture_output=True,
             text=True,
             encoding=encoding,
-            errors="replace"
+            errors="replace",
         )
 
         if result.stdout:
@@ -131,6 +136,7 @@ def run_python(code):
 # ---------------------------------------------------------
 # REJESTRACJA KOMEND
 # ---------------------------------------------------------
+
 
 def register():
     for cmd in ["RUN", "RUN_PYTHON"]:

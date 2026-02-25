@@ -1,4 +1,5 @@
 import psutil
+
 from dark8_mark01.core.kernel.dark8_kernel_event_dispatcher import Dark8KernelEventDispatcher
 
 
@@ -22,7 +23,11 @@ class Dark8KernelSystemMonitor:
 
         # eventy krytyczne
         if cpu >= self.cpu_threshold:
-            self.dispatcher.emit("CPU_HIGH", "KernelMonitor", {"cpu": cpu, "threshold": self.cpu_threshold})
+            self.dispatcher.emit(
+                "CPU_HIGH", "KernelMonitor", {"cpu": cpu, "threshold": self.cpu_threshold}
+            )
 
         if ram >= self.ram_threshold:
-            self.dispatcher.emit("RAM_HIGH", "KernelMonitor", {"ram": ram, "threshold": self.ram_threshold})
+            self.dispatcher.emit(
+                "RAM_HIGH", "KernelMonitor", {"ram": ram, "threshold": self.ram_threshold}
+            )

@@ -1,6 +1,7 @@
 # plugin_git_status.py
 import subprocess
 
+
 def handle_GIT_STATUS(task: dict, context: dict) -> dict:
     path = task.get("path")
 
@@ -9,9 +10,7 @@ def handle_GIT_STATUS(task: dict, context: dict) -> dict:
 
     try:
         result = subprocess.run(
-            ["git", "-C", path, "status", "--short"],
-            capture_output=True,
-            text=True
+            ["git", "-C", path, "status", "--short"], capture_output=True, text=True
         )
         return {
             "status": "ok",

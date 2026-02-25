@@ -1,4 +1,5 @@
 import os
+
 from dark8_llm_os_api import llm_fix_task
 
 MAX_FILE_CHARS = 8000
@@ -36,7 +37,10 @@ def _write_file_safe(path, content):
 
 def _build_auto_fix_prompt(rel_path, original_code):
     if len(original_code) > MAX_FILE_CHARS:
-        original_code = original_code[:MAX_FILE_CHARS] + f"\n\n# [DARK8] Plik przycięty do {MAX_FILE_CHARS} znaków.\n"
+        original_code = (
+            original_code[:MAX_FILE_CHARS]
+            + f"\n\n# [DARK8] Plik przycięty do {MAX_FILE_CHARS} znaków.\n"
+        )
 
     return f"""
 Jesteś modułem AUTO-FIX DARK8-OS.

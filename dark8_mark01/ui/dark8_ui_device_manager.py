@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QListWidget, QPushButton
+from PySide6.QtWidgets import QLabel, QListWidget, QPushButton, QVBoxLayout, QWidget
 
 from dark8_mark01.devices.device_manager import get_all_devices
 
@@ -64,6 +64,4 @@ class DeviceManagerPanel(QWidget):
             ssid = net.get("ssid", "N/A")
             signal = net.get("signal", "N/A")
 
-            self.list_widget.addItem(
-                f"Wi‑Fi | SSID: {ssid} | Signal: {signal}"
-            )
+            self.list_widget.addItem(f"Wi‑Fi | SSID: {ssid} | Signal: {signal}")
