@@ -5,9 +5,8 @@ Autor: DARK8 Development Team
 """
 
 import json
-import time
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple, Any
+from typing import Dict, List, Optional
 from dataclasses import dataclass, asdict
 from enum import Enum
 from collections import defaultdict, deque
@@ -412,10 +411,10 @@ class Logger:
         result = list(self.logs)
         
         if level:
-            result = [l for l in result if l['level'] == level]
+            result = [entry for entry in result if entry['level'] == level]
         
         if component:
-            result = [l for l in result if l['component'] == component]
+            result = [entry for entry in result if entry['component'] == component]
         
         return result[-limit:]
     
@@ -424,7 +423,7 @@ class Logger:
         stats = {'total_logs': len(self.logs)}
         
         for level in self.log_levels:
-            count = sum(1 for l in self.logs if l['level'] == level)
+            count = sum(1 for entry in self.logs if entry['level'] == level)
             stats[f'{level.lower()}_count'] = count
         
         return stats

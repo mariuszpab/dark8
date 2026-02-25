@@ -7,7 +7,7 @@ def build_mpx_from_plan(plan: list[dict], task_description: str) -> str:
     Na razie: szablon + komentarze.
     """
     lines = []
-    lines.append(f"# AUTO-GENERATED MPX SCENARIO")
+    lines.append("# AUTO-GENERATED MPX SCENARIO")
     lines.append(f"# TASK: {task_description}")
     lines.append("")
 

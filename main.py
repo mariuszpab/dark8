@@ -1,5 +1,8 @@
 import tkinter as tk
 from tkinter import scrolledtext
+from dark8_mark01.nlp.nlp_engine import interpret as interpret_polish
+from dark8_mark01.utils.dark8_backend import ensure_backend_ready
+from dark8_mark01.utils.dark8_watchdog import start_watchdog
 
 # ---------------------------------------------------------
 # 1. ŁADOWANIE DARK8 (core + pluginy)
@@ -20,15 +23,11 @@ load_plugins()
 # 2. NLP — silnik interpretacji języka naturalnego
 # ---------------------------------------------------------
 
-from dark8_mark01.nlp.nlp_engine import interpret as interpret_polish
 
 
 # ---------------------------------------------------------
 # 3. Backend + Watchdog
 # ---------------------------------------------------------
-
-from dark8_mark01.utils.dark8_backend import ensure_backend_ready
-from dark8_mark01.utils.dark8_watchdog import start_watchdog
 
 # Backend LLM musi być gotowy zanim UI wystartuje
 ensure_backend_ready()

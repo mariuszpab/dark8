@@ -11,7 +11,7 @@ from dark8_core.logger import logger
 
 class InputValidator:
     """Validate and sanitize user inputs"""
-    
+
     @staticmethod
     def validate_command(command: str) -> bool:
         """Validate command input"""
@@ -21,7 +21,7 @@ class InputValidator:
             logger.warning("Command too long")
             return False
         return True
-    
+
     @staticmethod
     def validate_filepath(path: str) -> bool:
         """Validate file path for security"""
@@ -33,12 +33,12 @@ class InputValidator:
             logger.warning(f"System path access denied: {path}")
             return False
         return True
-    
+
     @staticmethod
     def validate_code(code: str) -> Dict[str, Any]:
         """Validate code for security issues"""
         issues = []
-        
+
         # Check for dangerous patterns
         dangerous_patterns = [
             r"__import__\(",
@@ -48,11 +48,11 @@ class InputValidator:
             r"subprocess\.call\(",
             r"open\(.*'w'",  # File write
         ]
-        
+
         for pattern in dangerous_patterns:
             if re.search(pattern, code):
                 issues.append(f"⚠️ Dangerous pattern detected: {pattern}")
-        
+
         return {
             "valid": len(issues) == 0,
             "issues": issues,
@@ -62,42 +62,42 @@ class InputValidator:
 
 class RateLimiter:
     """Rate limiting for API endpoints"""
-    
+
     def __init__(self, max_requests: int = 100, window_seconds: int = 60):
         self.max_requests = max_requests
         self.window_seconds = window_seconds
         self.requests: Dict[str, list] = {}
-    
+
     def is_allowed(self, client_id: str) -> bool:
         """Check if request is allowed"""
         import time
-        
+
         now = time.time()
         cutoff = now - self.window_seconds
-        
+
         if client_id not in self.requests:
             self.requests[client_id] = []
-        
+
         # Remove old requests
         self.requests[client_id] = [
             req_time for req_time in self.requests[client_id]
             if req_time > cutoff
         ]
-        
+
         if len(self.requests[client_id]) >= self.max_requests:
             logger.warning(f"Rate limit exceeded for {client_id}")
             return False
-        
+
         self.requests[client_id].append(now)
         return True
 
 
 class AuditLogger:
     """Log all security-relevant actions"""
-    
+
     def __init__(self, db=None):
         self.db = db
-    
+
     def log_operation(
         self,
         action: str,
@@ -107,18 +107,9 @@ class AuditLogger:
         details: Optional[Dict] = None
     ):
         """Log security-relevant operation"""
-        
-        log_entry = {
-            "action": action,
-            "user": user,
-            "resource": resource,
-            "result": result,
-            "details": details or {},
-            "timestamp": str(__import__("datetime").datetime.now()),
-        }
-        
+
         logger.info(f"🔐 AUDIT: {action} on {resource} - {result}")
-        
+
         if self.db:
             try:
                 self.db.add_audit_log(
@@ -133,12 +124,12 @@ class AuditLogger:
 
 class SecurityContext:
     """Security context for operations"""
-    
+
     def __init__(self, user: str = "system", role: str = "user"):
         self.user = user
         self.role = role
         self.permissions = self._get_permissions(role)
-    
+
     def _get_permissions(self, role: str) -> set:
         """Get permissions for role"""
         permissions_map = {
@@ -148,11 +139,11 @@ class SecurityContext:
             "guest": {"read"},
         }
         return permissions_map.get(role, {"read"})
-    
+
     def can_execute(self, operation: str) -> bool:
         """Check if operation is allowed"""
         return operation in self.permissions
-    
+
     def require_permission(self, operation: str) -> bool:
         """Require permission or raise error"""
         if not self.can_execute(operation):

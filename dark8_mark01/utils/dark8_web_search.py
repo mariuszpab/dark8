@@ -1,14 +1,12 @@
 # dark8_web_search.py
+# dark8_web_search.py
 # Moduł wyszukiwania informacji dla DARK8
 #
 # Źródła:
 # - DuckDuckGo Instant Answer API (bez klucza)
 # - Wikipedia API (bez klucza)
 #
-# Brak limitów rozmiaru i czasu.
-# Brak blokad typów danych.
-# Bez scrapowania Google.
-# Stabilne, legalne, szybkie.
+# Proste, bezpieczne wywołania HTTP; brak scrapowania Google.
 
 import requests
 from requests.exceptions import RequestException
@@ -98,17 +96,18 @@ def simple_search(query: str) -> str:
     # Wikipedia
     try:
         wiki = search_wikipedia(query)
-        if "extract" in wiki:
+        if isinstance(wiki, dict) and wiki.get("extract"):
             return wiki["extract"]
-    except:
+    except Exception:
         pass
 
     # DuckDuckGo
     try:
         ddg = search_duckduckgo(query)
-        if ddg.get("Abstract"):
+        if isinstance(ddg, dict) and ddg.get("Abstract"):
             return ddg["Abstract"]
-    except:
+    except Exception:
         pass
 
     return f"Brak wyników dla: {query}"
+

@@ -1,5 +1,4 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QTextEdit, QLineEdit, QLabel
-from PySide6.QtCore import Qt
 
 from dark8_mark01.ui.terminal.dark8_terminal import Dark8TerminalInterpreter
 

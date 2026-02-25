@@ -5,9 +5,8 @@ Learns from successful and failed tasks.
 """
 
 from typing import Dict, List, Optional
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from datetime import datetime, timedelta
-import json
 
 from dark8_core.logger import logger
 from dark8_core.persistence import get_database
@@ -159,10 +158,10 @@ class AgentLearner:
     def get_success_rate(self, intent: str, time_window_hours: int = 24) -> float:
         """Get success rate for intent in time window"""
         
-        cutoff = datetime.now() - timedelta(hours=time_window_hours)
+        _cutoff = datetime.now() - timedelta(hours=time_window_hours)
         recent_metrics = [
             m for m in self.metrics
-            if m.intent == intent and m.timestamp > cutoff
+            if m.intent == intent and m.timestamp > _cutoff
         ]
         
         if not recent_metrics:
@@ -267,7 +266,7 @@ class MemoryConsolidation:
     @staticmethod
     def prune_old_memories(db, days: int = 30):
         """Remove old memories older than N days"""
-        cutoff = datetime.now() - timedelta(days=days)
+        _cutoff = datetime.now() - timedelta(days=days)
         logger.info(f"🗑️ Pruning memories older than {days} days")
         # Implementation would delete old records
 

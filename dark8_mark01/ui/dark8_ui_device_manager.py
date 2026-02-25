@@ -1,5 +1,4 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QListWidget, QPushButton
-from PySide6.QtCore import Qt
 
 from dark8_mark01.devices.device_manager import get_all_devices
 

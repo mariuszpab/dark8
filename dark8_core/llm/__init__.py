@@ -3,7 +3,6 @@
 Integration with local Ollama LLM backend for advanced reasoning.
 """
 
-import asyncio
 from typing import Optional, Dict, List, AsyncGenerator
 import json
 
@@ -33,7 +32,7 @@ class OllamaClient:
                     async with httpx.AsyncClient(timeout=5) as client:
                         response = await client.get(f"{self.host}/api/tags")
                         return response.status_code == 200
-                except:
+                except Exception:
                     return False
             
             # Run sync check

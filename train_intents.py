@@ -22,8 +22,8 @@ dataset = load_dataset("json", data_files=DATA_PATH, split="train")
 
 # ETYKIETY INTENCJI
 labels = sorted(list(set(dataset["label"])))
-label2id = {l: i for i, l in enumerate(labels)}
-id2label = {i: l for l, i in label2id.items()}
+label2id = {label: i for i, label in enumerate(labels)}
+id2label = {i: label for label, i in label2id.items()}
 
 print(f"Liczba intencji: {len(labels)}")
 print("Intencje:", labels)

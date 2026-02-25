@@ -13,10 +13,11 @@ def scan_usb_devices():
             result.append({
                 "vendor": hex(dev.idVendor),
                 "product": hex(dev.idProduct),
-                "bus": dev.bus,
-                "address": dev.address,
+                "bus": getattr(dev, "bus", None),
+                "address": getattr(dev, "address", None),
             })
-        except:
-            pass
+        except Exception:
+            # ignore devices we cannot inspect
+            continue
 
     return result

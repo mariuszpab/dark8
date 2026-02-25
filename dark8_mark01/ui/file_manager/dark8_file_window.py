@@ -2,7 +2,6 @@ from PySide6.QtWidgets import (
     QWidget, QHBoxLayout, QVBoxLayout, QLabel, QListWidget,
     QPushButton, QLineEdit, QMessageBox
 )
-from PySide6.QtCore import Qt
 
 from dark8_mark01.core.vfs.dark8_vfs_manager import Dark8VFSManager
 
@@ -93,17 +92,17 @@ class Dark8FileWindow(QWidget):
         def walk(path, indent=""):
             try:
                 items = self.vfs.list_dir(path)
-            except:
+            except Exception:
                 return
 
             for name in items:
                 subpath = path.rstrip("/") + "/" + name
                 # sprawdzamy czy to katalog
                 try:
-                    children = self.vfs.list_dir(subpath)
+                    _children = self.vfs.list_dir(subpath)
                     self.tree.addItem(indent + name + "/")
                     walk(subpath, indent + "  ")
-                except:
+                except Exception:
                     pass  # plik – ignorujemy w drzewie
 
         walk("/")
@@ -123,7 +122,7 @@ class Dark8FileWindow(QWidget):
         self.content.clear()
         try:
             items = self.vfs.list_dir(self.current_path)
-        except:
+        except Exception:
             return
 
         for name in items:
@@ -132,7 +131,7 @@ class Dark8FileWindow(QWidget):
             try:
                 self.vfs.list_dir(subpath)
                 self.content.addItem(name + "/")
-            except:
+            except Exception:
                 self.content.addItem(name)
 
     def on_content_double_click(self, item):

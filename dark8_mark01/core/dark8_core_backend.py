@@ -171,7 +171,7 @@ class Dark8CoreBackend:
             pid = int(args[0])
             if self.scheduler.kill_task(pid):
                 return f"Killed process {pid}"
-            return f"kill: no such pid"
+            return "kill: no such pid"
 
         # ===== IPC =====
         if cmd == "send":

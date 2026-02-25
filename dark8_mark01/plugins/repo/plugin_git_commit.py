@@ -12,7 +12,7 @@ def handle_GIT_COMMIT(task: dict, context: dict) -> dict:
         return {"error": "GIT_COMMIT wymaga pola 'message'"}
 
     try:
-        add = subprocess.run(
+        _add = subprocess.run(
             ["git", "-C", path, "add", "."],
             capture_output=True,
             text=True

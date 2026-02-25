@@ -6,7 +6,6 @@ Usage: python -m dark8_core [--mode cli|api|browser]
 
 import sys
 import asyncio
-from typing import Optional
 
 from dark8_core.logger import logger
 from dark8_core.config import config
@@ -53,7 +52,7 @@ async def main_async(mode: str = "cli"):
     """Main async entry point"""
     
     # Boot system
-    agent = await boot()
+    _agent = await boot()
     
     # Route to mode
     if mode == "cli":

@@ -4,7 +4,6 @@ Command-line interface for DARK8 OS agent.
 """
 
 import asyncio
-from typing import Optional
 
 from dark8_core.logger import logger
 from dark8_core.nlp import get_nlp_engine
@@ -74,7 +73,7 @@ Examples:
         print(f"  CPU: {cpu}%")
         print(f"  Memory: {mem.percent}%")
         print(f"  Available: {mem.available / 1024 / 1024:.1f} MB")
-        print(f"\n📚 Agent:")
+        print("\n📚 Agent:")
         print(f"  Memories: {len(self.agent.memory.conversation_history)}")
         print(f"  Tasks: {len(self.agent.memory.task_history)}")
     

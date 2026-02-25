@@ -4,9 +4,8 @@ Semantic NLP using BERT Polish fine-tuned model.
 Replaces keyword-based classification with embeddings.
 """
 
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Tuple
 from dataclasses import dataclass
-import json
 
 
 @dataclass

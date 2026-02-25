@@ -87,6 +87,18 @@ agent> analizuj kod z repozytorium UserService
 
 [ANALYZER] Pobieram repo...
 [ANALYSIS] Kod jest dobrze strukturyzowany. sugeruję refaktor w ...
+
+### Budowanie pliku źródłowego (.d8)
+
+Jeżeli chcesz wygenerować IR z pliku źródłowego w formacie .d8, możesz użyć skryptu CLI:
+
+```bash
+# lokalnie (python)
+python dark8_build.py program.d8
+
+# po instalacji jako pakiet dostępne jako polecenie:
+dark8-build program.d8
+```
 ```
 
 ---

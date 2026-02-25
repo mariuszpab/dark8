@@ -13,7 +13,6 @@
 # - obsługa błędów sieciowych
 # - logowanie (opcjonalne)
 
-import os
 import requests
 from requests.exceptions import RequestException
 

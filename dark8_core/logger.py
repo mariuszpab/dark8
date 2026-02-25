@@ -2,8 +2,6 @@
 # Centralized logging for entire system
 
 import sys
-from pathlib import Path
-from typing import Optional
 
 from loguru import logger as loguru_logger
 

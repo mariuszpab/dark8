@@ -3,8 +3,7 @@
 Enhanced agent with multi-step planning and reasoning.
 """
 
-import asyncio
-from typing import List, Dict, Optional, Callable
+from typing import List, Dict, Optional
 from dataclasses import dataclass
 
 from dark8_core.logger import logger

@@ -1,5 +1,4 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QListWidget, QListWidgetItem, QLabel
-from PySide6.QtCore import Qt
 
 from dark8_mark01.ui.system_log.dark8_system_log_bus import Dark8SystemLogBus
 

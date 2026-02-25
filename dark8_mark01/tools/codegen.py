@@ -1,4 +1,3 @@
-import os
 
 def generate_code(language: str, prompt: str) -> str:
     """

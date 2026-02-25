@@ -27,7 +27,6 @@ class Dark8MainWindow(QMainWindow):
         splitter.setStretchFactor(1, 1)
 
         container = QWidget()
-        layout = splitter
         container.setLayout(None)  # QSplitter sam zarządza
         self.setCentralWidget(splitter)
 

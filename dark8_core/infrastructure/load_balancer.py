@@ -5,7 +5,6 @@ Autor: DARK8 Development Team
 """
 
 import hashlib
-import time
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass, asdict
@@ -347,7 +346,7 @@ class HealthMonitor:
             self.last_check_time[backend_id] = datetime.now()
             return backend.healthy
             
-        except Exception as e:
+        except Exception:
             self.failed_checks[backend_id] += 1
             
             if self.failed_checks[backend_id] >= self.max_failures:

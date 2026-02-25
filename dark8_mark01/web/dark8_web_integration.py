@@ -3,11 +3,9 @@
 
 from dark8_mark01.utils.dark8_web_fetch import (
     fetch_page,
-    fetch_api_json,
     fetch_file,
 )
 from dark8_mark01.utils.dark8_web_search import (
-    web_search,
     simple_search,
 )
 from dark8_mark01.utils.dark8_web_analyze import (

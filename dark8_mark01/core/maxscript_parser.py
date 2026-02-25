@@ -7,7 +7,6 @@
 # - parametry
 # - listę tasków kompatybilną z TaskRunnerem
 
-import re
 
 
 class MaxscriptParser:

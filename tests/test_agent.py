@@ -1,7 +1,6 @@
 """Integration tests for Agent"""
 
 import pytest
-import asyncio
 from dark8_core.agent import Agent, Task
 
 

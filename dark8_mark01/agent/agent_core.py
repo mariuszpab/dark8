@@ -124,7 +124,7 @@ def interactive_jobs_commands(text: str):
     if stripped.startswith("job "):
         try:
             job_id = int(stripped.split()[1])
-        except:
+        except (ValueError, IndexError):
             return "JOB_DETAIL", "Niepoprawne ID joba."
         job = get_job(job_id)
         if not job:
@@ -143,7 +143,7 @@ def interactive_jobs_commands(text: str):
     if stripped.startswith("kill "):
         try:
             job_id = int(stripped.split()[1])
-        except:
+        except (ValueError, IndexError):
             return "JOB_KILL", "Niepoprawne ID joba."
         msg = kill_job(job_id)
         return "JOB_KILL", msg

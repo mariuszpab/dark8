@@ -4,10 +4,8 @@ Main agent loop with reasoning and tool execution.
 Integrates with Ollama LLM backend.
 """
 
-import asyncio
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
-import json
 
 from dark8_core.logger import logger
 from dark8_core.config import config
@@ -151,7 +149,7 @@ class Agent:
         tasks = self._plan_tasks(intent, entities, user_input)
         
         # Step 3: REASON (placeholder - Ollama integration)
-        decision = await self._reason_with_llm(user_input, tasks)
+        _decision = await self._reason_with_llm(user_input, tasks)
         
         # Step 4: ACT
         results = []

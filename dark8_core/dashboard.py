@@ -4,9 +4,8 @@ FastAPI backend for web dashboard.
 Real-time monitoring, metrics, agent status.
 """
 
-from typing import Dict, List, Optional
+from typing import Dict, List
 from dataclasses import dataclass
-import json
 
 
 @dataclass

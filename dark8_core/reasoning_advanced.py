@@ -4,7 +4,7 @@ Chain-of-Thought prompting and multi-step reasoning.
 Complex task decomposition and solving.
 """
 
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict
 from dataclasses import dataclass
 
 
@@ -21,48 +21,47 @@ class ReasoningStep:
 
 class ChainOfThoughtEngine:
     """Generate and execute chain-of-thought reasoning"""
-    
+
     def __init__(self):
         self.reasoning_chains: List[List[ReasoningStep]] = []
-    
+
     def generate_cot_chain(self, task: str, depth: int = 5) -> List[str]:
         """
         Generate chain-of-thought steps.
-        
+
         Example:
         Task: "Zbuduj API z autentykacją"
         Step 1: Rozumieję zadanie - API z logowaniem
         Step 2: Rozbijaę na podzadania - setup, modele, routy, auth
         ...
         """
-        
+
         cot_steps = [
             f"🤔 Krok 1: Rozumieję zadanie - {task}",
-            f"📋 Krok 2: Rozbijaę na podzadania",
-            f"🔍 Krok 3: Analizuję zależności",
-            f"🛠️ Krok 4: Planuję implementację",
-            f"✅ Krok 5: Weryfikuję plan",
+            "📋 Krok 2: Rozbijaę na podzadania",
+            "🔍 Krok 3: Analizuję zależności",
+            "🛠️ Krok 4: Planuję implementację",
+            "✅ Krok 5: Weryfikuję plan",
         ]
-        
+
         return cot_steps[:depth]
-    
+
     def execute_chain(self, task: str) -> Dict:
         """Execute full reasoning chain"""
-        
+
         steps = []
-        current_thought = task
-        
+
         # Step 1: Problem Understanding
         step1 = ReasoningStep(
             step_number=1,
             thought=f"Problem to: {task}",
             action="understand",
-            observation=f"Zadanie wymaga: analiza, planowanie, implementacja",
+            observation="Zadanie wymaga: analiza, planowanie, implementacja",
             reasoning="Podzielę zadanie na mniejsze części",
             confidence=0.9,
         )
         steps.append(step1)
-        
+
         # Step 2: Decomposition
         step2 = ReasoningStep(
             step_number=2,
@@ -73,7 +72,7 @@ class ChainOfThoughtEngine:
             confidence=0.85,
         )
         steps.append(step2)
-        
+
         # Step 3: Resource Planning
         step3 = ReasoningStep(
             step_number=3,
@@ -84,7 +83,7 @@ class ChainOfThoughtEngine:
             confidence=0.8,
         )
         steps.append(step3)
-        
+
         # Step 4: Execution Planning
         step4 = ReasoningStep(
             step_number=4,
@@ -95,7 +94,7 @@ class ChainOfThoughtEngine:
             confidence=0.85,
         )
         steps.append(step4)
-        
+
         # Step 5: Risk Assessment
         step5 = ReasoningStep(
             step_number=5,
@@ -106,7 +105,7 @@ class ChainOfThoughtEngine:
             confidence=0.75,
         )
         steps.append(step5)
-        
+
         return {
             "task": task,
             "reasoning_chain": steps,
@@ -117,17 +116,17 @@ class ChainOfThoughtEngine:
 
 class TreeOfThoughtEngine:
     """Multi-branch reasoning (Tree-of-Thought)"""
-    
+
     def __init__(self):
         self.reasoning_tree: Dict = {}
-    
+
     def generate_branches(self, problem: str, num_branches: int = 3) -> List[List[str]]:
         """
         Generate multiple reasoning branches.
-        
+
         Returns different approaches to solve the same problem.
         """
-        
+
         branches = [
             [
                 "Podejście 1: Standardowe",
@@ -148,17 +147,17 @@ class TreeOfThoughtEngine:
                 "- Adaptuj do kontekstu",
             ],
         ]
-        
+
         return branches[:num_branches]
-    
+
     def evaluate_branches(self, branches: List[List[str]], criteria: Dict) -> Dict:
         """Evaluate and rank different approaches"""
-        
+
         rankings = {}
-        
+
         for i, branch in enumerate(branches):
             score = 0
-            
+
             # Score based on criteria
             if "simplicity" in criteria:
                 score += criteria["simplicity"] * (5 - i)  # Simpler first
@@ -166,36 +165,36 @@ class TreeOfThoughtEngine:
                 score += criteria["efficiency"] * (i + 1)  # Different efficiency per approach
             if "reliability" in criteria:
                 score += criteria["reliability"] * 0.8  # All reliable
-            
+
             rankings[f"approach_{i+1}"] = {
                 "score": score,
                 "investment": ["low", "high", "medium"][i],
                 "risk": ["low", "high", "medium"][i],
             }
-        
+
         return rankings
 
 
 class ComplexReasoningEngine:
     """Highest level - complex multi-step reasoning"""
-    
+
     def __init__(self):
         self.cot_engine = ChainOfThoughtEngine()
         self.tot_engine = TreeOfThoughtEngine()
-    
+
     def solve_complex_task(self, task: str) -> Dict:
         """
         Solve complex task using combined reasoning.
-        
+
         Combines Chain-of-Thought + Tree-of-Thought.
         """
-        
+
         # Generate chain-of-thought
         cot_result = self.cot_engine.execute_chain(task)
-        
+
         # Generate branches
         approaches = self.tot_engine.generate_branches(task, num_branches=3)
-        
+
         # Evaluate approaches
         criteria = {
             "simplicity": 0.3,
@@ -206,10 +205,10 @@ class ComplexReasoningEngine:
             [[a for a in app] for app in approaches],
             criteria
         )
-        
+
         # Select best approach
         best_approach = max(rankings, key=lambda x: rankings[x]["score"])
-        
+
         return {
             "task": task,
             "chain_of_thought": cot_result,

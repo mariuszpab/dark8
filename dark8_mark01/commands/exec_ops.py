@@ -124,7 +124,7 @@ def run_python(code):
         # Usuwamy plik tymczasowy
         try:
             os.remove(tmp_path)
-        except:
+        except Exception:
             pass
 
 

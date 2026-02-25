@@ -27,6 +27,7 @@ class BinaryOp(Expr):
 @dataclass
 class VarRef(Expr):
     name: str
+    resolved: object = None
 
 
 @dataclass
@@ -38,6 +39,30 @@ class Return(Node):
 class Call(Expr):
     name: str
     args: List[Expr]
+    resolved: object = None
+
+
+@dataclass
+class If(Node):
+    cond: Expr
+    then_body: List[Node]
+    else_body: Optional[List[Node]] = None
+
+
+@dataclass
+class While(Node):
+    cond: Expr
+    body: List[Node]
+
+
+@dataclass
+class Break(Node):
+    pass
+
+
+@dataclass
+class Continue(Node):
+    pass
 
 
 @dataclass

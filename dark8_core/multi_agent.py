@@ -4,10 +4,9 @@ Multiple specialized agents working together.
 Task distribution, coordination, result aggregation.
 """
 
-from typing import List, Dict, Optional, Callable
+from typing import List, Dict
 from dataclasses import dataclass
 from enum import Enum
-import json
 
 
 class AgentRole(Enum):

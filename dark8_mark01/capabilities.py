@@ -1,12 +1,19 @@
-// Kod wygenerowany przez DARK8 OS
-// Język: python
 
-// TODO: implementacja na podstawie promptu:
-// 
-Stwórz nowy moduł zgodnie z instrukcją:
+"""Placeholder module: capabilities
 
-Instrukcja:
-stwórz moduł opisujący dostępne narzędzia i funkcje DARK8 jako listę capabilities
+This file is a placeholder generated during development. It previously
+contained non-Python content and has been replaced with a valid
+Python module stub so linters do not report syntax errors.
+"""
 
-Wygeneruj kompletny kod modułu.
+CAPABILITIES = [
+	# Example capability entries
+	{"name": "file_read", "desc": "Read files from the filesystem"},
+	{"name": "file_write", "desc": "Write files to the filesystem"},
+	{"name": "shell_execute", "desc": "Execute shell commands (sandboxed)"},
+]
+
+
+def list_capabilities():
+	return CAPABILITIES
 

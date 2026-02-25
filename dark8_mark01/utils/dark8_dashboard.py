@@ -33,7 +33,7 @@ def _tail_file(path: str, max_lines: int):
     except Exception as e:
         return [f"(błąd odczytu: {e})"]
 
-    lines = [l.rstrip("\n") for l in lines]
+    lines = [ln.rstrip("\n") for ln in lines]
     if len(lines) <= max_lines:
         return lines
     return lines[-max_lines:]

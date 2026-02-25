@@ -1,6 +1,5 @@
 import os
 import json
-import re
 from ..command_registry import register_command
 from ..commands.patch_ops import load_json_lenient
 
@@ -90,7 +89,7 @@ def handle_config_set(command, args, block):
     # Spróbuj sparsować wartość jako JSON
     try:
         value = load_json_lenient(value_raw)
-    except:
+    except Exception:
         # Jeśli nie jest JSON-em, traktujemy jako string
         value = value_raw
 

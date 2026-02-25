@@ -132,6 +132,7 @@ Issues = "https://github.com/dark8-os/dark8/issues"
 dark8 = "dark8_core.ui.cli:main"
 dark8-api = "dark8_core.ui.api:main"
 dark8-browser = "dark8_core.browser.browser:main"
+dark8-build = "dark8_build:main"
 
 [tool.setuptools]
 packages = ["dark8_core"]

@@ -4,7 +4,7 @@ Database models, migrations, and storage abstractions.
 """
 
 from datetime import datetime
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict
 
 from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, JSON, Float
 from sqlalchemy.ext.declarative import declarative_base
@@ -25,7 +25,7 @@ Base = declarative_base()
 class Project(Base):
     """Represents a saved project"""
     __tablename__ = "projects"
-    
+
     id = Column(Integer, primary_key=True)
     name = Column(String(255), unique=True, nullable=False)
     description = Column(Text)
@@ -39,7 +39,7 @@ class Project(Base):
 class Conversation(Base):
     """Represents a user-AI conversation"""
     __tablename__ = "conversations"
-    
+
     id = Column(Integer, primary_key=True)
     user_input = Column(Text, nullable=False)
     ai_response = Column(Text, nullable=False)
@@ -53,7 +53,7 @@ class Conversation(Base):
 class Task(Base):
     """Represents an executed task"""
     __tablename__ = "tasks"
-    
+
     id = Column(String(100), primary_key=True)
     description = Column(Text)
     intent = Column(String(100))
@@ -67,7 +67,7 @@ class Task(Base):
 class KnowledgeItem(Base):
     """Code snippets, patterns, templates in knowledge base"""
     __tablename__ = "knowledge_base"
-    
+
     id = Column(Integer, primary_key=True)
     type = Column(String(50))  # code_snippet, pattern, template, example
     title = Column(String(255))
@@ -81,7 +81,7 @@ class KnowledgeItem(Base):
 class AuditLog(Base):
     """Audit trail for security and debugging"""
     __tablename__ = "audit_log"
-    
+
     id = Column(Integer, primary_key=True)
     action = Column(String(100))  # command_executed, file_written, code_generated, etc
     user_input = Column(Text)
@@ -97,39 +97,39 @@ class AuditLog(Base):
 
 class DatabaseManager:
     """Manage database operations"""
-    
+
     def __init__(self):
         self.engine = None
         self.SessionLocal = None
         self._init_database()
-    
+
     def _init_database(self):
         """Initialize database connection"""
         try:
             logger.info(f"Connecting to database: {config.DATABASE_URL}")
-            
+
             # Create engine
             self.engine = create_engine(
                 config.DATABASE_URL,
                 echo=config.DEBUG,
                 pool_pre_ping=True,
             )
-            
+
             # Create session factory
             self.SessionLocal = sessionmaker(bind=self.engine)
-            
+
             # Create tables
             Base.metadata.create_all(self.engine)
-            
+
             logger.info("✓ Database connected and initialized")
         except Exception as e:
             logger.error(f"Database initialization error: {e}")
             raise
-    
+
     def get_session(self) -> Session:
         """Get database session"""
         return self.SessionLocal()
-    
+
     def add_project(self, name: str, description: str, path: str, app_type: str, metadata: Dict = None) -> Project:
         """Add project to database"""
         session = self.get_session()
@@ -151,7 +151,7 @@ class DatabaseManager:
             raise
         finally:
             session.close()
-    
+
     def get_project(self, name: str) -> Optional[Project]:
         """Get project by name"""
         session = self.get_session()
@@ -159,7 +159,7 @@ class DatabaseManager:
             return session.query(Project).filter_by(name=name).first()
         finally:
             session.close()
-    
+
     def get_all_projects(self) -> List[Project]:
         """Get all projects"""
         session = self.get_session()
@@ -167,7 +167,7 @@ class DatabaseManager:
             return session.query(Project).all()
         finally:
             session.close()
-    
+
     def add_conversation(self, user_input: str, ai_response: str, intent: str, confidence: float, entities: Dict = None, context: Dict = None) -> Conversation:
         """Save conversation"""
         session = self.get_session()
@@ -190,7 +190,7 @@ class DatabaseManager:
             raise
         finally:
             session.close()
-    
+
     def get_conversations(self, limit: int = 50) -> List[Conversation]:
         """Get recent conversations"""
         session = self.get_session()
@@ -198,7 +198,7 @@ class DatabaseManager:
             return session.query(Conversation).order_by(Conversation.timestamp.desc()).limit(limit).all()
         finally:
             session.close()
-    
+
     def add_audit_log(self, action: str, user_input: str, parameters: Dict = None, result: str = "success", error_message: str = None) -> AuditLog:
         """Log audit event"""
         session = self.get_session()

@@ -7,7 +7,7 @@ Autor: DARK8 Development Team
 import json
 import time
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 from dataclasses import dataclass, asdict
 from enum import Enum
 
@@ -531,7 +531,7 @@ def test_kubernetes_manager():
     
     # Skalowanie
     cluster.scale_deployment('dark8-api', 5)
-    print(f"✅ Scale up: dark8-api -> 5 replik")
+    print("✅ Scale up: dark8-api -> 5 replik")
     
     # Serwisy
     cluster.create_service('dark8-api', {'app': 'dark8-api'}, 80, 8080, 'LoadBalancer')

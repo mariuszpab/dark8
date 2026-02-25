@@ -13,7 +13,7 @@ def handle_PATCH_DIFF(task: dict, context: dict) -> dict:
 
     try:
         with open(path, "r", encoding="utf-8") as f:
-            original = f.read().splitlines(keepends=True)
+            _original = f.read().splitlines(keepends=True)
     except Exception as e:
         return {"error": f"Nie można odczytać pliku: {e}"}
 

@@ -3,7 +3,6 @@
 
 from dark8_mark01.agent.agent_core import (
     run_agent,
-    run_agent_as_job,
     handle_shell_like,
     interactive_memory_commands,
     interactive_jobs_commands,

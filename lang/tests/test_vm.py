@@ -1,7 +1,7 @@
 from lang.lexer import Lexer
 from lang.parser import Parser
-from lang.ir.generator import generate_ir
-from lang.vm.vm import VM
+from lang.ir.generator import generate_ir_program
+from lang.vm.vm_irprogram import VMProgram
 
 
 def test_call_and_store_execution():
@@ -12,7 +12,7 @@ def test_call_and_store_execution():
     toks = list(Lexer(src))
     p = Parser(toks)
     mod = p.parse_module()
-    ir = generate_ir(mod)
-    vm = VM(ir)
+    prog = generate_ir_program(mod)
+    vm = VMProgram(prog)
     vm.run()
     assert vm.globals.get('z') == 5

@@ -10,7 +10,6 @@
 # ale NIE ma ograniczać samorozwoju, samoaktualizacji ani pracy na dużych plikach.
 
 import os
-import re
 import ipaddress
 from urllib.parse import urlparse
 

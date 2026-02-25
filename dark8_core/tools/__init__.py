@@ -5,18 +5,15 @@ File ops, shell, git, web client, etc.
 """
 
 import os
-import subprocess
 import asyncio
-from pathlib import Path
-from typing import Dict, List, Optional, Any
-import json
+from typing import Dict, Optional
 
 from dark8_core.logger import logger
 
 
 class FileOperations:
     """File system operations"""
-    
+
     @staticmethod
     async def read_file(path: str, max_lines: Optional[int] = None) -> str:
         """Read file content"""
@@ -28,7 +25,7 @@ class FileOperations:
                 return content
         except Exception as e:
             return f"Error reading {path}: {e}"
-    
+
     @staticmethod
     async def write_file(path: str, content: str, append: bool = False) -> str:
         """Write to file"""
@@ -40,7 +37,7 @@ class FileOperations:
             return f"✓ File written: {path}"
         except Exception as e:
             return f"Error writing {path}: {e}"
-    
+
     @staticmethod
     async def list_dir(path: str = ".") -> str:
         """List directory contents"""
@@ -49,7 +46,7 @@ class FileOperations:
             return "\n".join(sorted(items))
         except Exception as e:
             return f"Error listing {path}: {e}"
-    
+
     @staticmethod
     async def delete_file(path: str) -> str:
         """Delete file"""
@@ -61,7 +58,7 @@ class FileOperations:
                 return f"File not found: {path}"
         except Exception as e:
             return f"Error deleting {path}: {e}"
-    
+
     @staticmethod
     async def copy_file(src: str, dst: str) -> str:
         """Copy file"""
@@ -75,7 +72,7 @@ class FileOperations:
 
 class ShellOperations:
     """Safe shell command execution"""
-    
+
     @staticmethod
     async def execute(command: str, timeout: int = 30) -> str:
         """
@@ -84,13 +81,13 @@ class ShellOperations:
         """
         try:
             logger.info(f"[SHELL] {command}")
-            
+
             process = await asyncio.create_subprocess_shell(
                 command,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )
-            
+
             try:
                 stdout, stderr = await asyncio.wait_for(
                     process.communicate(),
@@ -99,22 +96,22 @@ class ShellOperations:
             except asyncio.TimeoutError:
                 process.kill()
                 return f"Command timeout (>{timeout}s)"
-            
+
             output = stdout.decode() + stderr.decode()
             return output.strip()
         except Exception as e:
             return f"Error executing command: {e}"
-    
+
     @staticmethod
     async def which(command: str) -> str:
         """Find command in PATH"""
         result = await ShellOperations.execute(f"which {command}")
-        return result if result and not "not found" in result else None
+        return result if result and "not found" not in result else None
 
 
 class GitOperations:
     """Git version control operations"""
-    
+
     @staticmethod
     async def clone(repo_url: str, target_dir: str) -> str:
         """Clone git repository"""
@@ -123,7 +120,7 @@ class GitOperations:
             return await ShellOperations.execute(cmd, timeout=60)
         except Exception as e:
             return f"Error cloning: {e}"
-    
+
     @staticmethod
     async def commit(path: str, message: str) -> str:
         """Commit changes"""
@@ -132,7 +129,7 @@ class GitOperations:
             return await ShellOperations.execute(cmd)
         except Exception as e:
             return f"Error committing: {e}"
-    
+
     @staticmethod
     async def push(path: str) -> str:
         """Push to remote"""
@@ -145,7 +142,7 @@ class GitOperations:
 
 class WebClient:
     """HTTP/Web client operations"""
-    
+
     @staticmethod
     async def fetch(url: str) -> str:
         """Fetch URL content"""
@@ -156,7 +153,7 @@ class WebClient:
                 return response.text[:1000]  # First 1000 chars
         except Exception as e:
             return f"Error fetching {url}: {e}"
-    
+
     @staticmethod
     async def post(url: str, data: Dict) -> str:
         """POST to URL"""
@@ -171,7 +168,7 @@ class WebClient:
 
 class SystemOperations:
     """System information and operations"""
-    
+
     @staticmethod
     async def get_system_info() -> Dict:
         """Get system information"""
@@ -190,7 +187,7 @@ class SystemOperations:
 
 class ToolRegistry:
     """Registry of all available tools"""
-    
+
     def __init__(self):
         self.tools = {
             'file_read': FileOperations.read_file,
@@ -207,12 +204,12 @@ class ToolRegistry:
             'web_post': WebClient.post,
             'sys_info': SystemOperations.get_system_info,
         }
-    
+
     async def execute(self, tool_name: str, **kwargs) -> str:
         """Execute tool by name"""
         if tool_name not in self.tools:
             return f"Tool not found: {tool_name}"
-        
+
         try:
             result = await self.tools[tool_name](**kwargs)
             return str(result)

@@ -4,10 +4,9 @@ Autonomous self-improvement system.
 Tunes prompts, adjusts parameters, learns optimal strategies.
 """
 
-from typing import Dict, List, Optional, Callable
+from typing import Dict, List
 from dataclasses import dataclass
 from datetime import datetime
-import json
 
 
 @dataclass

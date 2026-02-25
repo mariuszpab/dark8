@@ -6,7 +6,7 @@ Supports:
 """
 from typing import List
 from lang.lexer import Token, TokenType
-from lang.ast.nodes import Module, VarDecl, FunctionDef, Literal, Expr, VarRef, BinaryOp, Return, Call
+from lang.ast.nodes import Module, VarDecl, FunctionDef, Literal, Expr, VarRef, BinaryOp, Return, Call, If, While, Break, Continue
 
 
 class ParserError(Exception):
@@ -107,6 +107,104 @@ class Parser:
                     self.advance()
                 body_nodes.append(Return(value=expr))
                 continue
+                if t.type == TokenType.KEYWORD and t.value == 'if':
+                    # parse if (cond) { ... } [else { ... }]
+                    self.advance()
+                    if self.peek().type == TokenType.OP and self.peek().value == '(':
+                        self.advance()
+                        cond = self.parse_expression()
+                        self.expect(TokenType.OP, ')')
+                    else:
+                        cond = self.parse_expression()
+                    # then block
+                    self.expect(TokenType.OP, '{')
+                    then_nodes = []
+                    while True:
+                        t2 = self.peek()
+                        if t2.type == TokenType.OP and t2.value == '}':
+                            self.advance()
+                            break
+                        if t2.type == TokenType.NEWLINE or t2.type == TokenType.COMMENT:
+                            self.advance()
+                            continue
+                        if t2.type == TokenType.KEYWORD and t2.value == 'let':
+                            then_nodes.append(self.parse_let())
+                            continue
+                        if t2.type == TokenType.KEYWORD and t2.value == 'return':
+                            self.advance()
+                            then_nodes.append(Return(value=self.parse_expression()))
+                            continue
+                        then_nodes.append(self.parse_expression())
+                    # optional else
+                    else_nodes = None
+                    if self.peek().type == TokenType.KEYWORD and self.peek().value == 'else':
+                        self.advance()
+                        self.expect(TokenType.OP, '{')
+                        else_nodes = []
+                        while True:
+                            t3 = self.peek()
+                            if t3.type == TokenType.OP and t3.value == '}':
+                                self.advance()
+                                break
+                            if t3.type == TokenType.NEWLINE or t3.type == TokenType.COMMENT:
+                                self.advance()
+                                continue
+                            if t3.type == TokenType.KEYWORD and t3.value == 'let':
+                                else_nodes.append(self.parse_let())
+                                continue
+                            if t3.type == TokenType.KEYWORD and t3.value == 'return':
+                                self.advance()
+                                else_nodes.append(Return(value=self.parse_expression()))
+                                continue
+                            else_nodes.append(self.parse_expression())
+                    body_nodes.append(If(cond=cond, then_body=then_nodes, else_body=else_nodes))
+                    continue
+                if t.type == TokenType.KEYWORD and t.value == 'while':
+                    # parse while (cond) { ... }
+                    self.advance()
+                    if self.peek().type == TokenType.OP and self.peek().value == '(':
+                        self.advance()
+                        cond = self.parse_expression()
+                        self.expect(TokenType.OP, ')')
+                    else:
+                        cond = self.parse_expression()
+                    self.expect(TokenType.OP, '{')
+                    loop_nodes = []
+                    while True:
+                        t2 = self.peek()
+                        if t2.type == TokenType.OP and t2.value == '}':
+                            self.advance()
+                            break
+                        if t2.type == TokenType.NEWLINE or t2.type == TokenType.COMMENT:
+                            self.advance()
+                            continue
+                        if t2.type == TokenType.KEYWORD and t2.value == 'let':
+                            loop_nodes.append(self.parse_let())
+                            continue
+                        if t2.type == TokenType.KEYWORD and t2.value == 'return':
+                            self.advance()
+                            loop_nodes.append(Return(value=self.parse_expression()))
+                            continue
+                        if t2.type == TokenType.KEYWORD and t2.value == 'break':
+                            self.advance()
+                            loop_nodes.append(Break())
+                            # optional semicolon/newline
+                            if self.peek().type == TokenType.OP and self.peek().value == ';':
+                                self.advance()
+                            if self.peek().type == TokenType.NEWLINE:
+                                self.advance()
+                            continue
+                        if t2.type == TokenType.KEYWORD and t2.value == 'continue':
+                            self.advance()
+                            loop_nodes.append(Continue())
+                            if self.peek().type == TokenType.OP and self.peek().value == ';':
+                                self.advance()
+                            if self.peek().type == TokenType.NEWLINE:
+                                self.advance()
+                            continue
+                        loop_nodes.append(self.parse_expression())
+                    body_nodes.append(While(cond=cond, body=loop_nodes))
+                    continue
             # for now parse expression statements
             expr = self.parse_expression()
             # optional semicolon
@@ -148,6 +246,97 @@ class Parser:
             expr = self.parse_expression()
             self.expect(TokenType.OP, ')')
             return expr
+        if t.type == TokenType.KEYWORD and t.value == 'if':
+            # allow if as an expression/statement fallback
+            self.advance()
+            if self.peek().type == TokenType.OP and self.peek().value == '(':
+                self.advance()
+                cond = self.parse_expression()
+                self.expect(TokenType.OP, ')')
+            else:
+                cond = self.parse_expression()
+            self.expect(TokenType.OP, '{')
+            then_nodes = []
+            while True:
+                t2 = self.peek()
+                if t2.type == TokenType.OP and t2.value == '}':
+                    self.advance()
+                    break
+                if t2.type == TokenType.NEWLINE or t2.type == TokenType.COMMENT:
+                    self.advance()
+                    continue
+                if t2.type == TokenType.KEYWORD and t2.value == 'let':
+                    then_nodes.append(self.parse_let())
+                    continue
+                if t2.type == TokenType.KEYWORD and t2.value == 'return':
+                    self.advance()
+                    then_nodes.append(Return(value=self.parse_expression()))
+                    continue
+                then_nodes.append(self.parse_expression())
+            else_nodes = None
+            if self.peek().type == TokenType.KEYWORD and self.peek().value == 'else':
+                self.advance()
+                self.expect(TokenType.OP, '{')
+                else_nodes = []
+                while True:
+                    t3 = self.peek()
+                    if t3.type == TokenType.OP and t3.value == '}':
+                        self.advance()
+                        break
+                    if t3.type == TokenType.NEWLINE or t3.type == TokenType.COMMENT:
+                        self.advance()
+                        continue
+                    if t3.type == TokenType.KEYWORD and t3.value == 'let':
+                        else_nodes.append(self.parse_let())
+                        continue
+                    if t3.type == TokenType.KEYWORD and t3.value == 'return':
+                        self.advance()
+                        else_nodes.append(Return(value=self.parse_expression()))
+                        continue
+                    else_nodes.append(self.parse_expression())
+            return If(cond=cond, then_body=then_nodes, else_body=else_nodes)
+        if t.type == TokenType.KEYWORD and t.value == 'break':
+            self.advance()
+            # optional semicolon/newline
+            if self.peek().type == TokenType.OP and self.peek().value == ';':
+                self.advance()
+            if self.peek().type == TokenType.NEWLINE:
+                self.advance()
+            return Break()
+        if t.type == TokenType.KEYWORD and t.value == 'continue':
+            self.advance()
+            if self.peek().type == TokenType.OP and self.peek().value == ';':
+                self.advance()
+            if self.peek().type == TokenType.NEWLINE:
+                self.advance()
+            return Continue()
+        if t.type == TokenType.KEYWORD and t.value == 'while':
+            self.advance()
+            if self.peek().type == TokenType.OP and self.peek().value == '(':
+                self.advance()
+                cond = self.parse_expression()
+                self.expect(TokenType.OP, ')')
+            else:
+                cond = self.parse_expression()
+            self.expect(TokenType.OP, '{')
+            loop_nodes = []
+            while True:
+                t2 = self.peek()
+                if t2.type == TokenType.OP and t2.value == '}':
+                    self.advance()
+                    break
+                if t2.type == TokenType.NEWLINE or t2.type == TokenType.COMMENT:
+                    self.advance()
+                    continue
+                if t2.type == TokenType.KEYWORD and t2.value == 'let':
+                    loop_nodes.append(self.parse_let())
+                    continue
+                if t2.type == TokenType.KEYWORD and t2.value == 'return':
+                    self.advance()
+                    loop_nodes.append(Return(value=self.parse_expression()))
+                    continue
+                loop_nodes.append(self.parse_expression())
+            return While(cond=cond, body=loop_nodes)
         raise ParserError(f"Unexpected token in expression: {t.type} '{t.value}' at {t.line}:{t.col}")
 
     def parse_binop(self, min_prec: int = 0) -> Expr:

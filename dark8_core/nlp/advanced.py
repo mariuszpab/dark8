@@ -4,14 +4,10 @@ Enhanced NLP engine with learning capabilities.
 Uses transformer models and learns from user interactions.
 """
 
-import json
 from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass, asdict
-from pathlib import Path
-import pickle
 
 from dark8_core.logger import logger
-from dark8_core.config import config
 from dark8_core.persistence import get_database
 
 
@@ -31,7 +27,7 @@ class ParsedCommand:
 
 class AdvancedIntentClassifier:
     """Advanced intent classification with learning"""
-    
+
     INTENT_HIERARCHY = {
         "DEVELOPMENT": {
             "BUILD_APP": {"keywords": ["zbuduj", "stwórz", "utwórz"], "priority": 1},
@@ -55,66 +51,66 @@ class AdvancedIntentClassifier:
             "CONFIG": {"keywords": ["konfiguruj", "ustawienia"], "priority": 3},
         }
     }
-    
+
     def __init__(self):
         self.learned_patterns: Dict[str, float] = {}
         self._load_learned_patterns()
-    
+
     def _load_learned_patterns(self):
         """Load patterns learned from previous interactions"""
         try:
             db = get_database()
             conversations = db.get_conversations(limit=1000)
-            
+
             for conv in conversations:
                 if conv.intent and conv.confidence:
                     key = f"{conv.user_input}:{conv.intent}"
                     self.learned_patterns[key] = conv.confidence
-            
+
             logger.info(f"✓ Loaded {len(self.learned_patterns)} learned patterns")
         except Exception as e:
             logger.warning(f"Could not load learned patterns: {e}")
-    
+
     def classify(self, text: str, use_learning: bool = True) -> Tuple[str, float, str]:
         """
         Classify intent with hierarchy support.
         Returns: (intent, confidence, category)
         """
         text_lower = text.lower()
-        
+
         best_intent = "UNKNOWN"
         best_confidence = 0.0
         best_category = "OTHER"
-        
+
         # Check learned patterns first
         if use_learning:
             for key, conf in self.learned_patterns.items():
                 if key.startswith(text_lower):
                     intent = key.split(":")[1]
                     return intent, conf, "learned"
-        
+
         # Hierarchical search
         for category, intents in self.INTENT_HIERARCHY.items():
             for intent, config_dict in intents.items():
                 keywords = config_dict["keywords"]
-                
+
                 for keyword in keywords:
                     if keyword in text_lower:
                         priority = config_dict["priority"]
                         # Confidence = keyword match + priority bonus
                         confidence = 0.6 + (0.1 * (len(keyword) / len(text_lower))) + (0.04 / priority)
-                        
+
                         if confidence > best_confidence:
                             best_confidence = min(confidence, 1.0)
                             best_intent = intent
                             best_category = category
-        
+
         return best_intent, best_confidence, best_category
 
 
 class EntityExtractorAdvanced:
     """Advanced entity extraction with context awareness"""
-    
+
     ENTITY_PATTERNS = {
         "FILE_PATH": {
             "patterns": [".py", ".js", ".java", "/", "plik", "katalog", "folder"],
@@ -145,7 +141,7 @@ class EntityExtractorAdvanced:
             "type": "temporal"
         },
     }
-    
+
     @classmethod
     def extract(cls, text: str) -> Dict[str, List[Dict]]:
         """
@@ -154,10 +150,10 @@ class EntityExtractorAdvanced:
         """
         entities = {}
         text_lower = text.lower()
-        
+
         for entity_type, config_dict in cls.ENTITY_PATTERNS.items():
             entities[entity_type] = []
-            
+
             for pattern in config_dict["patterns"]:
                 if pattern in text_lower:
                     entities[entity_type].append({
@@ -165,64 +161,63 @@ class EntityExtractorAdvanced:
                         "confidence": 0.8,
                         "category": config_dict["type"]
                     })
-        
+
         return {k: v for k, v in entities.items() if v}
 
 
 class DependencyAnalyzer:
     """Analyze dependencies between entities"""
-    
+
     DEPENDENCY_RULES = {
         "BUILD_APP": ["FRAMEWORK", "LANGUAGE", "DATABASE"],
         "DEPLOY": ["TOOL", "FRAMEWORK"],
         "ANALYZE_CODE": ["FILE_PATH", "LANGUAGE"],
         "TEST": ["FRAMEWORK", "FILE_PATH"],
     }
-    
+
     @classmethod
     def analyze(cls, intent: str, entities: Dict[str, List]) -> List[str]:
         """Determine needed dependencies"""
         needed = cls.DEPENDENCY_RULES.get(intent, [])
-        provided = [e for e in needed if entities.get(e)]
         missing = [e for e in needed if not entities.get(e)]
-        
+
         return missing
 
 
 class AdvancedNLPEngine:
     """Complete advanced NLP system"""
-    
+
     def __init__(self):
         self.intent_classifier = AdvancedIntentClassifier()
         self.entity_extractor = EntityExtractorAdvanced()
         self.dependency_analyzer = DependencyAnalyzer()
         self.db = get_database()
         logger.info("✓ Advanced NLP Engine initialized")
-    
+
     def process(self, user_input: str) -> ParsedCommand:
         """Full NLP processing pipeline"""
-        
+
         # Normalize
         normalized = user_input.lower().strip()
-        
+
         # Tokenize
         tokens = self._tokenize(normalized)
-        
+
         # Classify intent
         intent, confidence, category = self.intent_classifier.classify(normalized)
-        
+
         # Extract entities
         entities = self.entity_extractor.extract(normalized)
-        
+
         # Analyze dependencies
         dependencies = self.dependency_analyzer.analyze(intent, entities)
-        
+
         # Determine priority based on intent
         priority = self._calculate_priority(intent, confidence)
-        
+
         # Check if context is needed
         context_needed = len(dependencies) > 0
-        
+
         return ParsedCommand(
             original=user_input,
             normalized=normalized,
@@ -234,7 +229,7 @@ class AdvancedNLPEngine:
             priority=priority,
             context_needed=context_needed,
         )
-    
+
     def _tokenize(self, text: str) -> List[str]:
         """Tokenize Polish text"""
         import re
@@ -242,7 +237,7 @@ class AdvancedNLPEngine:
         text = re.sub(r'[.,!?;:]', '', text)
         tokens = text.split()
         return [t for t in tokens if t]
-    
+
     def _calculate_priority(self, intent: str, confidence: float) -> int:
         """Calculate execution priority (1=highest, 5=lowest)"""
         if intent in ["DEPLOY", "BUILD_APP"]:
@@ -255,7 +250,7 @@ class AdvancedNLPEngine:
             return 4
         else:
             return 3
-    
+
     def learn_from_execution(self, command: ParsedCommand, success: bool, feedback: str = ""):
         """Learn from executed commands"""
         try:
@@ -268,7 +263,7 @@ class AdvancedNLPEngine:
                 entities=asdict(command.entities),
                 context={"success": success, "priority": command.priority}
             )
-            
+
             # Update learned patterns
             if success:
                 key = f"{command.normalized}:{command.intent}"

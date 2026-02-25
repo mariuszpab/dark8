@@ -15,7 +15,7 @@ def load_learned_intents():
     try:
         with open(LEARNING_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
-    except:
+    except Exception:
         return {}
 
 

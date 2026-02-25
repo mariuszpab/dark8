@@ -6,7 +6,6 @@ import threading
 import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib import request
-from typing import Dict
 import sys
 import os
 
