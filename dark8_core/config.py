@@ -111,6 +111,13 @@ class SystemConfig:
         default_factory=lambda: float(os.getenv("NLP_ENTITY_THRESHOLD", "0.5"))
     )
 
+    # Search / FTS boosting weights: (title_weight, content_weight, tags_weight)
+    SEARCH_WEIGHTS: tuple = field(default_factory=lambda: (
+        float(os.getenv("SEARCH_WEIGHT_TITLE", "2.0")),
+        float(os.getenv("SEARCH_WEIGHT_CONTENT", "1.0")),
+        float(os.getenv("SEARCH_WEIGHT_TAGS", "1.0")),
+    ))
+
     # Security
     SECRET_KEY: str = field(
         default_factory=lambda: os.getenv("SECRET_KEY", "dev-secret-key-change-in-production")

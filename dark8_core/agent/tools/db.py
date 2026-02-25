@@ -163,7 +163,9 @@ def ensure_documents_table(db_path: str) -> Dict[str, Any]:
     sql = """
     CREATE TABLE IF NOT EXISTS documents (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
         content TEXT NOT NULL,
+        tags TEXT,
         metadata TEXT
     )
     """
@@ -184,11 +186,11 @@ def ensure_fts5(db_path: str) -> Dict[str, Any]:
         with lock:
             conn = _connect(db_path)
             cur = conn.cursor()
-            # create a standalone FTS5 table (store content in FTS table itself)
+            # create a standalone FTS5 table with columns for boosting
             cur.executescript(
                 """
                 CREATE VIRTUAL TABLE IF NOT EXISTS documents_fts USING fts5(
-                    content
+                    title, content, tags
                 );
                 """
             )
@@ -234,19 +236,31 @@ def rebuild_fts_index(db_path: str) -> Dict[str, Any]:
             return {"success": False, "error": str(e)}
 
 
-def search_fts(db_path: str, query: str, limit: int = 10) -> List[Dict[str, Any]]:
-    """Search FTS5 virtual table. Returns list of dicts with id, snippet, score optional."""
+def search_fts(
+    db_path: str, query: str, limit: int = 10, weights: Optional[Tuple[float, float, float]] = None
+) -> List[Dict[str, Any]]:
+    """Search FTS5 virtual table. Supports optional BM25 weights tuple (title, content, tags).
+
+    Returns list of dicts with id, snippet, score.
+    """
     out: List[Dict[str, Any]] = []
     if not query:
         return out
+    if weights is None:
+        weights = (1.0, 1.0, 1.0)
     try:
-        # use MATCH; snippet uses  -1 to return whole content snippet
-        sql = "SELECT rowid, snippet(documents_fts, -1, '<b>', '</b>', '...', 10) as snippet FROM documents_fts WHERE documents_fts MATCH ? LIMIT ?"
-        res = run_query(db_path, sql, (query, limit))
+        # use MATCH; include bm25() score with per-column weights and snippet
+        sql = (
+            "SELECT rowid, bm25(documents_fts, ?, ?, ?) AS score, "
+            "snippet(documents_fts, -1, '<b>', '</b>', '...', 10) as snippet "
+            "FROM documents_fts WHERE documents_fts MATCH ? ORDER BY score ASC LIMIT ?"
+        )
+        params = (weights[0], weights[1], weights[2], query, limit)
+        res = run_query(db_path, sql, params)
         if not res.get("success"):
             return out
         for r in res.get("rows", []):
-            out.append({"id": r.get("rowid"), "snippet": r.get("snippet") or ""})
+            out.append({"id": r.get("rowid"), "snippet": r.get("snippet") or "", "score": r.get("score")})
         return out
     except Exception:
         return out
@@ -259,19 +273,24 @@ def index_document(db_path: str, doc_id: int, content: str) -> bool:
         lock = _get_db_lock(db_path)
         with lock:
             ensure_documents_table(db_path)
-            existing = run_query_single(db_path, "SELECT id FROM documents WHERE id = ?", (doc_id,))
+            existing = run_query_single(db_path, "SELECT id, title, metadata, tags FROM documents WHERE id = ?", (doc_id,))
+            title = ""
+            tags = ""
             if existing:
+                # update content only if provided
                 run_write(db_path, "UPDATE documents SET content = ? WHERE id = ?", (content, doc_id))
+                title = existing.get("title") or ""
+                tags = existing.get("tags") or ""
             else:
-                run_write(db_path, "INSERT INTO documents (id, content, metadata) VALUES (?, ?, ?)", (doc_id, content, json.dumps({})))
-            # ensure FTS exists and update FTS table explicitly
+                # insert with empty title/tags
+                run_write(db_path, "INSERT INTO documents (id, content, metadata, title, tags) VALUES (?, ?, ?, ?, ?)", (doc_id, content, json.dumps({}), title, tags))
+            # ensure FTS exists and update FTS table explicitly (replace row)
             ensure_fts5(db_path)
             try:
-                # replace existing FTS row for this doc
                 run_write(db_path, "DELETE FROM documents_fts WHERE rowid = ?", (doc_id,))
             except Exception:
                 pass
-            run_write(db_path, "INSERT INTO documents_fts(rowid, content) VALUES (?, ?)", (doc_id, content))
+            run_write(db_path, "INSERT INTO documents_fts(rowid, title, content, tags) VALUES (?, ?, ?, ?)", (doc_id, title or "", content, tags or ""))
             return True
     except Exception as e:
         logger.error(f"index_document error: {e}")
@@ -285,6 +304,68 @@ def reindex_all(db_path: str) -> Dict[str, Any]:
     return rebuild_fts_index(db_path)
 
 
+def bulk_insert_documents(
+    db_path: str,
+    docs: List[Tuple[str, Optional[Dict[str, Any]]]],
+    reindex: bool = False,
+    batch_size: int = 1000,
+) -> Dict[str, Any]:
+    """Insert many documents in a single transaction and update FTS.
+
+    docs: list of (content, metadata) tuples. Returns dict with success and
+    inserted_count and optionally list of ids if small.
+    """
+    attempts = 0
+    while True:
+        try:
+            lock = _get_db_lock(db_path)
+            with lock:
+                conn = _connect(db_path)
+                cur = conn.cursor()
+                # ensure tables
+                ensure_documents_table(db_path)
+                ensure_fts5(db_path)
+
+                inserted_ids: List[int] = []
+                # do all inserts in one transaction for speed
+                for content, metadata in docs:
+                    meta_json = json.dumps(metadata or {})
+                    title = ""
+                    tags = ""
+                    try:
+                        title = (metadata or {}).get("title") or ""
+                        tags = (metadata or {}).get("tags") or ""
+                    except Exception:
+                        title = ""
+                        tags = ""
+
+                    cur.execute("INSERT INTO documents (title, content, tags, metadata) VALUES (?, ?, ?, ?)", (title, content, tags, meta_json))
+                    # index into standalone FTS table explicitly using last_insert_rowid()
+                    last_id = cur.lastrowid
+                    cur.execute("INSERT INTO documents_fts(rowid, title, content, tags) VALUES (?, ?, ?, ?)", (last_id, title or "", content, tags or ""))
+                    inserted_ids.append(last_id)
+
+                conn.commit()
+                cur.close()
+                conn.close()
+
+                if reindex:
+                    # full rebuild if requested
+                    reindex_all(db_path)
+
+                return {"success": True, "inserted": len(inserted_ids), "ids": inserted_ids}
+        except sqlite3.OperationalError as e:
+            attempts += 1
+            if attempts > 5:
+                logger.error(f"bulk_insert_documents error: {e}")
+                return {"success": False, "error": str(e)}
+            time.sleep(0.05 * attempts)
+            continue
+        except Exception as e:
+            logger.error(f"bulk_insert_documents error: {e}")
+            return {"success": False, "error": str(e)}
+
+
 def insert_document(db_path: str, content: str, metadata: Optional[Dict[str, Any]] = None) -> Optional[int]:
     """Insert a document into `documents` and return inserted id."""
     ensure_documents_table(db_path)
@@ -292,9 +373,22 @@ def insert_document(db_path: str, content: str, metadata: Optional[Dict[str, Any
     try:
         lock = _get_db_lock(db_path)
         with lock:
+            # extract optional title/tags from metadata
+            title = ""
+            tags = ""
+            try:
+                title = (metadata or {}).get("title") or ""
+                tags = (metadata or {}).get("tags") or ""
+            except Exception:
+                title = ""
+                tags = ""
+
             conn = _connect(db_path)
             cur = conn.cursor()
-            cur.execute("INSERT INTO documents (content, metadata) VALUES (?, ?)", (content, meta_json))
+            cur.execute(
+                "INSERT INTO documents (title, content, tags, metadata) VALUES (?, ?, ?, ?)",
+                (title, content, tags, meta_json),
+            )
             conn.commit()
             last = cur.lastrowid
             cur.close()
@@ -302,7 +396,7 @@ def insert_document(db_path: str, content: str, metadata: Optional[Dict[str, Any
             # Ensure FTS exists and index the inserted document
             try:
                 ensure_fts5(db_path)
-                index_document(db_path, last, content)
+                run_write(db_path, "INSERT INTO documents_fts(rowid, title, content, tags) VALUES (?, ?, ?, ?)", (last, title or "", content, tags or ""))
             except Exception:
                 pass
         return last
@@ -312,25 +406,35 @@ def insert_document(db_path: str, content: str, metadata: Optional[Dict[str, Any
 
 
 def get_document_by_id(db_path: str, doc_id: int) -> Optional[Dict[str, Any]]:
-    row = run_query_single(db_path, "SELECT id, content, metadata FROM documents WHERE id = ?", (doc_id,))
+    row = run_query_single(db_path, "SELECT id, title, content, tags, metadata FROM documents WHERE id = ?", (doc_id,))
     if not row:
         return None
     try:
         meta = json.loads(row.get("metadata") or "{}")
     except Exception:
         meta = {}
-    return {"id": row.get("id"), "content": row.get("content"), "metadata": meta}
+    return {
+        "id": row.get("id"),
+        "title": row.get("title"),
+        "content": row.get("content"),
+        "tags": row.get("tags"),
+        "metadata": meta,
+    }
 
 
 def list_documents(db_path: str, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
-    rows = run_query_all(db_path, "SELECT id, content, metadata FROM documents ORDER BY id DESC LIMIT ? OFFSET ?", (limit, offset))
+    rows = run_query_all(
+        db_path, "SELECT id, title, content, tags, metadata FROM documents ORDER BY id DESC LIMIT ? OFFSET ?", (limit, offset)
+    )
     out = []
     for r in rows:
         try:
             meta = json.loads(r.get("metadata") or "{}")
         except Exception:
             meta = {}
-        out.append({"id": r.get("id"), "content": r.get("content"), "metadata": meta})
+        out.append(
+            {"id": r.get("id"), "title": r.get("title"), "content": r.get("content"), "tags": r.get("tags"), "metadata": meta}
+        )
     return out
 
 
@@ -347,19 +451,39 @@ def delete_document(db_path: str, doc_id: int) -> bool:
 
 
 def update_document(db_path: str, doc_id: int, content: str, metadata: Optional[Dict[str, Any]] = None) -> bool:
-    """Update document content and metadata, and update FTS index."""
+    """Update document content and metadata, update title/tags, and sync FTS index."""
     meta_json = json.dumps(metadata or {})
     lock = _get_db_lock(db_path)
     with lock:
+        # update main document
         res = run_write(db_path, "UPDATE documents SET content = ?, metadata = ? WHERE id = ?", (content, meta_json, doc_id))
+
+        # if metadata contains title/tags, update those fields too
+        try:
+            if metadata:
+                if "title" in metadata:
+                    run_write(db_path, "UPDATE documents SET title = ? WHERE id = ?", (metadata.get("title"), doc_id))
+                if "tags" in metadata:
+                    run_write(db_path, "UPDATE documents SET tags = ? WHERE id = ?", (metadata.get("tags"), doc_id))
+        except Exception:
+            pass
+
+        # reindex into FTS: fetch current stored values to ensure consistency
         try:
             ensure_fts5(db_path)
-            index_document(db_path, doc_id, content)
+            doc = get_document_by_id(db_path, doc_id)
+            if doc is not None:
+                t = doc.get("title") or ""
+                c = doc.get("content") or ""
+                tg = doc.get("tags") or ""
+                try:
+                    run_write(db_path, "DELETE FROM documents_fts WHERE rowid = ?", (doc_id,))
+                except Exception:
+                    pass
+                run_write(db_path, "INSERT INTO documents_fts(rowid, title, content, tags) VALUES (?, ?, ?, ?)", (doc_id, t, c, tg))
         except Exception:
-            try:
-                index_document(db_path, doc_id, content)
-            except Exception:
-                pass
+            pass
+
         return bool(res.get("success") and res.get("affected", 0) >= 0)
 
 

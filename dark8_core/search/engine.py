@@ -9,6 +9,7 @@ try:
 except Exception:
     DatabaseSearchSource = None
 
+from dark8_core.config import config
 try:
     from dark8_core.agent.tools.db import search_fts
 except Exception:
@@ -56,7 +57,8 @@ class SearchEngine:
             for name, src in self.sources.items():
                 try:
                     if isinstance(src, DatabaseSearchSource) and getattr(src, "db_path", None):
-                        fts_rows = search_fts(src.db_path, query, limit=limit)
+                        weights = getattr(config, "SEARCH_WEIGHTS", (1.0, 1.0, 1.0))
+                        fts_rows = search_fts(src.db_path, query, limit=limit, weights=weights)
                         # search_fts is sync, might return list of dicts
                         if hasattr(fts_rows, "__await__"):
                             fts_rows = await fts_rows
